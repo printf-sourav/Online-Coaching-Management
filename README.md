@@ -144,7 +144,3 @@ For detailed API documentation, refer to the route files in `backend/src/routes/
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the ISC License.
