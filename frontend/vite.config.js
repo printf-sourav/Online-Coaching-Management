@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/Online_Coaching_frontend/',
+  base: '/Online-Coaching-Management/',
   server: {
     proxy: {
       '/api': {

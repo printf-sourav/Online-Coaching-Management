@@ -4,7 +4,7 @@ const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('edunova-theme') || 'light';
+    const saved = localStorage.getItem('edunova-theme') || 'dark';
     // Apply synchronously so first paint has correct colours (avoids white flash)
     document.documentElement.setAttribute('data-theme', saved);
     return saved;

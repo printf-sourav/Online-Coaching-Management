@@ -71,11 +71,33 @@ export default function Landing() {
   const [tutors, setTutors]   = useState([]);
   const [openFaq, setOpenFaq] = useState(null);
   const [navScrolled, setNavScrolled] = useState(false);
+  
+  // Ref and state for scroll-linked orbit
+  const orbitRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
   useEffect(() => { fetchTutors().then(setTutors); }, []);
+  
   useEffect(() => {
     const fn = () => setNavScrolled(window.scrollY > 16);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!orbitRef.current) return;
+      const rect = orbitRef.current.getBoundingClientRect();
+      // Orbit section is 400vh tall. Sticky content is 100vh.
+      // Maximum scroll distance inside section is 300vh.
+      const scrollDistance = rect.height - window.innerHeight;
+      let progress = -rect.top / scrollDistance;
+      if (progress < 0) progress = 0;
+      if (progress > 1) progress = 1;
+      setScrollProgress(progress);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const c1 = useCounter('50000+');
@@ -85,12 +107,12 @@ export default function Landing() {
 
   /* ── Static data ──────────────────────────────────── */
   const subjects = [
-    { icon: '📐', name: 'Mathematics',      desc: 'From arithmetic to calculus — concept mastery at every grade.',     color: PURPLE,  bg: PURPLE  + '12' },
-    { icon: '🔬', name: 'Science',           desc: 'Physics, Chemistry & Biology through experiments & real examples.', color: BLUE,    bg: BLUE    + '12' },
-    { icon: '📝', name: 'English',           desc: 'Grammar, literature, writing skills and confident communication.',   color: GREEN,   bg: GREEN   + '12' },
-    { icon: '💻', name: 'Coding',            desc: 'Python, Web Dev & App Dev — from scratch to real projects.',        color: ORANGE,  bg: ORANGE  + '12' },
-    { icon: '🌍', name: 'Social Studies',    desc: 'History, Geography, Civics and current-affairs expertise.',         color: '#EC4899', bg: '#EC489912' },
-    { icon: '🎨', name: 'Arts & Creativity', desc: 'Visual arts, design thinking and creative expression for kids.',    color: '#EAB308', bg: '#EAB30812' },
+    { icon: '📐', name: 'Mathematics', desc: 'From arithmetic to calculus — concept mastery at every grade.', color: '#ff2d78', bg: 'transparent' },
+    { icon: '🔬', name: 'Science', desc: 'Physics, Chemistry & Biology through experiments & real examples.', color: '#00ffcc', bg: 'transparent' },
+    { icon: '📝', name: 'English', desc: 'Grammar, literature, writing skills and confident communication.', color: '#ffe04a', bg: 'transparent' },
+    { icon: '💻', name: 'Coding', desc: 'Python, Web Dev & App Dev — from scratch to real projects.', color: '#ff2d78', bg: 'transparent' },
+    { icon: '🌍', name: 'Social Studies', desc: 'History, Geography, Civics and current-affairs expertise.', color: '#00ffcc', bg: 'transparent' },
+    { icon: '🎨', name: 'Arts & Creativity', desc: 'Visual arts, design thinking and creative expression for kids.', color: '#ffe04a', bg: 'transparent' },
   ];
 
   const steps = [
@@ -160,7 +182,7 @@ export default function Landing() {
   });
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', overflowX: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', overflowX: 'clip' }}>
 
       {/* ═══════════════════════════════════════ NAV ═══ */}
       <nav style={{
@@ -214,371 +236,149 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ══════════════════════════════════════ HERO ═══ */}
-      <section style={{ ...S, paddingTop: 'clamp(80px,10vw,120px)', paddingBottom: 'clamp(80px,10vw,120px)', position: 'relative', overflow: 'hidden', minHeight: '88vh', display: 'flex', alignItems: 'center' }}>
+      {/* ══════════════════════════════════════ HERO & SCROLL ORBIT ═══ */}
+      <section ref={orbitRef} style={{ ...S, padding: 0, height: '400vh', position: 'relative', background: 'var(--color-bg)' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+          
+          {/* Dot-grid texture */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.15, backgroundImage: `radial-gradient(circle,rgba(255,45,120,0.4) 1px,transparent 1px)`, backgroundSize: '36px 36px' }} />
 
-        {/* Dot-grid texture */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: isDark ? .04 : .028, backgroundImage: `radial-gradient(circle,${PURPLE} 1px,transparent 1px)`, backgroundSize: '36px 36px' }} />
-
-        {/* ── Giant atom — absolute background ─────────────── */}
-        <div aria-hidden="true" style={{
-          position: 'absolute', top: '50%', left: '62%',
-          transform: 'translate(-50%,-50%)',
-          width: 720, height: 720,
-          pointerEvents: 'none', zIndex: 0,
-        }}>
-          {/* Ambient glow */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 520, height: 520, borderRadius: '50%', background: `radial-gradient(circle,${PURPLE}20 0%,${BLUE}10 52%,transparent 72%)`, filter: 'blur(70px)' }} />
-
-          {/* Nucleus */}
-          <div style={{
-            position: 'absolute', top: '50%', left: '50%',
-            transform: 'translate(-50%,-50%)',
-            width: 82, height: 82, borderRadius: '50%',
-            background: `radial-gradient(circle at 35% 35%, #e8d5ff 0%, ${PURPLE} 45%, #2A0EA8 100%)`,
-            boxShadow: `0 0 0 10px ${PURPLE}18, 0 0 44px ${PURPLE}55, 0 0 100px ${PURPLE}22`,
-            zIndex: 10,
-            animation: 'nucl-pulse 2.8s ease-in-out infinite',
-          }} />
-
-          {/* 5 orbit ellipses — each carries an electron dot + a subject chip */}
-          {[
-            { rx: 320, ry: 90, dur: '6s',  color: PURPLE,    label: 'Physics',        icon: '⚛️',  startDeg: 0   },
-            { rx: 320, ry: 90, dur: '8s',  color: BLUE,      label: 'Chemistry',      icon: '🧪',  startDeg: 72  },
-            { rx: 320, ry: 90, dur: '10s', color: GREEN,     label: 'Mathematics',    icon: '📐',  startDeg: 144 },
-            { rx: 320, ry: 90, dur: '7s',  color: ORANGE,    label: 'English',        icon: '📖',  startDeg: 216 },
-            { rx: 320, ry: 90, dur: '9s',  color: '#EC4899',  label: 'Social Studies', icon: '🌍',  startDeg: 288 },
-          ].map((o, i) => (
-            <div key={i} style={{
-              position: 'absolute', top: '50%', left: '50%',
-              width: o.rx * 2, height: o.ry * 2,
-              marginTop: -o.ry, marginLeft: -o.rx,
-              borderRadius: '50%',
-              border: `1.5px solid ${o.color}38`,
-              boxShadow: `0 0 18px ${o.color}10`,
-              animation: `orbit-spin-${i} ${o.dur} linear infinite`,
-            }}>
-              {/* Electron dot at top of orbit */}
-              <div style={{
-                position: 'absolute', top: -7, left: '50%', marginLeft: -7,
-                width: 14, height: 14, borderRadius: '50%',
-                background: `radial-gradient(circle at 35% 35%, #fff, ${o.color})`,
-                boxShadow: `0 0 10px ${o.color}, 0 0 26px ${o.color}80`,
-              }} />
-              {/* Subject chip at bottom — counter-rotates to stay upright as orbit spins */}
-              <div style={{
-                position: 'absolute', bottom: -18, left: '50%',
-                animation: `counter-spin-${i} ${o.dur} linear infinite`,
+          {/* Centered Text Details overlaying the orbit */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            {scrollProgress < 0.1 ? (
+              <div className="ani-up" style={{ 
+                background: 'radial-gradient(circle, rgba(14,14,22,0.95) 0%, rgba(14,14,22,0.6) 50%, transparent 100%)', 
+                padding: '50px', borderRadius: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', 
+                pointerEvents: 'auto' 
               }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 7,
-                  background: isDark ? 'rgba(16,8,44,.9)' : 'rgba(255,255,255,.92)',
-                  border: `1.5px solid ${o.color}55`,
-                  borderRadius: 22, padding: '7px 13px',
-                  backdropFilter: 'blur(12px)',
-                  boxShadow: `0 4px 20px ${o.color}30, 0 1px 0 rgba(255,255,255,.6) inset`,
-                  fontSize: '.74rem', fontWeight: 800, color: o.color,
-                  whiteSpace: 'nowrap',
-                  transform: 'translateX(-50%)',
-                }}>
-                  <span style={{ fontSize: '1rem', lineHeight: 1 }}>{o.icon}</span>
-                  {o.label}
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(255,45,120,0.1)`, border: `1px solid rgba(255,45,120,0.3)`, borderRadius: 100, padding: '6px 16px', marginBottom: 26 }} className="neon-box">
+                  <span className="dot-live" />
+                  <span style={{ fontSize: '.78rem', fontWeight: 700, color: '#ff2d78', letterSpacing: '.03em' }} className="neon-text">Scroll to explore subjects</span>
                 </div>
+                <h1 style={{ fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }} className="neon-text">
+                  Neon Tokyo<br />
+                  <span style={{ color: '#00ffcc' }} className="neon-text">Interactive</span> Learning
+                </h1>
+                <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 36, maxWidth: 500 }}>
+                  Experience the future of education with immersive 1:1 sessions, real-time feedback, and a premium learning environment.
+                </p>
               </div>
-            </div>
-          ))}
+            ) : (
+              (() => {
+                const totalSubjects = subjects.length;
+                const segment = 0.9 / totalSubjects;
+                const rawIdx = (scrollProgress - 0.1) / segment;
+                let activeIdx = Math.floor(rawIdx);
+                let isCapped = false;
+                if (activeIdx >= totalSubjects) { activeIdx = totalSubjects - 1; isCapped = true; }
+                if (activeIdx < 0) activeIdx = 0;
+                
+                const s = subjects[activeIdx];
+                let localProgress = isCapped ? 0.5 : (rawIdx - activeIdx);
+                
+                let opacity = 1;
+                let translateX = 0;
+                let translateY = 0;
+                let scale = 1;
+                let blur = 0;
+                
+                if (localProgress < 0.25) {
+                  const p = localProgress / 0.25; // 0 to 1
+                  opacity = Math.pow(p, 2);
+                  translateX = (1 - p) * 120; // Starts slightly right, holographic shift
+                  translateY = (1 - p) * 20;
+                  scale = 0.85 + (p * 0.15); // scales smoothly from 85% to 100%
+                  blur = (1 - p) * 15; // blurs out of focus at the start
+                } else if (localProgress > 0.75) {
+                  const p = (localProgress - 0.75) / 0.25; // 0 to 1
+                  opacity = 1 - p;
+                  translateX = -(p * 120); // moves left
+                  translateY = -(p * 20);
+                  scale = 1 - (p * 0.1);
+                  blur = p * 15;
+                }
 
-          {/* Quantum pulse rings from nucleus */}
-          {[1, 2, 3].map(n => (
-            <div key={n} style={{
-              position: 'absolute', top: '50%', left: '50%',
-              width: n * 150, height: n * 150,
-              marginTop: -(n * 75), marginLeft: -(n * 75),
-              borderRadius: '50%',
-              border: `1px solid ${PURPLE}${['14', '0D', '08'][n - 1]}`,
-              animation: `q-ring-expand 4.2s ease-out ${n * 1.3}s infinite`,
-              pointerEvents: 'none',
-            }} />
-          ))}
-        </div>
-
-        {/* ── Hero text (z-index above atom) ───────────────── */}
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 1200, margin: '0 auto', width: '100%' }}>
-          <div style={{ maxWidth: 600 }}>
-
-            {/* Live pill */}
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: `${PURPLE}14`, border: `1px solid ${PURPLE}30`,
-              borderRadius: 100, padding: '6px 16px', marginBottom: 26,
-            }}>
-              <span className="dot-live" />
-              <span style={{ fontSize: '.78rem', fontWeight: 700, color: PURPLE, letterSpacing: '.03em' }}>50,000+ students learning live</span>
-            </div>
-
-            <h1 style={{
-              fontSize: 'clamp(2rem,4.8vw,3.8rem)', fontWeight: 900,
-              letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22,
-              color: 'var(--text-primary)',
-            }}>
-              1:1 Live Online Tutoring<br />
-              for <span style={{ background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Every Child</span> to<br />
-              Reach Their{' '}
-              <span style={{ background: `linear-gradient(135deg,${ORANGE},#FFAB00)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Full Potential</span>
-            </h1>
-
-            <p style={{ fontSize: 'clamp(.93rem,1.8vw,1.08rem)', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 36, maxWidth: 520 }}>
-              One child. One expert mentor. Real attention and measurable growth.
-              Personalised live classes, real-time feedback and a parent portal to keep you informed — all in one platform.
-            </p>
-
-            {/* CTAs */}
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
-              <RippleButton
-                className="btn btn-lg"
-                style={{ background: `linear-gradient(135deg,${ORANGE},#FF9A00)`, color: '#fff', fontWeight: 800, border: 'none', boxShadow: `0 10px 30px ${ORANGE}50`, borderRadius: 14 }}
-                onClick={() => navigate('/register')}
-              >Book a FREE Trial &nbsp;→</RippleButton>
-              <RippleButton
-                className="btn btn-ghost btn-lg"
-                style={{ borderRadius: 14 }}
-                onClick={() => navigate('/tutors')}
-              >Browse Tutors</RippleButton>
-            </div>
-
-            {/* Trust badges */}
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: 'var(--color-surface)', borderRadius: 12, border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,.06)' }}>
-                <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,#4285F4 0%,#34A853 34%,#FBBC04 67%,#EA4335 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.85rem', fontWeight: 900, color: '#fff', flexShrink: 0 }}>G</div>
-                <div>
-                  <div style={{ display: 'flex', gap: 1 }}>{[1,2,3,4,5].map(s => <span key={s} style={{ color: '#FBBC04', fontSize: '.75rem' }}>★</span>)}</div>
-                  <div style={{ fontSize: '.65rem', color: 'var(--text-muted)', fontWeight: 600 }}>4.8/5 · 1,200+ reviews</div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: 'var(--color-surface)', borderRadius: 12, border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,.06)' }}>
-                <span style={{ fontSize: '1.2rem' }}>🎓</span>
-                <div>
-                  <div style={{ fontSize: '.88rem', fontWeight: 800, color: 'var(--text-primary)' }}>50,000+</div>
-                  <div style={{ fontSize: '.65rem', color: 'var(--text-muted)', fontWeight: 600 }}>Students Taught</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* ── Keyframes ────────────────────────────────────── */}
-        <style>{`
-          @keyframes orbit-spin-0 {
-            from { transform: rotate(0deg);   }
-            to   { transform: rotate(360deg); }
-          }
-          @keyframes orbit-spin-1 {
-            from { transform: rotate(72deg);  }
-            to   { transform: rotate(432deg); }
-          }
-          @keyframes orbit-spin-2 {
-            from { transform: rotate(144deg); }
-            to   { transform: rotate(504deg); }
-          }
-          @keyframes orbit-spin-3 {
-            from { transform: rotate(216deg); }
-            to   { transform: rotate(576deg); }
-          }
-          @keyframes orbit-spin-4 {
-            from { transform: rotate(288deg); }
-            to   { transform: rotate(648deg); }
-          }
-          @keyframes counter-spin-0 {
-            from { transform: translateX(-50%) rotate(0deg);    }
-            to   { transform: translateX(-50%) rotate(-360deg); }
-          }
-          @keyframes counter-spin-1 {
-            from { transform: translateX(-50%) rotate(-72deg);  }
-            to   { transform: translateX(-50%) rotate(-432deg); }
-          }
-          @keyframes counter-spin-2 {
-            from { transform: translateX(-50%) rotate(-144deg); }
-            to   { transform: translateX(-50%) rotate(-504deg); }
-          }
-          @keyframes counter-spin-3 {
-            from { transform: translateX(-50%) rotate(-216deg); }
-            to   { transform: translateX(-50%) rotate(-576deg); }
-          }
-          @keyframes counter-spin-4 {
-            from { transform: translateX(-50%) rotate(-288deg); }
-            to   { transform: translateX(-50%) rotate(-648deg); }
-          }
-          @keyframes nucl-pulse {
-            0%,100% { box-shadow: 0 0 0 10px ${PURPLE}18, 0 0 44px ${PURPLE}55, 0 0 100px ${PURPLE}22; }
-            50%      { box-shadow: 0 0 0 16px ${PURPLE}10, 0 0 70px ${PURPLE}70, 0 0 140px ${PURPLE}35; }
-          }
-          @keyframes q-ring-expand {
-            0%   { opacity: .4; transform: translate(-50%,-50%) scale(.82); }
-            100% { opacity: 0;  transform: translate(-50%,-50%) scale(1.55); }
-          }
-        `}</style>
-      </section>
-
-      {/* ═══════════════════════════════════ STATS BAND ═══ */}
-      <section style={{ background: 'var(--grad-primary)', padding: 'clamp(36px,5vw,56px) clamp(16px,5vw,80px)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle,rgba(255,255,255,.08) 1px,transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 28, position: 'relative' }}>
-          {[
-            { v: c1, l: 'Students Taught',  icon: '🎓' },
-            { v: c2, l: 'Expert Tutors',    icon: '🏫' },
-            { v: c3, l: 'Satisfaction Rate',icon: '⭐' },
-            { v: c4 + '/5', l: 'Google Rating', icon: '🌟' },
-          ].map((s, i) => (
-            <div key={i} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.5rem', marginBottom: 6 }}>{s.icon}</div>
-              <div style={{ fontSize: 'clamp(1.7rem,3vw,2.4rem)', fontWeight: 900, color: '#fff', lineHeight: 1, letterSpacing: '-.02em' }}>{s.v}</div>
-              <div style={{ fontSize: '.7rem', color: 'rgba(255,255,255,.7)', fontWeight: 600, marginTop: 6, textTransform: 'uppercase', letterSpacing: '.06em' }}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ════════════════════════ WHY 1:1 LEARNING ════════ */}
-      <section style={{ ...S, background: isDark ? 'var(--color-bg)' : '#F8F6FF', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-          <div style={{
-            position: 'absolute',
-            right: 'clamp(-80px, -5vw, -24px)',
-            top: '50%',
-            width: 'min(620px, 60vw)',
-            height: 'min(430px, 78%)',
-            transform: 'translateY(-50%) rotate(-6deg)',
-            borderRadius: 28,
-            backgroundImage: "url('/images/student-studying.jpg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: isDark ? 0.18 : 0.15,
-            boxShadow: '0 26px 70px rgba(0,0,0,.18)',
-          }} />
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: isDark
-              ? 'linear-gradient(90deg, var(--color-bg) 55%, rgba(0,0,0,0) 100%)'
-              : 'linear-gradient(90deg, #F8F6FF 52%, rgba(248,246,255,0) 100%)',
-          }} />
-        </div>
-
-        <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vw,60px)' }}>
-            <Chip label="The Science Behind It" color={PURPLE} />
-            <h2 style={{ fontSize: 'clamp(1.7rem,3.5vw,2.8rem)', fontWeight: 900, letterSpacing: '-.02em', color: 'var(--text-primary)', marginBottom: 16 }}>
-              The Proven Advantage of{' '}
-              <span style={{ background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>1:1 Learning</span>
-            </h2>
-            {/* Bloom callout */}
-            <div style={{
-              display: 'inline-block', maxWidth: 700,
-              background: isDark ? `${PURPLE}14` : `${PURPLE}08`,
-              border: `1px solid ${PURPLE}28`,
-              borderRadius: 16, padding: '18px 28px', textAlign: 'left',
-            }}>
-              <p style={{ fontSize: '.9rem', color: 'var(--text-secondary)', lineHeight: 1.75, margin: 0 }}>
-                <strong style={{ color: PURPLE }}>Bloom's 2-Sigma Effect:</strong> Research by educational psychologist Benjamin Bloom showed that students who receive 1:1 tutoring perform <strong>2 standard deviations better</strong> than those in traditional classrooms — outperforming <strong>98% of their peers.</strong>
-                <span style={{ color: 'var(--text-muted)', fontSize: '.82rem' }}> At EduNova, we bring this proven principle to life every single day.</span>
-              </p>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 18 }}>
-            {advantages.map((a, i) => (
-              <TiltCard key={i} style={{ ...card(), borderLeft: `4px solid ${a.color}`, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                <div style={{ width: 50, height: 50, borderRadius: 14, flexShrink: 0, background: a.color + '14', border: `1.5px solid ${a.color}28`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem' }}>
-                  {a.icon}
-                </div>
-                <div>
-                  <h3 style={{ fontWeight: 700, fontSize: '.95rem', marginBottom: 6, color: 'var(--text-primary)' }}>{a.title}</h3>
-                  <p style={{ fontSize: '.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0 }}>{a.desc}</p>
-                </div>
-              </TiltCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════ HOW IT WORKS ══════════ */}
-      <section id="how-it-works" style={{ ...S }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vw,60px)' }}>
-            <Chip label="Super Easy to Start" color={ORANGE} />
-            <h2 style={{ fontSize: 'clamp(1.7rem,3.5vw,2.8rem)', fontWeight: 900, letterSpacing: '-.02em', color: 'var(--text-primary)', marginBottom: 12 }}>
-              Getting Started is{' '}
-              <span style={{ background: `linear-gradient(135deg,${ORANGE},#FFAB00)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Incredibly Easy</span>
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '.95rem', maxWidth: 480, margin: '0 auto' }}>
-              A working device and stable internet — that's all you need. Setup in under 5 minutes.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: 32 }}>
-            {steps.map((s, i) => (
-              <div key={i} style={{ textAlign: 'center' }}>
-                {/* Numbered icon circle */}
-                <div style={{ position: 'relative', width: 90, height: 90, margin: '0 auto 26px' }}>
-                  <div style={{ width: 90, height: 90, borderRadius: '50%', background: s.color + '14', border: `3px solid ${s.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ width: 66, height: 66, borderRadius: '50%', background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.7rem', boxShadow: `0 10px 28px ${s.color}55` }}>
-                      {s.icon}
-                    </div>
+                return (
+                  <div key={activeIdx} style={{ 
+                    maxWidth: 600, 
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    background: 'radial-gradient(circle, rgba(14,14,22,0.95) 0%, rgba(14,14,22,0.6) 50%, transparent 100%)',
+                    padding: '50px', borderRadius: '40px',
+                    pointerEvents: 'auto',
+                    opacity, 
+                    transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
+                    filter: `blur(${blur}px)`,
+                    willChange: 'transform, opacity, filter'
+                  }}>
+                     <div style={{ width: 80, height: 80, borderRadius: 20, background: `${s.color}15`, border: `2px solid ${s.color}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', marginBottom: 24, boxShadow: `0 0 30px ${s.color}40`, color: s.color }}>
+                       {s.icon}
+                     </div>
+                     <h2 style={{ fontSize: 'clamp(2.5rem,4vw,3.5rem)', fontWeight: 900, letterSpacing: '-.02em', color: s.color, marginBottom: 16, textShadow: `0 0 20px ${s.color}60` }}>
+                       {s.name}
+                     </h2>
+                     <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.8, maxWidth: 450 }}>{s.desc}</p>
+                     
+                     <RippleButton
+                        className="btn btn-lg neon-box"
+                        style={{ marginTop: 30, background: `linear-gradient(135deg,${s.color},transparent)`, color: '#fff', border: `1px solid ${s.color}`, fontWeight: 800 }}
+                        onClick={() => navigate('/tutors')}
+                      >Explore classes →</RippleButton>
                   </div>
-                  <div style={{
-                    position: 'absolute', bottom: -4, right: -4,
-                    width: 30, height: 30, borderRadius: '50%',
-                    background: 'var(--color-bg)', border: `2px solid ${s.color}`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '.72rem', fontWeight: 900, color: s.color,
-                  }}>{s.num}</div>
-                </div>
-                <h3 style={{ fontWeight: 800, fontSize: '1.05rem', marginBottom: 10, color: 'var(--text-primary)' }}>{s.title}</h3>
-                <p style={{ fontSize: '.84rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: '0 auto', maxWidth: 280 }}>{s.desc}</p>
-              </div>
-            ))}
+                );
+              })()
+            )}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: 52 }}>
-            <RippleButton
-              className="btn btn-lg"
-              style={{ background: `linear-gradient(135deg,${ORANGE},#FF9A00)`, color: '#fff', fontWeight: 800, border: 'none', boxShadow: `0 10px 30px ${ORANGE}45`, borderRadius: 14 }}
-              onClick={() => navigate('/register')}
-            >Book a FREE Trial Class</RippleButton>
-          </div>
-        </div>
-      </section>
+          {/* Centered Giant Rotating Atom */}
+          <div aria-hidden="true" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 700, height: 700, pointerEvents: 'none', zIndex: 0 }}>
+            {/* Ambient glow */}
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 500, borderRadius: '50%', background: `radial-gradient(circle,rgba(255,45,120,0.15) 0%,rgba(0,255,204,0.05) 50%,transparent 70%)`, filter: 'blur(80px)' }} />
 
-      {/* ════════════════════════════ SUBJECTS ════════════ */}
-      <section id="subjects" style={{ ...S, background: isDark ? `${PURPLE}06` : `${PURPLE}05` }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vw,60px)' }}>
-            <Chip label="All Age Groups · KG – Grade 12" color={PURPLE} />
-            <h2 style={{ fontSize: 'clamp(1.7rem,3.5vw,2.8rem)', fontWeight: 900, letterSpacing: '-.02em', color: 'var(--text-primary)', marginBottom: 12 }}>
-              Online Courses for{' '}
-              <span style={{ background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Every Subject</span>
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '.95rem', maxWidth: 520, margin: '0 auto' }}>
-              Well-researched, highly effective curriculum. Starting from just <strong>₹500 per class.</strong>
-            </p>
-          </div>
+            {/* Nucleus */}
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 90, height: 90, borderRadius: '50%', background: `radial-gradient(circle at 35% 35%, #fff 0%, #ff2d78 45%, #b3004e 100%)`, boxShadow: `0 0 0 12px rgba(255,45,120,0.15), 0 0 60px rgba(255,45,120,0.6), 0 0 120px rgba(255,45,120,0.3)`, zIndex: 10 }} />
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(270px,1fr))', gap: 20 }}>
-            {subjects.map((s, i) => (
-              <SpotlightCard key={i} className="clay-glow" style={{
-                ...card({ padding: '28px 24px', background: s.bg, border: `1.5px solid ${s.color}28`, cursor: 'pointer', borderRadius: 20, position: 'relative', overflow: 'hidden' }),
-              }} onClick={() => navigate('/tutors')}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: 16, boxShadow: `0 8px 22px ${s.color}45` }}>
-                  {s.icon}
-                </div>
-                <h3 style={{ fontWeight: 800, fontSize: '1rem', marginBottom: 8, color: 'var(--text-primary)' }}>{s.name}</h3>
-                <p style={{ fontSize: '.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: 16 }}>{s.desc}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '.8rem', color: s.color, fontWeight: 700 }}>
-                  Explore classes <span>→</span>
-                </div>
-              </SpotlightCard>
-            ))}
+            {/* Rotating Orbits Frame */}
+            <div style={{
+              width: '100%', height: '100%',
+              transform: `rotate(${((scrollProgress >= 0.1 ? scrollProgress - 0.1 : 0) / 0.9) * 360}deg)`,
+              willChange: 'transform'
+            }}>
+              {subjects.map((o, i) => {
+                 const rx = 320; const ry = 100;
+                 const baseAngle = (i / subjects.length) * 360;
+                 const frameRotation = ((scrollProgress >= 0.1 ? scrollProgress - 0.1 : 0) / 0.9) * 360;
+                 // Determine which subject is currently "active" mathematically
+                 const totalSubjects = subjects.length;
+                 const segment = 0.9 / totalSubjects;
+                 const rawIdx = (scrollProgress - 0.1) / segment;
+                 let activeIdx = Math.floor(rawIdx);
+                 if (activeIdx >= totalSubjects) activeIdx = totalSubjects - 1;
+                 if (activeIdx < 0) activeIdx = 0;
+                 
+                 // If this is the active subject, fade its orbit chip out.
+                 const isChipActive = i === activeIdx;
+
+                 return (
+                  <div key={i} style={{ 
+                    position: 'absolute', top: '50%', left: '50%', 
+                    width: rx * 2, height: ry * 2, 
+                    marginTop: -ry, marginLeft: -rx, borderRadius: '50%', 
+                    border: `1.5px solid ${o.color}40`, boxShadow: `0 0 20px ${o.color}15, inset 0 0 20px ${o.color}15`,
+                    transform: `rotate(${baseAngle}deg)` 
+                  }}>
+                    {/* Electron dot (Glows hugely when its subject is active) */}
+                    <div style={{
+                      position: 'absolute', top: -10, left: '50%', marginLeft: -10,
+                      width: 20, height: 20, borderRadius: '50%',
+                      background: `radial-gradient(circle at 35% 35%, #fff, ${o.color})`,
+                      boxShadow: isChipActive ? `0 0 30px ${o.color}, 0 0 60px ${o.color}` : `0 0 10px ${o.color}`,
+                      transform: isChipActive ? `scale(1.8)` : `scale(1)`,
+                      transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s'
+                    }} />
+                  </div>
+                 );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -769,7 +569,7 @@ export default function Landing() {
               })}
             </div>
             <div style={{ textAlign: 'center' }}>
-              <RippleButton className="btn btn-ghost btn-lg" style={{ borderRadius: 14 }} onClick={() => navigate('/tutors')}>
+              <RippleButton className="btn btn-ghost neon-box btn-lg" style={{ borderRadius: 14 }} onClick={() => navigate('/tutors')}>
                 Browse All Tutors &nbsp;→
               </RippleButton>
             </div>
