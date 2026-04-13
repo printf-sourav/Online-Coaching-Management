@@ -243,27 +243,32 @@ export default function Landing() {
           {/* Dot-grid texture */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.15, backgroundImage: `radial-gradient(circle,rgba(255,45,120,0.4) 1px,transparent 1px)`, backgroundSize: '36px 36px' }} />
 
-          {/* Centered Text Details overlaying the orbit */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-            {scrollProgress < 0.1 ? (
-              <div className="ani-up" style={{ 
-                background: 'radial-gradient(circle, rgba(14,14,22,0.95) 0%, rgba(14,14,22,0.6) 50%, transparent 100%)', 
-                padding: '50px', borderRadius: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', 
-                pointerEvents: 'auto' 
-              }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(255,45,120,0.1)`, border: `1px solid rgba(255,45,120,0.3)`, borderRadius: 100, padding: '6px 16px', marginBottom: 26 }} className="neon-box">
-                  <span className="dot-live" />
-                  <span style={{ fontSize: '.78rem', fontWeight: 700, color: '#ff2d78', letterSpacing: '.03em' }} className="neon-text">Scroll to explore subjects</span>
-                </div>
-                <h1 style={{ fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }} className="neon-text">
-                  Neon Tokyo<br />
-                  <span style={{ color: '#00ffcc' }} className="neon-text">Interactive</span> Learning
-                </h1>
-                <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 36, maxWidth: 500 }}>
-                  Experience the future of education with immersive 1:1 sessions, real-time feedback, and a premium learning environment.
-                </p>
+          {/* Intro Text (Left Side originally) */}
+          <div style={{
+            position: 'absolute', top: '50%', left: 'clamp(20px, 8vw, 100px)',
+            transform: `translateY(-50%) translateX(${-(Math.min(scrollProgress / 0.1, 1) * 100)}px)`,
+            opacity: 1 - Math.pow(Math.min(scrollProgress / 0.1, 1), 2),
+            pointerEvents: scrollProgress < 0.1 ? 'auto' : 'none',
+            zIndex: 10, display: 'flex', flexDirection: 'column'
+          }}>
+            <div className="ani-up">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(255,45,120,0.1)`, border: `1px solid rgba(255,45,120,0.3)`, borderRadius: 100, padding: '6px 16px', marginBottom: 26 }} className="neon-box">
+                <span className="dot-live" />
+                <span style={{ fontSize: '.78rem', fontWeight: 700, color: '#ff2d78', letterSpacing: '.03em' }} className="neon-text">Scroll to explore subjects</span>
               </div>
-            ) : (
+              <h1 style={{ fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }} className="neon-text">
+                Neon Tokyo<br />
+                <span style={{ color: '#00ffcc' }} className="neon-text">Interactive</span> Learning
+              </h1>
+              <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 36, maxWidth: 500 }}>
+                Experience the future of education with immersive 1:1 sessions, real-time feedback, and a premium learning environment.
+              </p>
+            </div>
+          </div>
+
+          {/* Centered Text Details overlaying the orbit */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', pointerEvents: 'none' }}>
+            {scrollProgress >= 0.1 && (
               (() => {
                 const totalSubjects = subjects.length;
                 const segment = 0.9 / totalSubjects;
@@ -329,8 +334,11 @@ export default function Landing() {
             )}
           </div>
 
-          {/* Centered Giant Rotating Atom */}
-          <div aria-hidden="true" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 700, height: 700, pointerEvents: 'none', zIndex: 0 }}>
+          <div aria-hidden="true" style={{ 
+            position: 'absolute', top: '50%', 
+            left: `${75 - (Math.min(scrollProgress / 0.1, 1) * 25)}%`, 
+            transform: 'translate(-50%, -50%)', width: 700, height: 700, pointerEvents: 'none', zIndex: 0 
+          }}>
             {/* Ambient glow */}
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 500, borderRadius: '50%', background: `radial-gradient(circle,rgba(255,45,120,0.15) 0%,rgba(0,255,204,0.05) 50%,transparent 70%)`, filter: 'blur(80px)' }} />
 
