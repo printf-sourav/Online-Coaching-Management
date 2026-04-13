@@ -1,0 +1,1 @@
+import{j as i}from"./index-BzH53P4f.js";function e({size:r=18,light:o=!0}){return i.jsx("span",{className:"spinner",style:{display:"inline-block",width:r,height:r,border:`2px solid ${o?"rgba(255,255,255,.3)":"var(--color-border)"}`,borderTopColor:o?"#fff":"var(--color-primary)",borderRadius:"50%",animation:"spin .7s linear infinite"}})}export{e as S};
