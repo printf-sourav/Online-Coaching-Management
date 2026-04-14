@@ -12,7 +12,7 @@ import User from "../models/User.model.js";
 
 // ── DEFAULTS (override via env) ────────────────────────────────────────────
 const NAME     = process.env.ADMIN_NAME     || "Super Admin";
-const EMAIL    = process.env.ADMIN_EMAIL    || "admin@edunova.com";
+const EMAIL    = process.env.ADMIN_EMAIL    || "admin@meritnook.com";
 const PASSWORD = process.env.ADMIN_PASSWORD || "Admin@1234";
 // ──────────────────────────────────────────────────────────────────────────
 

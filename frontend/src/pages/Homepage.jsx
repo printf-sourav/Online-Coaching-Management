@@ -194,7 +194,7 @@ export default function Homepage() {
         <Container>
           <Navbar.Brand as={Link} to="/">
             <div className="hp-logo-mark">E</div>
-            EduNova Academy
+            Merit Nook Academy
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="hp-navbar" />
           <Navbar.Collapse id="hp-navbar">
@@ -241,7 +241,7 @@ export default function Homepage() {
               </h1>
 
               <p className="hp-hero-desc" data-aos="fade-right" data-aos-delay="160">
-                EduNova offers live 1-to-1 online classes, small group sessions, and self-paced learning.
+                Merit Nook offers live 1-to-1 online classes, small group sessions, and self-paced learning.
                 Whether your child thrives with personal guidance or prefers to learn independently,
                 our platform adapts to their needs, helping them excel at their own pace.
               </p>
@@ -330,7 +330,7 @@ export default function Homepage() {
 
             <Col lg={7}>
               <div className="mb-4" data-aos="fade-left">
-                <div className="hp-section-tag" style={{ color: 'var(--color-accent)' }}>Why Choose EduNova?</div>
+                <div className="hp-section-tag" style={{ color: 'var(--color-accent)' }}>Why Choose Merit Nook?</div>
                 <h2 className="hp-section-title">
                   0% Worries About Your<br />Child's <span className="tg-accent">Learning</span>
                 </h2>
@@ -365,10 +365,10 @@ export default function Homepage() {
           <div className="text-center mb-4" data-aos="fade-up">
             <div className="hp-section-tag" style={{ color: 'var(--color-primary)' }}>Explore Our Programs</div>
             <h2 className="hp-section-title">
-              Explore How EduNova Fits<br />Your Child's <span className="tg-primary">Learning Style</span>
+              Explore How Merit Nook Fits<br />Your Child's <span className="tg-primary">Learning Style</span>
             </h2>
             <p className="hp-section-sub centered">
-              Whether your child thrives with direct guidance or prefers the freedom to explore concepts independently, EduNova offers the perfect learning experience.
+              Whether your child thrives with direct guidance or prefers the freedom to explore concepts independently, Merit Nook offers the perfect learning experience.
             </p>
           </div>
 
@@ -619,12 +619,12 @@ export default function Homepage() {
       <section className="hp-section">
         <Container>
           <div className="text-center mb-4" data-aos="fade-up">
-            <div className="hp-section-tag" style={{ color: 'var(--color-sky)' }}>Life at EduNova</div>
+            <div className="hp-section-tag" style={{ color: 'var(--color-sky)' }}>Life at Merit Nook</div>
             <h2 className="hp-section-title">
               A Glimpse Into Our <span className="tg-primary">Academy</span>
             </h2>
             <p className="hp-section-sub centered">
-              From interactive classrooms to happy students — see what makes EduNova special.
+              From interactive classrooms to happy students — see what makes Merit Nook special.
             </p>
           </div>
 
@@ -671,7 +671,7 @@ export default function Homepage() {
             </div>
 
             <h2>Ready to Start<br />Your Learning Journey?</h2>
-            <p>Book a free demo class and experience the EduNova difference firsthand. No commitments — just great learning.</p>
+            <p>Book a free demo class and experience the Merit Nook difference firsthand. No commitments — just great learning.</p>
 
             <div className="d-flex gap-3 justify-content-center flex-wrap mb-5">
               <RippleButton className="btn btn-lg hp-cta-btn-primary" onClick={() => navigate('/register')}>
@@ -707,7 +707,7 @@ export default function Homepage() {
             <Col lg={4} md={6}>
               <div className="d-flex align-items-center gap-3 mb-3">
                 <div className="hp-logo-mark" style={{ width: 36, height: 36, fontSize: '.95rem' }}>E</div>
-                <span style={{ fontWeight: 800, fontSize: '1.1rem' }}>EduNova Academy</span>
+                <span style={{ fontWeight: 800, fontSize: '1.1rem' }}>Merit Nook Academy</span>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '.88rem', lineHeight: 1.75, maxWidth: 320 }}>
                 Empowering students with concept clarity, logical thinking, and personalized attention since 2018. Building the next generation of thinkers and achievers.
@@ -748,7 +748,7 @@ export default function Homepage() {
             <Col lg={3} md={6}>
               <h5>Contact Us</h5>
               <div style={{ color: 'var(--text-secondary)', fontSize: '.85rem', lineHeight: 2.1 }}>
-                <div>📧 hello@edunova.academy</div>
+                <div>📧 hello@meritnook.academy</div>
                 <div>📞 +91 98765 43210</div>
                 <div>📍 Sector 15, Gurugram, India</div>
                 <div>🕐 Mon – Sat, 9 AM – 8 PM</div>
@@ -757,7 +757,7 @@ export default function Homepage() {
           </Row>
 
           <div className="hp-footer-bottom d-flex flex-wrap justify-content-between align-items-center">
-            <p>© {new Date().getFullYear()} EduNova Academy. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Merit Nook Academy. All rights reserved.</p>
             <div className="d-flex gap-3">
               <a href="#">Privacy Policy</a>
               <a href="#">Terms of Service</a>

@@ -58,7 +58,7 @@ export default function Login() {
           <div className="auth-header">
             <div className="auth-icon" style={{ background: 'var(--grad-primary)' }}>🎓</div>
             <h1 className="auth-title">
-              Welcome to <span className="tg-primary">EduNova</span>
+              Welcome to <span className="tg-primary">Merit Nook</span>
             </h1>
             <p className="auth-subtitle">Sign in to access your dashboard</p>
           </div>

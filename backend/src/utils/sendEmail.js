@@ -14,7 +14,7 @@ export const sendVerificationEmail = async (email, otp) => {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: "Verify Your Email - EduNova",
+    subject: "Verify Your Email - Merit Nook",
     html: `
       <div style="font-family: Arial; padding: 20px;">
         <h2>Email Verification</h2>
@@ -30,7 +30,7 @@ export const sendPasswordResetEmail = async (email, otp) => {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: "Reset Your Password - EduNova",
+    subject: "Reset Your Password - Merit Nook",
     html: `
       <div style="font-family: Arial; padding: 20px;">
         <h2>Password Reset Request</h2>
@@ -47,7 +47,7 @@ export const sendPaymentReceiptEmail = async (email, payment) => {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: email,
-    subject: "Payment Successful - EduNova",
+    subject: "Payment Successful - Merit Nook",
     html: `
       <h2>Payment Successful</h2>
       <p>Invoice Number: ${payment.invoiceNumber}</p>
@@ -75,7 +75,7 @@ export const sendAssignmentSubmissionEmail = async ({
     html: `
       <div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e5e7eb;border-radius:8px;">
         <h2 style="color:#7c5cfc;margin-bottom:4px;">New Assignment Submission</h2>
-        <p style="color:#6b7280;margin-top:0;">EduNova</p>
+        <p style="color:#6b7280;margin-top:0;">Merit Nook</p>
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0;" />
         <table style="width:100%;font-size:14px;color:#374151;border-collapse:collapse;">
           <tr><td style="padding:6px 0;font-weight:600;width:140px;">Assignment</td><td>${assignmentTitle}</td></tr>

@@ -23,11 +23,11 @@ const upload = multer({
 
 export default upload;
 
-// ── Avatar upload (images only → Cloudinary edunova_avatars) ───────────────
+// ── Avatar upload (images only → Cloudinary meritnook_avatars) ───────────────
 const avatarStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "edunova_avatars",
+    folder: "meritnook_avatars",
     resource_type: "image",
     allowed_formats: ["jpg", "jpeg", "png", "webp", "gif"],
     transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],

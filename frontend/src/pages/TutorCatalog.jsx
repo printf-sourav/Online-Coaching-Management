@@ -6,8 +6,25 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import RippleButton from '../components/RippleButton';
 import PlaceholderImage from '../components/PlaceholderImage';
+import meritLogo from '../../public/images/Gemini_Generated_Image_a212hia212hia212-Photoroom.png';
 
 const SUBJECTS = ['All', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'Computer Science', 'History & Civics', 'Economics'];
+const TUTOR_PAGE_STATE_KEY = 'meritnook-tutor-page-state';
+
+const TUTOR_ACCENTS = [
+  { line: '#7CC0B5', avatarGrad: 'linear-gradient(135deg,#93D7CD,#6FAEA7)', feeGrad: 'linear-gradient(135deg,#6FAEA7,#5A9B93)' },
+  { line: '#C59F68', avatarGrad: 'linear-gradient(135deg,#DAB882,#C59F68)', feeGrad: 'linear-gradient(135deg,#C59F68,#A98454)' },
+  { line: '#88B96F', avatarGrad: 'linear-gradient(135deg,#A6D289,#88B96F)', feeGrad: 'linear-gradient(135deg,#88B96F,#6F9F57)' },
+  { line: '#9684C1', avatarGrad: 'linear-gradient(135deg,#B09FD6,#9684C1)', feeGrad: 'linear-gradient(135deg,#9684C1,#7C6AA7)' },
+  { line: '#C98C9A', avatarGrad: 'linear-gradient(135deg,#DEA7B3,#C98C9A)', feeGrad: 'linear-gradient(135deg,#C98C9A,#AF7381)' },
+  { line: '#7B96C8', avatarGrad: 'linear-gradient(135deg,#9AB1DB,#7B96C8)', feeGrad: 'linear-gradient(135deg,#7B96C8,#607CAE)' },
+];
+
+function pickTutorAccent(tutor) {
+  const key = `${tutor?.subject || ''}-${tutor?.id || ''}`;
+  const hash = [...key].reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  return TUTOR_ACCENTS[hash % TUTOR_ACCENTS.length];
+}
 
 /* ── Star display ───────────────────────────────────────── */
 function Stars({ rating }) {
@@ -72,6 +89,7 @@ function TutorModal({ tutor, onClose, demosMap, refreshDemos, enrollmentsMap, re
   const demoInfo   = demosMap[String(tutor.id)];
   const demoBooked = !!demoInfo;
   const enrolled   = enrollmentsMap[String(tutor.id)];
+  const accent = pickTutorAccent(tutor);
 
   const bookDemo = async () => {
     if (!user) {
@@ -138,14 +156,14 @@ function TutorModal({ tutor, onClose, demosMap, refreshDemos, enrollmentsMap, re
         }}
       >
         {/* Hero strip */}
-        <div style={{ height: 8, background: tutor.color, borderRadius: '24px 24px 0 0' }} />
+        <div style={{ height: 8, background: accent.line, borderRadius: '24px 24px 0 0' }} />
 
         <div style={{ padding: 'clamp(16px,4vw,28px) clamp(16px,4vw,32px) 0' }}>
           {/* Header */}
           <div style={{ display: 'flex', gap: 18, alignItems: 'flex-start', marginBottom: 24 }}>
             <div
               className="avatar avatar-xl"
-              style={{ background: tutor.avatarGrad, color: '#fff', flexShrink: 0, fontSize: '1.4rem', fontWeight: 800, boxShadow: '0 4px 20px rgba(0,0,0,.2)', borderRadius: 18 }}
+              style={{ background: accent.avatarGrad, color: '#1C2216', flexShrink: 0, fontSize: '1.4rem', fontWeight: 900, boxShadow: '0 4px 20px rgba(0,0,0,.2)', borderRadius: 18 }}
             >
               {tutor.avatar}
             </div>
@@ -406,6 +424,7 @@ function TutorCard({ tutor, onOpen, demosMap, enrollmentsMap }) {
   const ref = useRef(null);
   const demoBooked = !!demosMap[String(tutor.id)];
   const enrolled = enrollmentsMap[String(tutor.id)];
+  const accent = pickTutorAccent(tutor);
 
   const onMove = useCallback((e) => {
     const el = ref.current;
@@ -424,20 +443,30 @@ function TutorCard({ tutor, onOpen, demosMap, enrollmentsMap }) {
   return (
     <div
       ref={ref}
-      className="glass spotlight"
+      className="spotlight"
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       data-aos="fade-up"
-      style={{ padding: 22, position: 'relative', overflow: 'hidden', transition: 'transform .18s ease, box-shadow .18s ease', cursor: 'default', borderRadius: 'var(--radius-lg)' }}
+      style={{
+        padding: 22,
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'transform .18s ease, box-shadow .18s ease',
+        cursor: 'default',
+        borderRadius: 18,
+        background: '#FFFFFF',
+        border: '3px solid #1C2216',
+        boxShadow: '7px 7px 0 #1C2216',
+      }}
     >
       <div className="spotlight-layer" />
 
       {/* color top strip */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: tutor.color, borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: accent.line, borderRadius: '18px 18px 0 0' }} />
 
       {enrolled && (
         <div style={{ position: 'absolute', top: 14, right: 14 }}>
-          <span className="badge bd-success" style={{ fontSize: '.65rem' }}>✓ {enrolled.status}</span>
+          <span className="badge bd-success" style={{ fontSize: '.65rem', border: '2px solid #1C2216', boxShadow: '2px 2px 0 #1C2216', background: '#D8ED92', color: '#1C2216' }}>✓ {enrolled.status}</span>
         </div>
       )}
 
@@ -454,17 +483,17 @@ function TutorCard({ tutor, onOpen, demosMap, enrollmentsMap }) {
       </div>
 
       <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 14, marginTop: 4 }}>
-        <div className="avatar avatar-lg" style={{ background: tutor.avatarGrad, color: '#fff', fontWeight: 800, fontSize: '1rem', borderRadius: 14, boxShadow: '0 4px 14px rgba(0,0,0,.15)', flexShrink: 0 }}>
+        <div className="avatar avatar-lg" style={{ background: accent.avatarGrad, color: '#1C2216', fontWeight: 900, fontSize: '1rem', borderRadius: 14, boxShadow: '0 4px 14px rgba(0,0,0,.15)', flexShrink: 0 }}>
           {tutor.avatar}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 700, fontSize: '.95rem', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tutor.name}</div>
           <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)', marginBottom: 4 }}>{tutor.subject}</div>
-          <span className={`badge ${tutor.badgeCls}`} style={{ fontSize: '.62rem' }}>{tutor.badge}</span>
+          <span className={`badge ${tutor.badgeCls}`} style={{ fontSize: '.62rem', border: '2px solid #1C2216', boxShadow: '2px 2px 0 #1C2216' }}>{tutor.badge}</span>
         </div>
       </div>
 
-      <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', marginBottom: 12, lineHeight: 1.5 }}>{tutor.speciality}</div>
+      <div style={{ fontSize: '.75rem', color: '#5E6D5D', marginBottom: 12, lineHeight: 1.5 }}>{tutor.speciality}</div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 6 }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.78rem' }}>
@@ -472,13 +501,13 @@ function TutorCard({ tutor, onOpen, demosMap, enrollmentsMap }) {
           <strong>{tutor.rating}</strong>
           <span style={{ color: 'var(--text-muted)' }}>({tutor.reviews})</span>
         </span>
-        <span style={{ fontSize: '.75rem', color: 'var(--text-secondary)' }}>⏳ {tutor.experience}</span>
+        <span style={{ fontSize: '.75rem', color: '#324030' }}>⏳ {tutor.experience}</span>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
           <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Monthly fee</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 800, background: tutor.color, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>Contact for details</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 800, background: accent.feeGrad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>Contact for details</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>STUDENTS</div>
@@ -493,7 +522,7 @@ function TutorCard({ tutor, onOpen, demosMap, enrollmentsMap }) {
           </span>
         </div>
       ) : (
-        <div style={{ fontSize: '.72rem', color: 'var(--color-accent)', fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
+        <div style={{ fontSize: '.72rem', color: '#C77D2A', fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 4 }}>
           🎁 Free 30-min demo available
         </div>
       )}
@@ -524,6 +553,51 @@ export default function TutorCatalog() {
   const [demosMap, setDemosMap] = useState({});
   // enrollmentsMap: { [tutorId]: enrollment }
   const [enrollmentsMap, setEnrollmentsMap] = useState({});
+
+  // Restore persisted tutors page state on first load
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(TUTOR_PAGE_STATE_KEY) || '{}');
+      if (saved.subject && SUBJECTS.includes(saved.subject)) setSubject(saved.subject);
+      if (typeof saved.search === 'string') setSearch(saved.search);
+      if (saved.sortBy === 'rating' || saved.sortBy === 'students') setSortBy(saved.sortBy);
+      if (typeof saved.scrollY === 'number' && saved.scrollY > 0) {
+        requestAnimationFrame(() => window.scrollTo({ top: saved.scrollY, behavior: 'auto' }));
+      }
+    } catch {
+      // ignore broken persisted state
+    }
+  }, []);
+
+  // Persist key UI state for reload continuity
+  useEffect(() => {
+    try {
+      const prev = JSON.parse(localStorage.getItem(TUTOR_PAGE_STATE_KEY) || '{}');
+      localStorage.setItem(TUTOR_PAGE_STATE_KEY, JSON.stringify({
+        ...prev,
+        subject,
+        search,
+        sortBy,
+        selectedTutorId: selected?.id ?? null,
+      }));
+    } catch {
+      // ignore storage errors
+    }
+  }, [subject, search, sortBy, selected]);
+
+  // Persist scroll position while browsing tutors
+  useEffect(() => {
+    const saveScroll = () => {
+      try {
+        const prev = JSON.parse(localStorage.getItem(TUTOR_PAGE_STATE_KEY) || '{}');
+        localStorage.setItem(TUTOR_PAGE_STATE_KEY, JSON.stringify({ ...prev, scrollY: window.scrollY }));
+      } catch {
+        // ignore storage errors
+      }
+    };
+    window.addEventListener('scroll', saveScroll, { passive: true });
+    return () => window.removeEventListener('scroll', saveScroll);
+  }, []);
 
   const refreshDemos = useCallback(async () => {
     if (!user) return;
@@ -559,12 +633,17 @@ export default function TutorCatalog() {
   useEffect(() => {
     if (loadingTutors) return;
     const openId = location.state?.openTutorId;
-    if (openId) {
-      const tutor = tutors.find(t => t.id === openId);
+    const saved = (() => {
+      try { return JSON.parse(localStorage.getItem(TUTOR_PAGE_STATE_KEY) || '{}'); }
+      catch { return {}; }
+    })();
+    const targetId = openId ?? saved.selectedTutorId;
+    if (targetId != null) {
+      const tutor = tutors.find(t => String(t.id) === String(targetId));
       if (tutor) setSelected(tutor);
-      window.history.replaceState({}, '');
     }
-  }, [loadingTutors]);
+    if (openId) window.history.replaceState({}, '');
+  }, [loadingTutors, tutors, location.state]);
 
   const filtered = tutors
     .filter(t => subject === 'All' || t.subject === subject)
@@ -576,71 +655,61 @@ export default function TutorCatalog() {
     });
 
   return (
-    <div className="bg-animated" style={{ minHeight: '100vh', position: 'relative' }}>
-      <div className="mesh-bg" />
+    <div data-theme="light" style={{ minHeight: '100vh', position: 'relative', background: '#F4F8F4', color: '#1C2216', overflowX: 'clip' }}>
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.16, backgroundImage: `radial-gradient(circle,rgba(146, 169, 255, 0.32) 1px,transparent 1px)`, backgroundSize: '36px 36px' }} />
 
       {/* NAV */}
       <nav style={{
-        position: 'sticky', top: 0, zIndex: 100,
-        background: 'var(--topbar-bg)', backdropFilter: 'blur(24px)',
-        borderBottom: '1px solid var(--color-border)',
-        padding: '0 40px', height: 64,
+        position: 'sticky', top: 0, zIndex: 120,
+        background: '#F4F8F4', backdropFilter: 'blur(20px)',
+        borderBottom: '3px solid #1C2216',
+        padding: '0 clamp(16px,5vw,80px)', height: 80,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '.95rem', color: '#fff', boxShadow: '0 4px 14px rgba(124,92,252,.4)' }}>E</div>
-            <span style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-.01em' }}>EduNova</span>
+            <img src={meritLogo} alt="Merit Nook logo" style={{ width: 88, height: 58, objectFit: 'contain', objectPosition: 'left center' }} />
+            <span style={{ fontWeight: 900, fontSize: '1.65rem', letterSpacing: '-.02em', color: '#1C2216' }}>Merit Nook</span>
           </Link>
-          <span style={{ color: 'var(--text-muted)', fontSize: '1.2rem', fontWeight: 300 }}>/</span>
-          <span style={{ fontWeight: 600, fontSize: '.9rem', color: 'var(--text-secondary)' }}>Tutors</span>
+          <span style={{ color: '#5E6D5D', fontSize: '1.2rem', fontWeight: 300 }}>/</span>
+          <span style={{ fontWeight: 700, fontSize: '.9rem', color: '#40556B' }}>Tutors</span>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <button
-            className="theme-toggle"
-            onClick={toggle}
-            aria-label="Toggle theme"
-          >
-            <div className={`toggle-track ${isDark ? 'toggle-track-dark' : 'toggle-track-light'}`}>
-              <div className={`toggle-thumb ${isDark ? 'toggle-thumb-dark' : 'toggle-thumb-light'}`}>
-                <span style={{ fontSize: '.85rem', lineHeight: 1 }}>{isDark ? '🌙' : '☀️'}</span>
-              </div>
-            </div>
-          </button>
-          <Link to="/login"><RippleButton className="btn btn-primary btn-sm">Login</RippleButton></Link>
+          <Link to="/login"><RippleButton className="btn btn-sm" style={{ background: '#FFFFFF', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '3px 3px 0 #1C2216' }}>Login</RippleButton></Link>
+          <Link to="/register"><RippleButton className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#D8ED92,#F7B32B)', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '3px 3px 0 #1C2216' }}>Book FREE Trial</RippleButton></Link>
         </div>
       </nav>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '40px 32px', position: 'relative', zIndex: 1 }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(30px,4vw,48px) clamp(16px,4vw,32px)', position: 'relative', zIndex: 1 }}>
 
         {/* Header */}
-        <div data-aos="fade-up" style={{ marginBottom: 36, textAlign: 'center' }}>
-          <div style={{ fontSize: '.78rem', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--color-primary)', marginBottom: 10 }}>Expert Instructors</div>
-          <h1 style={{ fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 900, letterSpacing: '-.03em', marginBottom: 14 }}>
-            Find Your Perfect <span className="tg-primary">Tutor</span>
+        <div data-aos="fade-up" style={{ marginBottom: 30, textAlign: 'center', background: '#FFFFFF', border: '3px solid #1C2216', boxShadow: '6px 6px 0 #1C2216', borderRadius: 22, padding: 'clamp(18px,3vw,28px)' }}>
+          <div style={{ fontSize: '.78rem', fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: '#1B9E9E', marginBottom: 10 }}>Expert Instructors</div>
+          <h1 style={{ fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 900, letterSpacing: '-.03em', marginBottom: 10, color: '#1C2216' }}>
+            Find Your Perfect <span style={{ color: '#2CCBCA' }}>Tutor</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '.975rem', maxWidth: 540, margin: '0 auto' }}>
-            Browse expert tutors, compare plans, and book a free demo class — no card required.
+          <p style={{ color: '#324030', fontSize: '.975rem', maxWidth: 620, margin: '0 auto' }}>
+            Browse expert tutors, compare plans, and book a free demo class with personalized guidance.
           </p>
         </div>
 
         {/* Search + sort */}
         <div data-aos="fade-up" data-aos-delay="80" style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: 220, position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '1rem' }}>🔍</span>
+            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#5E6D5D', fontSize: '1rem' }}>🔍</span>
             <input
               className="form-input"
               placeholder="Search by name, subject or topic…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ paddingLeft: 40, borderRadius: 'var(--radius-md)' }}
+              style={{ paddingLeft: 40, borderRadius: 12, border: '3px solid #1C2216', boxShadow: '4px 4px 0 #1C2216', background: '#FFFFFF' }}
             />
           </div>
           <select
             className="form-input form-select"
             value={sortBy}
             onChange={e => setSortBy(e.target.value)}
-            style={{ width: 200 }}
+            style={{ width: 220, borderRadius: 12, border: '3px solid #1C2216', boxShadow: '4px 4px 0 #1C2216', background: '#FFFFFF' }}
           >
             <option value="rating">Sort: Top Rated</option>
             <option value="students">Sort: Most Students</option>
@@ -653,7 +722,13 @@ export default function TutorCatalog() {
             <button
               key={s}
               onClick={() => setSubject(s)}
-              className={`btn btn-sm ${subject === s ? 'btn-primary' : 'btn-ghost'}`}
+              className="btn btn-sm"
+              style={{
+                background: subject === s ? '#2CCBCA' : '#FFFFFF',
+                color: '#1C2216',
+                border: '3px solid #1C2216',
+                boxShadow: '3px 3px 0 #1C2216',
+              }}
             >
               {s}
             </button>

@@ -5,7 +5,7 @@ import {
   apiForgotPassword, apiResetPassword, apiUpdateProfile,
 } from '../api';
 
-const AUTH_KEY = 'edunova-user';
+const AUTH_KEY = 'meritnook-user';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {

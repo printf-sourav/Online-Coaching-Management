@@ -77,7 +77,7 @@ export default function AdminLogin() {
               🛡️
             </div>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-.02em', marginBottom: 6 }}>
-              <span className="tg-primary">EduNova</span> Admin
+              <span className="tg-primary">Merit Nook</span> Admin
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '.85rem', lineHeight: 1.5 }}>
               Restricted access — authorized personnel only
@@ -103,7 +103,7 @@ export default function AdminLogin() {
               <label className="form-label">Admin Email</label>
               <input
                 type="email" className="form-input"
-                placeholder="admin@edunova.in"
+                placeholder="admin@meritnook.in"
                 value={creds.email}
                 onChange={e => setCreds(p => ({ ...p, email: e.target.value }))}
                 autoComplete="email"

@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext';
+import meritLogo from '../../public/images/Gemini_Generated_Image_a212hia212hia212-Photoroom.png';
 
 /* ── Lucide-style inline SVG icons (no dependency needed) ─── */
 const I = {
@@ -21,7 +22,6 @@ const I = {
   plus:      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>,
   mega:      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>,
   settings:  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
-  logout:    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>,
 };
 
 const navItems = {
@@ -62,11 +62,8 @@ const navItems = {
   ],
 };
 
-const roleLabels = { student: 'Student Portal', teacher: 'Teacher Portal', parent: 'Parent Portal', admin: 'Admin Panel' };
-const rolePills   = { student: 'bd-primary', teacher: 'bd-accent', parent: 'bd-rose', admin: 'bd-rose' };
-
 export default function Sidebar({ active, onNav, open, onClose }) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   if (!user) return null;
 
   const items = navItems[user.role] || [];
@@ -78,19 +75,11 @@ export default function Sidebar({ active, onNav, open, onClose }) {
 
       <aside className={`sidebar${open ? ' sidebar-open' : ''}`}>
       <div className="sidebar-logo">
-        <div className="sidebar-logo-mark">E</div>
+        <img src={meritLogo} alt="Merit Nook logo" style={{ width: 40, height: 40, objectFit: 'contain' }} />
         <div>
-          <div className="sidebar-logo-text">EduNova</div>
-          <div style={{ fontSize: '.68rem', color: 'var(--text-muted)', marginTop: '1px' }}>
-            {roleLabels[user.role]}
-          </div>
+          <div className="sidebar-logo-text">Merit Nook</div>
+          <div style={{ fontSize: '.68rem', color: 'var(--text-muted)', marginTop: '1px' }}>Academic workspace</div>
         </div>
-      </div>
-
-      <div style={{ padding: '0 16px 10px' }}>
-        <span className={`badge ${rolePills[user.role]}`} style={{ fontSize: '.65rem' }}>
-          {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-        </span>
       </div>
 
       <nav className="sidebar-nav">
@@ -107,24 +96,7 @@ export default function Sidebar({ active, onNav, open, onClose }) {
         ))}
       </nav>
 
-      <div className="sidebar-bottom">
-        <div className="sidebar-user">
-          <div className="avatar" style={{ background: user.avatarGrad, color: '#fff' }}>
-            {user.avatar}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 600, fontSize: '.85rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {user.name}
-            </div>
-            <div style={{ fontSize: '.72rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {user.email}
-            </div>
-          </div>
-          <button onClick={logout} title="Logout" className="logout-btn">
-            {I.logout}
-          </button>
-        </div>
-      </div>
+      <div className="sidebar-bottom" />
     </aside>
     </>
   );

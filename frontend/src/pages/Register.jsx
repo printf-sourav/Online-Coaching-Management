@@ -55,7 +55,7 @@ export default function Register() {
     setLoading(true);
     try {
       await verifyOTP(form.email.trim(), otp);
-      toast.success(`Welcome to EduNova, ${form.name.split(' ')[0]}! 🎉`);
+      toast.success(`Welcome to Merit Nook, ${form.name.split(' ')[0]}! 🎉`);
       navigate('/login', { state: { registered: true } });
     } catch (err) {
       setError(err.message || 'Invalid or expired OTP.');
@@ -103,7 +103,7 @@ export default function Register() {
               {step === 1 ? '🎓' : '✉️'}
             </div>
             <h1 className="auth-title">
-              {step === 1 ? <>Join <span className="tg-primary">EduNova</span></> : 'Verify your Email'}
+              {step === 1 ? <>Join <span className="tg-primary">Merit Nook</span></> : 'Verify your Email'}
             </h1>
             <p className="auth-subtitle">
               {step === 1

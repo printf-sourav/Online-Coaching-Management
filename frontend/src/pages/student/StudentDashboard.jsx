@@ -207,7 +207,7 @@ export default function StudentDashboard() {
           key,
           amount,
           currency: 'INR',
-          name: 'EduNova',
+          name: 'Merit Nook',
           description: `Monthly fee – ${invoice.month}`,
           order_id: orderId,
           handler: async (response) => {
@@ -245,7 +245,7 @@ export default function StudentDashboard() {
       await new Promise((resolve, reject) => {
         const rzp = new window.Razorpay({
           key, amount, currency: 'INR',
-          name: 'EduNova',
+          name: 'Merit Nook',
           description: `Enrollment – ${tutorObj?.name ?? 'Tutor'}`,
           order_id: orderId,
           handler: async (response) => {
@@ -286,7 +286,7 @@ export default function StudentDashboard() {
       await new Promise((resolve, reject) => {
         const rzp = new window.Razorpay({
           key, amount, currency: 'INR',
-          name: 'EduNova',
+          name: 'Merit Nook',
           description: fee.description || 'Fee Payment',
           order_id: orderId,
           handler: async (response) => {
@@ -1078,7 +1078,7 @@ export default function StudentDashboard() {
             <div className="glass card ani-up">
               <div className="section-title">🌟 Rate Our Platform</div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '.88rem', marginBottom: 16, lineHeight: 1.6 }}>
-                Tell us about your overall experience with EduNova. Your feedback helps us improve!
+                Tell us about your overall experience with Merit Nook. Your feedback helps us improve!
               </p>
 
               {platformSubmitted ? (
@@ -1466,7 +1466,7 @@ export default function StudentDashboard() {
     topics:     { title: 'Topics Covered',       sub: 'Lessons and teacher notes from recent classes.' },
     assignments:{ title: 'Assignments',          sub: 'Pending, submitted, and graded work.' },
     feedback:   { title: 'Feedback',             sub: 'Rate your teachers and classes.' },
-    'rate-platform': { title: 'Rate Platform',   sub: 'Share your overall experience with EduNova.' },
+    'rate-platform': { title: 'Rate Platform',   sub: 'Share your overall experience with Merit Nook.' },
     tutors:     { title: 'My Tutors',            sub: 'Your enrolled tutors, plans, and demo class status.' },
     updates:    { title: 'Teacher Updates',      sub: 'Latest notes and observations from your teachers.' },
     fees:       { title: 'Fee Payment',          sub: 'View fees set by admin, pay online, and track your payment history.' },

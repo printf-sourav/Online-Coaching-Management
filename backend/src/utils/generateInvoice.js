@@ -11,7 +11,7 @@ export const generateInvoicePDF = (payment, res) => {
 
   doc.pipe(res);
 
-  doc.fontSize(20).text("EduNova Invoice", { align: "center" });
+  doc.fontSize(20).text("Merit Nook Invoice", { align: "center" });
   doc.moveDown();
 
   doc.fontSize(12).text(`Invoice Number: ${payment.invoiceNumber}`);

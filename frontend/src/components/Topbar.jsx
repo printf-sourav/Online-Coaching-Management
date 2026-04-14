@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import toast from 'react-hot-toast';
@@ -18,7 +19,8 @@ const AVATAR_GRADS = [
 ];
 
 export default function Topbar({ title, subtitle, onMenuClick }) {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
+  const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
   const [scrollPct, setScrollPct] = useState(0);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -258,7 +260,6 @@ export default function Topbar({ title, subtitle, onMenuClick }) {
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.9rem' }}>{user?.name || 'User'}</div>
                     <div style={{ fontSize: '.75rem', color: 'var(--text-secondary)', marginTop: 2 }}>{user?.email || ''}</div>
-                    <span className="badge bd-primary" style={{ marginTop: 6, fontSize: '.65rem' }}>{user?.role || 'student'}</span>
                   </div>
                 </div>
 
@@ -267,7 +268,20 @@ export default function Topbar({ title, subtitle, onMenuClick }) {
                 <button className="profile-dropdown-item" onClick={() => { setProfileOpen(false); setProfileModal(true); }}>
                   <span>✏️</span> Edit Profile
                 </button>
-                <button className="profile-dropdown-item" style={{ color: 'var(--color-rose)' }} onClick={() => { setProfileOpen(false); /* handled by sidebar logout */ }}>
+                <button
+                  className="profile-dropdown-item"
+                  style={{ color: 'var(--color-rose)' }}
+                  onClick={async () => {
+                    setProfileOpen(false);
+                    try {
+                      await logout();
+                      toast.success('Signed out successfully');
+                    } catch {
+                      // ignore, logout already clears local user state
+                    }
+                    navigate('/login');
+                  }}
+                >
                   <span>🚪</span> Sign Out
                 </button>
               </div>

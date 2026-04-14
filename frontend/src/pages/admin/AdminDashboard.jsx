@@ -1910,8 +1910,8 @@ export default function AdminDashboard() {
               <div className="section-title">⚙️ Platform Configuration</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {[
-                  { label: 'Platform Name', value: 'EduNova', type: 'text' },
-                  { label: 'Support Email', value: 'support@edunova.in', type: 'email' },
+                  { label: 'Platform Name', value: 'Merit Nook', type: 'text' },
+                  { label: 'Support Email', value: 'support@meritnook.in', type: 'email' },
                   { label: 'Max Students per Class', value: '30', type: 'number' },
                   { label: 'Default Class Duration', value: '55', type: 'number' },
                 ].map((field, i) => (
@@ -1976,7 +1976,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="form-group" style={{ flex: 1, minWidth: 200 }}>
                     <label className="form-label">Email Address *</label>
-                    <input type="email" className="form-input" placeholder="teacher@edunova.in" value={teacherForm.email} onChange={e => tSet('email', e.target.value)} />
+                    <input type="email" className="form-input" placeholder="teacher@meritnook.in" value={teacherForm.email} onChange={e => tSet('email', e.target.value)} />
                   </div>
                 </div>
 
