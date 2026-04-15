@@ -65,6 +65,7 @@ export default function Landing() {
   const [tutors, setTutors]   = useState([]);
   const [openFaq, setOpenFaq] = useState(null);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [selectedStudyTab, setSelectedStudyTab] = useState(0);
   
   // Ref and state for scroll-linked orbit
   const orbitRef = useRef(null);
@@ -126,8 +127,8 @@ export default function Landing() {
   const orbitFloatingNotes = [
     { label: 'Demo classes', value: 'Live', icon: '📹', tint: '#D8ED92', pos: { top: '8%', left: '20%' } },
     { label: 'Assignments', value: 'Checked', icon: '📝', tint: '#97B8D0', pos: { top: '14%', right: '18%' } },
-    { label: 'Attendance', value: 'Tracked', icon: '✅', tint: '#7FA97B', pos: { bottom: '18%', left: '14%' } },
-    { label: 'Parent updates', value: 'Weekly', icon: '📣', tint: '#C98C9A', pos: { bottom: '16%', right: '16%' } },
+    { label: 'Attendance', value: 'Tracked', icon: '✅', tint: '#7FA97B', pos: { bottom: '10%', left: '30%' } },
+    { label: 'Parent updates', value: 'Weekly', icon: '📣', tint: '#C98C9A', pos: { bottom: '12%', right: '28%' } },
     { label: 'Fee status', value: 'On time', icon: '💳', tint: '#C59F68', pos: { top: '50%', left: '8%' } },
     { label: 'Tutor match', value: 'Fast', icon: '🎯', tint: '#88B96F', pos: { top: '46%', right: '10%' } },
   ];
@@ -316,33 +317,69 @@ export default function Landing() {
                 position: 'absolute',
                 left: 'clamp(16px,6vw,96px)',
                 top: 'clamp(18px, 4vh, 56px)',
-                width: 'min(620px, calc(100vw - 32px))',
+                width: 'min(1100px, calc(100vw - 32px))',
                 background: ORBIT_CARD_BG,
                 border: '3px solid #1C2216',
                 boxShadow: '8px 8px 0 #1C2216',
                 padding: 'clamp(26px,4vw,46px)',
-                borderRadius: 24,
+                borderRadius: 32,
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 40,
                 textAlign: 'left',
                 pointerEvents: 'auto',
               }}>
-                <h1 style={{ fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }}>
-                  Personalized Online Tutoring for Every Child to Reach Their Full Potential
-                </h1>
-                <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 0, maxWidth: 560 }}>
-                  Personalized live classes designed to build strong concepts, improve logical thinking, and track real progress — with regular feedback for parents.
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 28 }}>
-                  <div style={{ display: 'flex' }}>
-                    <img src="https://i.pravatar.cc/100?img=12" alt="Student" style={{ width: 44, height: 44, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', zIndex: 3 }} />
-                    <img src="https://i.pravatar.cc/100?img=32" alt="Student" style={{ width: 44, height: 44, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', marginLeft: -12, zIndex: 2 }} />
-                    <img src="https://i.pravatar.cc/100?img=47" alt="Student" style={{ width: 44, height: 44, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', marginLeft: -12, zIndex: 1 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                    <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Math, English & Coding</span>
+                    <span style={{ background: '#EAB308', padding: '4px 12px', borderRadius: 20, fontSize: '0.85rem', fontWeight: 800, border: '2px solid #1C2216' }}>Pre-K</span>
+                    <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>to</span>
+                    <span style={{ background: '#EAB308', padding: '4px 12px', borderRadius: 20, fontSize: '0.85rem', fontWeight: 800, border: '2px solid #1C2216' }}>Grade 12</span>
                   </div>
-                  <div style={{ fontSize: '.95rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                    Joined by <span style={{ color: '#EAB308', WebkitTextStroke: '1px #1C2216' }}>50K+</span> Happy Learners
+                  
+                  <h1 style={{ fontSize: 'clamp(2.5rem,4.5vw,4rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }}>
+                    Personalized Online Tutoring for Every Child to Reach Their Full Potential
+                  </h1>
+                  <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32, maxWidth: 640 }}>
+                    Personalized live classes designed to build strong concepts, improve logical thinking, and track real progress — with regular feedback for parents.
+                  </p>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <button
+                      className="hover-lift"
+                      style={{
+                        padding: '14px 32px',
+                        borderRadius: 30,
+                        border: 'none',
+                        background: 'var(--color-primary)',
+                        color: '#1C2216',
+                        fontWeight: 800,
+                        fontSize: '1rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onClick={() => navigate('/register')}
+                    >
+                      Parents, Start FREE Trial
+                    </button>
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 16 }}>
+                      <div style={{ display: 'flex' }}>
+                        <img src="https://i.pravatar.cc/100?img=12" alt="Student" style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', zIndex: 3 }} />
+                        <img src="https://i.pravatar.cc/100?img=32" alt="Student" style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', marginLeft: -12, zIndex: 2 }} />
+                        <img src="https://i.pravatar.cc/100?img=47" alt="Student" style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', marginLeft: -12, zIndex: 1 }} />
+                      </div>
+                      <div style={{ fontSize: '.85rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+                        Joined by<br/><span style={{ color: '#EAB308', WebkitTextStroke: '1px #1C2216' }}>50K+</span> Learners
+                      </div>
+                    </div>
                   </div>
+                </div>
+                
+                {/* Right side image placeholder similar to the reference */}
+                <div style={{ flex: '0 0 35%', display: 'none', '@media (min-width: 900px)': { display: 'block' } }}>
+                  <img src="https://images.unsplash.com/photo-1555519391-44ab06ecdc91?w=600&auto=format&fit=crop&q=80" alt="Happy student" style={{ width: '100%', height: 'auto', borderRadius: 24, border: '3px solid #1C2216', transform: 'rotate(2deg)', boxShadow: '6px 6px 0px 0px #1C2216' }} />
                 </div>
               </div>
             ) : scrollProgress < 0.2 ? (
@@ -561,25 +598,67 @@ export default function Landing() {
       <section style={{ ...S, background: '#D8ED92', borderBottom: '3px solid #1C2216' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vw,60px)' }}>
-            <h2 style={{ fontSize: 'clamp(1.7rem,3.5vw,2.8rem)', fontWeight: 900, letterSpacing: '-.02em', color: 'var(--text-primary)', marginBottom: 12 }}>
-              What Really{' '}
-              <span style={{ background: 'var(--color-primary)', border: '2px solid #1C2216', padding: '2px 10px', borderRadius: 6, display: 'inline-block', transform: 'rotate(-2deg)', color: '#1C2216', marginLeft: 8 }}>Sets Us Apart</span>
+            <h2 style={{ fontSize: 'clamp(1.7rem,3.5vw,2.8rem)', fontWeight: 900, letterSpacing: '-.02em', color: 'var(--text-primary)', marginBottom: 16 }}>
+              Find the Right{' '}
+              <span style={{ background: 'var(--color-primary)', border: '2px solid #1C2216', padding: '2px 10px', borderRadius: 6, display: 'inline-block', transform: 'rotate(-2deg)', color: '#1C2216', marginLeft: 8 }}>Learning Style</span>
+              {' '}for Your Child
             </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: 740, margin: '0 auto', lineHeight: 1.6 }}>
+              Whether your child needs personal attention, enjoys learning in small groups, or prefers to learn at their own pace, we offer flexible options to support every learning style.
+            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 18 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 40 }}>
+            {setApart.map((tab, idx) => {
+              const isActive = selectedStudyTab === idx;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedStudyTab(idx)}
+                  className="hover-lift"
+                  style={{
+                    padding: '12px 24px',
+                    borderRadius: 30,
+                    border: '2px solid #1C2216',
+                    background: isActive ? 'var(--color-primary)' : 'var(--color-surface)',
+                    color: isActive ? '#1C2216' : 'var(--text-primary)',
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isActive ? '3px 3px 0px 0px #1C2216' : 'none'
+                  }}
+                >
+                  {tab.title}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="neon-box-accent" style={{ ...card({ borderRadius: 24, border: 'none', padding: 0 }), overflow: 'hidden' }}>
             {setApart.map((item, i) => (
-              <TiltCard key={i} className="neon-box" style={{ ...card({ borderRadius: 18, border: 'none' }) }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center', textAlign: 'center' }}>
-                  {item.img && (
-                    <img src={item.img} alt={item.title} style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: '12px', border: '2px solid #1C2216' }} />
-                  )}
-                  <div>
-                    <h3 style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: 6, color: 'var(--text-primary)' }}>{item.title}</h3>
-                    <p style={{ fontSize: '.9rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
-                  </div>
+              <div
+                key={i}
+                style={{
+                  display: selectedStudyTab === i ? 'flex' : 'none',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap'
+                }}
+              >
+                <div style={{ flex: '1 1 300px', padding: 'clamp(24px, 5vw, 48px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <h3 style={{ fontWeight: 800, fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', marginBottom: 16, color: 'var(--text-primary)' }}>{item.title}</h3>
+                  <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
                 </div>
-              </TiltCard>
+                {item.img && (
+                  <div style={{ flex: '1 1 300px', minHeight: 320 }}>
+                    <img 
+                      src={item.img} 
+                      alt={item.title} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
