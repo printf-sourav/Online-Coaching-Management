@@ -165,9 +165,9 @@ export default function Landing() {
   ];
 
   const setApart = [
-    { title: 'One-to-One Learning', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=80', color: PURPLE, desc: 'Live personalized classes with expert tutors. Your child receives complete attention with lessons tailored to their level, pace, and learning style. This ensures better understanding, faster improvement, and strong confidence in every concept.' },
-    { title: 'Small Group Learning', img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80', color: BLUE, desc: 'Interactive learning in small groups of 3–5 students. Students learn together in a focused and engaging environment, where they can share ideas, ask questions, and stay motivated — while still receiving individual attention from the tutor.' },
-    { title: 'Self-Paced Learning', img: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&auto=format&fit=crop&q=80', color: ORANGE, desc: 'Flexible, interactive learning at your own pace. Perfect for independent learners, this mode offers structured lessons and practice material that students can access anytime, anywhere, allowing them to learn comfortably at their own speed.' },
+    { title: 'One-to-One Learning', vid: import.meta.env.BASE_URL + 'videos/Generating_a_Moving_Video_From_Picture.mp4', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=80', color: PURPLE, desc: 'Live personalized classes with expert tutors. Your child receives complete attention with lessons tailored to their level, pace, and learning style. This ensures better understanding, faster improvement, and strong confidence in every concept.' },
+    { title: 'Small Group Learning', vid: import.meta.env.BASE_URL + 'videos/PixVerse_V5-fast_Image_Text_720P_create_a_3_se.mp4?v=2', img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&auto=format&fit=crop&q=80', color: BLUE, desc: 'Interactive learning in small groups of 3–5 students. Students learn together in a focused and engaging environment, where they can share ideas, ask questions, and stay motivated — while still receiving individual attention from the tutor.' },
+    { title: 'Self-Paced Learning', vid: import.meta.env.BASE_URL + 'videos/PixVerse_V5-fast_Image_Text_720P_create_a_3_se(1).mp4', img: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&auto=format&fit=crop&q=80', color: ORANGE, desc: 'Flexible, interactive learning at your own pace. Perfect for independent learners, this mode offers structured lessons and practice material that students can access anytime, anywhere, allowing them to learn comfortably at their own speed.' },
   ];
 
   const faqs = [
@@ -213,13 +213,13 @@ export default function Landing() {
       }}>
 
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'clamp(260px, 23vw, 340px)' }} onClick={() => navigate('/')}>
+        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'clamp(364px, 32vw, 476px)' }} onClick={() => navigate('/')}>
           <img
             src={meritLogo}
             alt="Merit Nook logo"
             style={{
               width: '100%',
-              height: 96,
+              height: 134,
               objectFit: 'contain',
               objectPosition: 'left center',
               filter: 'drop-shadow(0 4px 6px rgba(0,0,0,.08))',
@@ -338,11 +338,12 @@ export default function Landing() {
                     <span style={{ background: '#EAB308', padding: '4px 12px', borderRadius: 20, fontSize: '0.85rem', fontWeight: 800, border: '2px solid #1C2216' }}>Grade 12</span>
                   </div>
                   
-                  <h1 style={{ fontSize: 'clamp(2.5rem,4.5vw,4rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }}>
-                    Personalized Online Tutoring for Every Child to Reach Their Full Potential
+                  <h1 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.8rem)', fontWeight: 900, letterSpacing: '-.03em', lineHeight: 1.1, marginBottom: 22, color: 'var(--text-primary)' }}>
+                    Personalized Online Tutoring for Every Child to Reach Their{' '}
+                    <span style={{ background: 'var(--color-accent)', border: '2px solid #1C2216', padding: '2px 10px', borderRadius: 6, display: 'inline-block', transform: 'rotate(-1.5deg)', color: '#1C2216', marginTop: 4 }}>Full Potential</span>
                   </h1>
-                  <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32, maxWidth: 640 }}>
-                    Personalized live classes designed to build strong concepts, improve logical thinking, and track real progress — with regular feedback for parents.
+                  <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32, maxWidth: 640 }}>
+                    Personalized live classes designed to build strong concepts, improve logical thinking, and track real progress — with regular feedback for parents. Our expert educators tailor each interactive session to your child's unique learning pace, ensuring academic excellence, boosted confidence, and a lifelong love for learning.
                   </p>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -649,15 +650,28 @@ export default function Landing() {
                   <h3 style={{ fontWeight: 800, fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', marginBottom: 16, color: 'var(--text-primary)' }}>{item.title}</h3>
                   <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
                 </div>
-                {item.img && (
-                  <div style={{ flex: '1 1 300px', minHeight: 320 }}>
+                {item.vid ? (
+                  <div style={{ flex: '1 1 300px', minHeight: 450, position: 'relative', overflow: 'hidden' }}>
+                    <video
+                      src={item.vid}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      onTimeUpdate={(e) => { if (e.target.currentTime >= 3) e.target.currentTime = 0; }}
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.2)' }}
+                      onLoadedData={(e) => { e.target.play().catch(() => {}); }}
+                    />
+                  </div>
+                ) : item.img ? (
+                  <div style={{ flex: '1 1 300px', minHeight: 450, position: 'relative', overflow: 'hidden' }}>
                     <img 
                       src={item.img} 
                       alt={item.title} 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                     />
                   </div>
-                )}
+                ) : null}
               </div>
             ))}
           </div>
@@ -928,13 +942,12 @@ export default function Landing() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 44, marginBottom: 52 }}>
             {/* Brand */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
                 <img
                   src={meritLogo}
                   alt="Merit Nook logo"
-                  style={{ width: 36, height: 36, objectFit: 'contain' }}
+                  style={{ width: '100%', maxWidth: 220, height: 80, objectFit: 'contain', objectPosition: 'left center' }}
                 />
-                <span style={{ fontWeight: 800, fontSize: '1.15rem', color: '#1C2216' }}>Merit Nook</span>
               </div>
               <p style={{ fontSize: '.82rem', lineHeight: 1.75, maxWidth: 240, marginBottom: 22 }}>
                 1:1 live online tutoring for students in Grades 1–12. Real attention. Clear progress. Real results.

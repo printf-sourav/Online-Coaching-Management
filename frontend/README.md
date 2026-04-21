@@ -1,17 +1,59 @@
-# React + Vite
+<div align="center">
+  <h1>🚀 Merit Nook Online Coaching - Frontend</h1>
+  <p>
+    <strong>A next-generation platform for 1-to-1, group, and self-paced online learning.</strong>
+  </p>
+  <p>
+    <a href="https://printf-sourav.github.io/Online-Coaching-Management"><strong>✨ View Live Demo ✨</strong></a>
+  </p>
+  
+  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
+  [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](#)
+  [![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)](#)
+  [![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](#)
+</div>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🌟 About the Project
+Merit Nook Online Coaching Management is a sophisticated platform focused on improving the tutoring experience for kids and parents. It offers features tailored for:
+* **Personalized 1-to-1 Learning**
+* **Small Group Learnings** 
+* **Self-Paced Video Progressions**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔗 Live Preview
+The frontend application is proudly hosted on **GitHub Pages**.
+👉 **[Access the Frontend Application here](https://printf-sourav.github.io/Online-Coaching-Management)**
 
-## React Compiler
+## 🛠️ Built With
+- **[React 19](https://react.dev/)** - Component-based UI methodology
+- **[Vite](https://vitejs.dev/)** - Lightning fast bundler and dev server
+- **[Bootstrap](https://getbootstrap.com/)** - Responsive CSS layout
+- **[Chart.js](https://www.chartjs.org/)** - For dynamic data tracking / visualizations
+- **[Lucide React](https://lucide.dev/)** - Beautifully crafted icons
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Getting Started
 
-## Expanding the ESLint configuration
+### Local Setup
+1. Clone the repository and navigate to the `frontend` folder:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:5173` to view the project in the browser.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# Online_Coaching_frontend
+### Deployment 🌐
+This project is configured to easily deploy to GitHub Pages:
+```bash
+npm run deploy
+```
+
+---
+*Created with ❤️ for better educational environments.*
