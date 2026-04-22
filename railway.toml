@@ -1,0 +1,17 @@
+[build]
+builder = "nixpacks"
+
+[build.buildpacks]
+pkgManager = "npm"
+
+[[services]]
+name = "backend"
+root = "backend"
+buildCommand = "npm install"
+startCommand = "npm start"
+
+[[services]]
+name = "frontend"
+root = "frontend"
+buildCommand = "npm run build"
+startCommand = "npm run preview"
