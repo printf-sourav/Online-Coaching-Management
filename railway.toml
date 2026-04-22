@@ -1,17 +1,7 @@
 [build]
-builder = "nixpacks"
+builder = "NIXPACKS"
 
-[build.buildpacks]
-pkgManager = "npm"
-
-[[services]]
-name = "backend"
-root = "backend"
-buildCommand = "npm install"
-startCommand = "npm start"
-
-[[services]]
-name = "frontend"
-root = "frontend"
-buildCommand = "npm run build"
-startCommand = "npm run preview"
+[deploy]
+startCommand = "cd backend && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
