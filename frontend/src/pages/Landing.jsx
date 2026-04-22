@@ -4,7 +4,7 @@ import RippleButton from '../components/RippleButton';
 import { fetchTutors } from '../api';
 import PlaceholderImage from '../components/PlaceholderImage';
 
-import meritLogo from '../../public/images/Gemini_Generated_Image_a212hia212hia212-Photoroom.png';
+import meritLogo from '../../public/images/logo.png';
 
 /* ── Spotlight card: tracks mouse to cast a radial glow ── */
 function SpotlightCard({ children, className = '', style = {}, onClick }) {
