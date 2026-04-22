@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext';
-import meritLogo from '../../public/images/Gemini_Generated_Image_a212hia212hia212-Photoroom.png';
+import meritLogo from '../../public/images/logo.png';
 
 /* ── Lucide-style inline SVG icons (no dependency needed) ─── */
 const I = {
