@@ -621,7 +621,7 @@ export default function AdminDashboard() {
 
             {/* Teacher Detail Modal */}
             {selectedTeacher && (
-              <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(8px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => { setSelectedTeacher(null); setConfirmDeleteTeacher(null); setShowEditTeacher(false); }}>
+              <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => { setSelectedTeacher(null); setConfirmDeleteTeacher(null); setShowEditTeacher(false); }}>
                 <div className="glass-flat" style={{ maxWidth: 700, width: '100%', maxHeight: '90vh', overflowY: 'auto', borderRadius: 'var(--radius-xl)', padding: '32px 28px', position: 'relative' }} onClick={e => e.stopPropagation()}>
                   <button onClick={() => { setSelectedTeacher(null); setConfirmDeleteTeacher(null); setShowEditTeacher(false); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
 
@@ -1035,7 +1035,7 @@ export default function AdminDashboard() {
 
             {/* ════ STUDENT DETAIL MODAL ════ */}
             {selectedStudent && (
-              <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(8px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+              <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
                 onClick={() => { setSelectedStudent(null); clearStuLookup(); }}>
                 <div className="glass-flat" style={{ maxWidth: 760, width: '100%', maxHeight: '90vh', overflowY: 'auto', borderRadius: 'var(--radius-xl)', padding: '28px', position: 'relative' }} onClick={e => e.stopPropagation()}>
                   <button onClick={() => { setSelectedStudent(null); clearStuLookup(); }}

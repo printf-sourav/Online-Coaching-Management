@@ -203,8 +203,7 @@ export default function Landing() {
       {/* ═══════════════════════════════════════ NAV ═══ */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 200,
-        background: navScrolled ? 'rgba(244, 248, 244, 0.95)' : '#F4F8F4',
-        backdropFilter: 'blur(20px)',
+        background: navScrolled ? 'rgba(244, 248, 244, 1)' : '#F4F8F4',
         borderBottom: '3px solid #1C2216',
         transition: 'background .25s, border-color .25s, box-shadow .25s',
         boxShadow: navScrolled ? '0 1px 24px rgba(0,0,0,.08)' : 'none',

@@ -1,49 +1,58 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-/* ── NEON TOKYO THEME ─────────────────────────────────── */
+/* ── NEOBRUTALIST DARK THEME ─────────────────────────────────── */
 :root, [data-theme="dark"] {
-  --color-bg:      #111417;
-  --color-bg-2:    #171B20;
-  --color-surface: #1E242B;
-  --color-surface-2: #252D36;
-  --color-border:  rgba(236, 240, 245, 0.12);
-  --color-border-2: rgba(236, 240, 245, 0.2);
-  --color-primary:   #8FA4BB;
-  --color-primary-2: #768DA5;
-  --color-accent:    #A8B99F;
-  --color-accent-2:  #8E9F86;
-  --color-rose:      #C9A48F;
-  --color-amber:     #C6B07A;
-  --color-sky:       #8FA4BB;
-  --grad-primary: linear-gradient(135deg,#8FA4BB 0%,#768DA5 100%);
-  --grad-accent:  linear-gradient(135deg,#A8B99F 0%,#8E9F86 100%);
-  --grad-rose:    linear-gradient(135deg,#C9A48F 0%,#B08B76 100%);
-  --grad-amber:   linear-gradient(135deg,#C6B07A 0%,#A89462 100%);
-  --grad-sky:     linear-gradient(135deg,#8FA4BB 0%,#768DA5 100%);
-  --text-primary:   #ECEFF3;
-  --text-secondary: #B6BEC8;
-  --text-muted:     #8D97A3;
-  --sidebar-text:   #C3CBD5;
-  --sidebar-text-muted: #8D97A3;
-  --sidebar-active-bg: rgba(143,164,187,.18);
-  --sidebar-active-text: #E8EDF2;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --shadow-md: 0 6px 20px rgba(0,0,0,0.24);
-  --shadow-lg: 0 12px 30px rgba(0,0,0,0.34);
-  --sidebar-bg:  #0a0a12;
-  --topbar-bg:   #0a0a12;
-  --table-hover: rgba(109,236,235,0.06);
+  --color-bg:      #121212;
+  --color-bg-2:    #181818;
+  --color-surface: #222222;
+  --color-surface-2: #2A2A2A;
+  --color-border:  #FFFFFF; /* Stark borders */
+  --color-border-2: #FF5A5F; /* Accent borders */
+  
+  --color-primary:   #0A9396;
+  --color-primary-2: #077B7C;
+  --color-accent:    #E2711D;
+  --color-accent-2:  #C46219;
+  
+  --color-rose:      #E76F51;
+  --color-amber:     #E9C46A;
+  --color-sky:       #8ECAE6;
+  
+  --grad-primary: var(--color-primary);
+  --grad-accent:  var(--color-accent);
+  --grad-rose:    var(--color-rose);
+  --grad-amber:   var(--color-amber);
+  --grad-sky:     var(--color-sky);
+  
+  --text-primary:   #FFFFFF;
+  --text-secondary: #E0E0E0;
+  --text-muted:     #A0A0A0;
+  
+  --sidebar-text:   #FFFFFF;
+  --sidebar-text-muted: #B0B0B0;
+  --sidebar-active-bg: #E2711D;
+  --sidebar-active-text: #121212;
+  
+  --radius-sm: 0px; /* Sharp corners for neobrutalism */
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  
+  /* Hard drop shadows characteristic of neobrutalism */
+  --shadow-md: 4px 4px 0px #FFFFFF;
+  --shadow-lg: 8px 8px 0px #E2711D;
+  
+  --sidebar-bg:  #181818;
+  --topbar-bg:   #181818;
+  --table-hover: rgba(226,113,29,0.15);
   --badge-text-mult: 1;
-  --mesh-1: rgba(143,164,187,0.08);
-  --mesh-2: rgba(168,185,159,0.07);
-  --mesh-3: rgba(201,164,143,0.06);
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Sora', system-ui, sans-serif;
+  --mesh-1: rgba(10,147,150,0.15);
+  --mesh-2: rgba(226,113,29,0.15);
+  --mesh-3: rgba(233,196,106,0.15);
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
-  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+  --transition: 0.15s cubic-bezier(0.4,0,0.2,1);
   --sidebar-w: 256px;
 }
 
@@ -106,7 +115,7 @@ button{font-family:var(--font-sans)}
 }
 
 /* glass */
-.glass{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);transition:var(--transition)}
+.glass{background:var(--color-surface);border:2px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);transition:var(--transition)}
 .glass:hover{background:var(--color-surface-2);border-color:var(--color-border-2);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .glass-flat{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md)}
 
@@ -116,9 +125,11 @@ button{font-family:var(--font-sans)}
 .tg-rose{background:var(--grad-rose);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:2px solid #1C2216;border-radius:8px;font-family:var(--font-sans);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.15s;white-space:nowrap;text-decoration:none;letter-spacing:0.02em;box-shadow: 3px 3px 0 #1C2216;}
-.btn:active{transform:translate(3px,3px);box-shadow:none;}
-.btn-primary{background:var(--color-primary);color:#1C2216;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:2px solid var(--text-primary);border-radius:var(--radius-md);background:var(--color-surface);font-family:var(--font-sans);font-weight:700;font-size:1rem;color:var(--text-primary);cursor:pointer;transition:all 0.15s;white-space:nowrap;text-decoration:none;letter-spacing:0.02em;box-shadow: 4px 4px 0 var(--text-primary);}
+.btn:hover{background:var(--color-surface-2);transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--color-accent);}
+.btn:active{transform:translate(4px,4px);box-shadow:none;}
+.btn-primary{background:var(--color-primary);color:#121212;border-color:var(--color-accent);box-shadow: 4px 4px 0 var(--color-accent);}
+.btn-primary:hover{background:var(--color-primary-2);box-shadow: 6px 6px 0 var(--color-accent);}
 .btn-primary:hover{background:var(--color-primary-2);transform:translate(-1px,-1px);box-shadow:4px 4px 0 #1C2216;}
 .btn-accent{background:var(--color-accent);color:#1C2216;}
 .btn-accent:hover{background:var(--color-accent-2);transform:translate(-1px,-1px);box-shadow:4px 4px 0 #1C2216;}
@@ -652,7 +663,8 @@ textarea.form-input{resize:vertical;min-height:90px}
 
 /* ── Tooltip ─────────────────────────────────────────────── */
 [data-tip]{position:relative}
-[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) scale(.9);white-space:nowrap;background:var(--color-bg-2);color:var(--text-primary);border:1px solid var(--color-border-2);padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:600;pointer-events:none;opacity:0;transition:opacity .18s,transform .18s;transform-origin:bottom center;backdrop-filter:blur(12px);z-index:9999}
+/* backdrop removed for neobrutalist non-glassy effect globally */
+[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) scale(.9);white-space:nowrap;background:var(--color-bg-2);color:var(--text-primary);border:1px solid var(--color-border-2);padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:600;pointer-events:none;opacity:0;transition:opacity .18s,transform .18s;transform-origin:bottom center;z-index:9999}
 [data-tip]:hover::after{opacity:1;transform:translateX(-50%) scale(1)}
 /* Right-edge tooltip — anchors from right so it doesn't overflow */
 .tip-left[data-tip]::after{left:auto;right:0;transform:translateX(0) scale(.9);transform-origin:bottom right}
@@ -678,7 +690,7 @@ textarea.form-input{resize:vertical;min-height:90px}
 div:hover > .avatar-cam-overlay{opacity:1}
 
 /* ── Modal overlay ───────────────────────────────────────── */
-.modal-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn .2s ease}
+.modal-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .modal-box{background:var(--color-bg-2);border:1px solid var(--color-border-2);border-radius:var(--radius-lg);padding:28px 32px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.45);animation:modalIn .22s ease}
 @keyframes modalIn{from{opacity:0;transform:translateY(-16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -848,7 +860,7 @@ select.form-input{cursor:pointer}
 .topbar-date{font-size:.82rem;color:var(--text-secondary);font-weight:500}
 
 /* ── Modal system ─────────────────────────────────────── */
-.modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s}
+.modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s}
 .modal-card{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-radius:var(--radius-xl,22px);padding:28px 26px;position:relative;background:var(--color-card);border:1px solid var(--color-border);box-shadow:0 24px 80px rgba(0,0,0,.35)}
 .modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;line-height:1;border-radius:var(--radius-sm);padding:2px 6px;transition:color .15s}
 .modal-close:hover{color:var(--text-primary)}
@@ -906,7 +918,7 @@ select.form-input{cursor:pointer}
 .security-notice span:last-child{font-size:.8rem;color:var(--text-secondary)}
 
 /* ── Landing page ─────────────────────────────────────── */
-.land-nav{position:sticky;top:0;z-index:100;background:var(--topbar-bg);backdrop-filter:blur(24px);border-bottom:1px solid var(--color-border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.land-nav{position:sticky;top:0;z-index:100;background:var(--topbar-bg);border-bottom:1px solid var(--color-border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
 .land-nav-brand{display:flex;align-items:center;gap:12px}
 .land-nav-brand .brand-icon{width:38px;height:38px;border-radius:12px;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;color:#fff;box-shadow:0 4px 16px rgba(124,92,252,.45)}
 .land-nav-brand span{font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
@@ -1009,7 +1021,8 @@ select.form-input{cursor:pointer}
 
 .neon-nav {
   background: rgba(10, 10, 18, 0.85);
-  backdrop-filter: blur(28px);
+.hp-mesh {
+}
   border-bottom: 1px solid rgba(255, 45, 120, 0.15);
   box-shadow: 0 4px 30px rgba(255, 45, 120, 0.1);
 }
@@ -1034,7 +1047,7 @@ select.form-input{cursor:pointer}
 }
 
 /* ── Mobile sidebar overlay backdrop ────────────────────── */
-.sidebar-overlay{position:fixed;inset:0;z-index:199;background:rgba(0,0,0,.52);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:fadeIn .2s ease}
+.sidebar-overlay{position:fixed;inset:0;z-index:199;background:rgba(0,0,0,.65);animation:fadeIn .2s ease}
 
 /* ── Hamburger button (hidden on desktop) ───────────────── */
 .hamburger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;min-width:40px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-sm);cursor:pointer;padding:10px;flex-shrink:0;transition:var(--transition)}

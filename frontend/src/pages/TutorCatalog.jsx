@@ -12,12 +12,12 @@ const SUBJECTS = ['All', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Engl
 const TUTOR_PAGE_STATE_KEY = 'meritnook-tutor-page-state';
 
 const TUTOR_ACCENTS = [
-  { line: '#7CC0B5', avatarGrad: 'linear-gradient(135deg,#93D7CD,#6FAEA7)', feeGrad: 'linear-gradient(135deg,#6FAEA7,#5A9B93)' },
-  { line: '#C59F68', avatarGrad: 'linear-gradient(135deg,#DAB882,#C59F68)', feeGrad: 'linear-gradient(135deg,#C59F68,#A98454)' },
-  { line: '#88B96F', avatarGrad: 'linear-gradient(135deg,#A6D289,#88B96F)', feeGrad: 'linear-gradient(135deg,#88B96F,#6F9F57)' },
-  { line: '#9684C1', avatarGrad: 'linear-gradient(135deg,#B09FD6,#9684C1)', feeGrad: 'linear-gradient(135deg,#9684C1,#7C6AA7)' },
-  { line: '#C98C9A', avatarGrad: 'linear-gradient(135deg,#DEA7B3,#C98C9A)', feeGrad: 'linear-gradient(135deg,#C98C9A,#AF7381)' },
-  { line: '#7B96C8', avatarGrad: 'linear-gradient(135deg,#9AB1DB,#7B96C8)', feeGrad: 'linear-gradient(135deg,#7B96C8,#607CAE)' },
+  { line: '#0A9396', avatarGrad: 'linear-gradient(135deg,#4EC1C3,#0A9396)', feeGrad: 'linear-gradient(135deg,#0A9396,#08777A)' },
+  { line: '#E2711D', avatarGrad: 'linear-gradient(135deg,#F79953,#E2711D)', feeGrad: 'linear-gradient(135deg,#E2711D,#B55A17)' },
+  { line: '#2A9D8F', avatarGrad: 'linear-gradient(135deg,#5EC8BA,#2A9D8F)', feeGrad: 'linear-gradient(135deg,#2A9D8F,#217E73)' },
+  { line: '#E9C46A', avatarGrad: 'linear-gradient(135deg,#F4DB9B,#E9C46A)', feeGrad: 'linear-gradient(135deg,#E9C46A,#BA9D55)' },
+  { line: '#E76F51', avatarGrad: 'linear-gradient(135deg,#F29983,#E76F51)', feeGrad: 'linear-gradient(135deg,#E76F51,#B95941)' },
+  { line: '#94D2BD', avatarGrad: 'linear-gradient(135deg,#BCEADC,#94D2BD)', feeGrad: 'linear-gradient(135deg,#94D2BD,#76A897)' },
 ];
 
 function pickTutorAccent(tutor) {
@@ -142,7 +142,8 @@ function TutorModal({ tutor, onClose, demosMap, refreshDemos, enrollmentsMap, re
       onClick={e => { if (e.target === backdropRef.current) onClose(); }}
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'rgba(0,0,0,.55)', backdropFilter: 'blur(6px)',
+        background: 'rgba(0,0,0,.85)'
+
         display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px',
         animation: 'fadeIn .2s ease',
       }}
@@ -466,7 +467,7 @@ function TutorCard({ tutor, onOpen, demosMap, enrollmentsMap }) {
 
       {enrolled && (
         <div style={{ position: 'absolute', top: 14, right: 14 }}>
-          <span className="badge bd-success" style={{ fontSize: '.65rem', border: '2px solid #1C2216', boxShadow: '2px 2px 0 #1C2216', background: '#D8ED92', color: '#1C2216' }}>✓ {enrolled.status}</span>
+          <span className="badge bd-success" style={{ fontSize: '.65rem', border: '2px solid #1C2216', boxShadow: '2px 2px 0 #1C2216', background: '#94D2BD', color: '#1C2216' }}>✓ {enrolled.status}</span>
         </div>
       )}
 
@@ -661,22 +662,27 @@ export default function TutorCatalog() {
       {/* NAV */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 120,
-        background: '#F4F8F4', backdropFilter: 'blur(20px)',
+        background: '#F4F8F4',
         borderBottom: '3px solid #1C2216',
         padding: '0 clamp(16px,5vw,80px)', height: 80,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none', color: 'inherit' }}>
-            <img src={meritLogo} alt="Merit Nook logo" style={{ width: 88, height: 58, objectFit: 'contain', objectPosition: 'left center' }} />
-            <span style={{ fontWeight: 900, fontSize: '1.65rem', letterSpacing: '-.02em', color: '#1C2216' }}>Merit Nook</span>
-          </Link>
-          <span style={{ color: '#5E6D5D', fontSize: '1.2rem', fontWeight: 300 }}>/</span>
-          <span style={{ fontWeight: 700, fontSize: '.9rem', color: '#40556B' }}>Tutors</span>
+        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'clamp(378px, 34vw, 504px)' }} onClick={() => navigate('/')}>
+          <img
+            src={meritLogo}
+            alt="Merit Nook logo"
+            style={{
+              width: '100%',
+              height: 162,
+              objectFit: 'contain',
+              objectPosition: 'left center',
+              filter: 'drop-shadow(0 4px 6px rgba(0,0,0,.08))',
+            }}
+          />
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link to="/login"><RippleButton className="btn btn-sm" style={{ background: '#FFFFFF', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '3px 3px 0 #1C2216' }}>Login</RippleButton></Link>
-          <Link to="/register"><RippleButton className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#D8ED92,#F7B32B)', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '3px 3px 0 #1C2216' }}>Book FREE Trial</RippleButton></Link>
+          <Link to="/register"><RippleButton className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#E9C46A,#E2711D)', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '3px 3px 0 #1C2216' }}>Book FREE Trial</RippleButton></Link>
         </div>
       </nav>
 
@@ -684,9 +690,9 @@ export default function TutorCatalog() {
 
         {/* Header */}
         <div data-aos="fade-up" style={{ marginBottom: 30, textAlign: 'center', background: '#FFFFFF', border: '3px solid #1C2216', boxShadow: '6px 6px 0 #1C2216', borderRadius: 22, padding: 'clamp(18px,3vw,28px)' }}>
-          <div style={{ fontSize: '.78rem', fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: '#1B9E9E', marginBottom: 10 }}>Expert Instructors</div>
+          <div style={{ fontSize: '.78rem', fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0A9396', marginBottom: 10 }}>Expert Instructors</div>
           <h1 style={{ fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 900, letterSpacing: '-.03em', marginBottom: 10, color: '#1C2216' }}>
-            Find Your Perfect <span style={{ color: '#2CCBCA' }}>Tutor</span>
+            Find Your Perfect <span style={{ color: '#E2711D' }}>Tutor</span>
           </h1>
           <p style={{ color: '#324030', fontSize: '.975rem', maxWidth: 620, margin: '0 auto' }}>
             Browse expert tutors, compare plans, and book a free demo class with personalized guidance.
@@ -724,10 +730,11 @@ export default function TutorCatalog() {
               onClick={() => setSubject(s)}
               className="btn btn-sm"
               style={{
-                background: subject === s ? '#2CCBCA' : '#FFFFFF',
-                color: '#1C2216',
+                background: subject === s ? '#0A9396' : '#FFFFFF',
+                color: subject === s ? '#FFF' : '#1C2216',
                 border: '3px solid #1C2216',
-                boxShadow: '3px 3px 0 #1C2216',
+                boxShadow: subject === s ? '0px 0px 0 #1C2216' : '3px 3px 0 #1C2216',
+                transform: subject === s ? 'translate(3px, 3px)' : 'none',
               }}
             >
               {s}

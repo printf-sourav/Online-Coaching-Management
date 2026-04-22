@@ -661,7 +661,7 @@ export default function Homepage() {
           <div style={{ position: 'relative', zIndex: 1 }} data-aos="zoom-in">
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(255,255,255,.18)', backdropFilter: 'blur(8px)',
+              background: 'var(--color-surface)',
               border: '1px solid rgba(255,255,255,.3)', borderRadius: 100,
               padding: '6px 18px', marginBottom: 24,
               fontSize: '.78rem', fontWeight: 700, color: '#fff', letterSpacing: '.06em', textTransform: 'uppercase',
