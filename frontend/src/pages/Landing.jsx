@@ -96,10 +96,10 @@ export default function Landing() {
   }, []);
 
   /* ── Dynamic Light/Dark variables ── */
-  const PURPLE = '#A3CBA0'; // Teal
-  const ORANGE = '#D8ED92'; // Peach/Orange
-  const GREEN  = '#A6B079'; // Darker Yellow for better contrast
-  const BLUE   = '#FCF6C8'; // Darker Cyan for contrast
+  const PURPLE = '#0A9396'; // Deep Teal / Dark Cyan
+  const ORANGE = '#E2711D'; // Terracotta / Rust Orange
+  const GREEN  = '#2A9D8F'; // Complementary Green
+  const BLUE   = '#E9C46A'; // Complementary Yellowish-Sand
   const ORBIT_BG = '#DDE1F0';
   const ORBIT_DOT = 'rgba(96, 116, 176, 0.32)';
   const ORBIT_CARD_BG = '#EEECE2';
@@ -107,30 +107,30 @@ export default function Landing() {
 
   /* ── Static data ──────────────────────────────────── */
   const effectivenessPoints = [
-    { title: 'Personal Attention', desc: 'Every child gets the attention they need. Classes are adjusted to their pace and level.', color: isDark ? '#ff2d78' : '#6FAEA7' },
-    { title: 'Strong Concept Building', desc: 'We focus on clear understanding so students do not just memorize, but truly learn.', color: isDark ? '#00ffcc' : '#7B96C8' },
-    { title: 'Real-Time Feedback', desc: 'Instant correction and guidance during class to improve quickly.', color: isDark ? '#ffe04a' : '#C79F6B' },
-    { title: 'Regular Progress Updates', desc: 'Parents stay informed with consistent feedback and performance tracking.', color: isDark ? '#ff7b54' : '#C98C9A' },
-    { title: 'Guided by Experts', desc: 'Experienced teachers who support, motivate, and build confidence.', color: isDark ? '#4ade80' : '#88B96F' },
-    { title: 'Flexible Learning', desc: 'Easy scheduling with options for 1:1 and small group classes.', color: isDark ? '#60a5fa' : '#9684C1' },
-    { title: 'Encouraging Environment', desc: 'Students feel comfortable to ask questions and think independently.', color: isDark ? '#f472b6' : '#7CC0B5' },
-    { title: 'Worldwide Curriculum Coverage', desc: 'We support students following different curriculums like US Common Core, British, Australian, and CBSE, adapting lessons to match their school requirements.', color: isDark ? '#f59e0b' : '#C59F68' },
+    { title: 'Personal Attention', desc: 'Every child gets the attention they need. Classes are adjusted to their pace and level.', color: isDark ? '#ff2d78' : '#0A9396' },
+    { title: 'Strong Concept Building', desc: 'We focus on clear understanding so students do not just memorize, but truly learn.', color: isDark ? '#00ffcc' : '#E2711D' },
+    { title: 'Real-Time Feedback', desc: 'Instant correction and guidance during class to improve quickly.', color: isDark ? '#ffe04a' : '#2A9D8F' },
+    { title: 'Regular Progress Updates', desc: 'Parents stay informed with consistent feedback and performance tracking.', color: isDark ? '#ff7b54' : '#E9C46A' },
+    { title: 'Guided by Experts', desc: 'Experienced teachers who support, motivate, and build confidence.', color: isDark ? '#4ade80' : '#E76F51' },
+    { title: 'Flexible Learning', desc: 'Easy scheduling with options for 1:1 and small group classes.', color: isDark ? '#60a5fa' : '#F4A261' },
+    { title: 'Encouraging Environment', desc: 'Students feel comfortable to ask questions and think independently.', color: isDark ? '#f472b6' : '#94D2BD' },
+    { title: 'Worldwide Curriculum Coverage', desc: 'We support students following different curriculums like US Common Core, British, Australian, and CBSE, adapting lessons to match their school requirements.', color: isDark ? '#f59e0b' : '#005F73' },
   ];
 
   const orbitAmbientBadges = [
-    { title: 'Learners', value: '50K+', tint: '#DCCE8B', pos: { top: '15%', right: '5%' } },
-    { title: 'Avg Rating', value: '4.8/5', tint: '#ADC86A', pos: { top: '72%', right: '8%' } },
-    { title: 'Live 1:1', value: 'Daily', tint: '#7FA97B', pos: { top: '18%', left: '6%' } },
-    { title: 'Reports', value: 'Weekly', tint: '#97B8D0', pos: { top: '76%', left: '10%' } },
+    { title: 'Learners', value: '50K+', tint: '#E9C46A', pos: { top: '15%', right: '5%' } },
+    { title: 'Avg Rating', value: '4.8/5', tint: '#F4A261', pos: { top: '72%', right: '8%' } },
+    { title: 'Live 1:1', value: 'Daily', tint: '#2A9D8F', pos: { top: '18%', left: '6%' } },
+    { title: 'Reports', value: 'Weekly', tint: '#94D2BD', pos: { top: '76%', left: '10%' } },
   ];
 
   const orbitFloatingNotes = [
-    { label: 'Demo classes', value: 'Live', icon: '📹', tint: '#D8ED92', pos: { top: '8%', left: '20%' } },
-    { label: 'Assignments', value: 'Checked', icon: '📝', tint: '#97B8D0', pos: { top: '14%', right: '18%' } },
-    { label: 'Attendance', value: 'Tracked', icon: '✅', tint: '#7FA97B', pos: { bottom: '10%', left: '30%' } },
-    { label: 'Parent updates', value: 'Weekly', icon: '📣', tint: '#C98C9A', pos: { bottom: '12%', right: '28%' } },
-    { label: 'Fee status', value: 'On time', icon: '💳', tint: '#C59F68', pos: { top: '50%', left: '8%' } },
-    { label: 'Tutor match', value: 'Fast', icon: '🎯', tint: '#88B96F', pos: { top: '46%', right: '10%' } },
+    { label: 'Demo classes', value: 'Live', icon: '📹', tint: '#E2711D', pos: { top: '8%', left: '20%' } },
+    { label: 'Assignments', value: 'Checked', icon: '📝', tint: '#94D2BD', pos: { top: '14%', right: '18%' } },
+    { label: 'Attendance', value: 'Tracked', icon: '✅', tint: '#2A9D8F', pos: { bottom: '10%', left: '30%' } },
+    { label: 'Parent updates', value: 'Weekly', icon: '📣', tint: '#E76F51', pos: { bottom: '12%', right: '28%' } },
+    { label: 'Fee status', value: 'On time', icon: '💳', tint: '#E9C46A', pos: { top: '50%', left: '8%' } },
+    { label: 'Tutor match', value: 'Fast', icon: '🎯', tint: '#0A9396', pos: { top: '46%', right: '10%' } },
   ];
 
   const orbitInsightCards = [
@@ -213,13 +213,13 @@ export default function Landing() {
       }}>
 
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'clamp(364px, 32vw, 476px)' }} onClick={() => navigate('/')}>
+        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'clamp(378px, 34vw, 504px)' }} onClick={() => navigate('/')}>
           <img
             src={meritLogo}
             alt="Merit Nook logo"
             style={{
               width: '100%',
-              height: 134,
+              height: 162,
               objectFit: 'contain',
               objectPosition: 'left center',
               filter: 'drop-shadow(0 4px 6px rgba(0,0,0,.08))',
@@ -941,18 +941,18 @@ export default function Landing() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 44, marginBottom: 52 }}>
             {/* Brand */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 0, width: '100%' }}>
                 <img
                   src={meritLogo}
                   alt="Merit Nook logo"
-                  style={{ width: '100%', maxWidth: 220, height: 80, objectFit: 'contain', objectPosition: 'left center' }}
+                  style={{ width: '100%', maxWidth: 320, height: 120, objectFit: 'contain', objectPosition: 'center', transform: 'translateY(10px)' }}
                 />
               </div>
-              <p style={{ fontSize: '.82rem', lineHeight: 1.75, maxWidth: 240, marginBottom: 22 }}>
+              <p style={{ fontSize: '.82rem', lineHeight: 1.75, maxWidth: 260, margin: '0 0 22px 0' }}>
                 1:1 live online tutoring for students in Grades 1–12. Real attention. Clear progress. Real results.
               </p>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
                 {['📘','📸','🎥','💼','🐦'].map((ic,i) => (
                   <div key={i} style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.85rem', cursor: 'pointer', transition: 'background .2s' }}
                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,.18)'}
