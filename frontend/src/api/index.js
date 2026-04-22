@@ -4,7 +4,11 @@
 
 // ─── REAL API HELPERS ─────────────────────────────────────────────────────────
 
-const API_BASE = import.meta.env.VITE_API_URL || '';  // '' = use Vite proxy
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (window.location.hostname === 'localhost'
+    ? ''
+    : 'https://online-coaching-management-production.up.railway.app');
 
 // Shared refresh promise — prevents multiple concurrent refresh calls
 let _refreshing = null;
