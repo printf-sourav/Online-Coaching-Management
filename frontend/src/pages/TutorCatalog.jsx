@@ -142,8 +142,7 @@ function TutorModal({ tutor, onClose, demosMap, refreshDemos, enrollmentsMap, re
       onClick={e => { if (e.target === backdropRef.current) onClose(); }}
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'rgba(0,0,0,.85)'
-
+        background: 'rgba(0,0,0,.85)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px',
         animation: 'fadeIn .2s ease',
       }}
