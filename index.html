@@ -3,19 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/Online-Coaching-Management/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Merit Nook – Premium live coaching platform for students, teachers and parents." />
+    <meta name="theme-color" content="#F4F8F4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111417" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=no" />
     <title>Merit Nook – Smart Learning Platform</title>
     <script>
       // Apply theme instantly before React hydrates to avoid white flash
       (function(){
-        var t = localStorage.getItem('edunova-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
-        document.documentElement.style.background = t === 'dark' ? '#070710' : '#f5f4ff';
+        try {
+          var t = localStorage.getItem('meritnook-theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', t);
+          document.documentElement.style.background = t === 'dark' ? '#111417' : '#F4F8F4';
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.style.background = '#111417';
+        }
       })();
     </script>
-    <script type="module" crossorigin src="/Online-Coaching-Management/assets/index-Cqxx2XcY.js"></script>
-    <link rel="stylesheet" crossorigin href="/Online-Coaching-Management/assets/index-DRf1nM86.css">
+    <script type="module" crossorigin src="/Online-Coaching-Management/assets/index-_lBMDwdd.js"></script>
+    <link rel="stylesheet" crossorigin href="/Online-Coaching-Management/assets/index-CpNArSPE.css">
   </head>
   <body>
     <div id="root"></div>
