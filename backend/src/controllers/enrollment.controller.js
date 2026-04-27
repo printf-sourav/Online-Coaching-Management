@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import Enrollment from "../models/Enrollment.model.js";
 import Teacher from "../models/Teacher.model.js";
 import Student from "../models/Student.model.js";

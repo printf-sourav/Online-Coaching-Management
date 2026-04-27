@@ -6,7 +6,6 @@ const platformReviewSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Student",
       required: true,
-      index: true,
     },
     rating: {
       type: Number,

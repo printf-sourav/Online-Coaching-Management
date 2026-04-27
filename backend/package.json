@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --env-file=src/.env src/server.js",
-    "start": "node --env-file=src/.env src/server.js",
+    "start": "node src/server.js",
     "seed:admin": "node --env-file=src/.env src/scripts/createAdmin.js"
   },
   "keywords": [],

@@ -3,7 +3,7 @@
  * Usage:  npm run seed:admin
  *
  * Reads credentials from env (or the defaults below).
- * Set ADMIN_NAME / ADMIN_EMAIL / ADMIN_PASSWORD in src/.env,
+ * Set ADMIN_NAME / ADMIN_EMAIL / ADMIN_PASSWORD in your Railway or local environment,
  * or just edit the DEFAULTS block before running.
  */
 
@@ -18,7 +18,7 @@ const PASSWORD = process.env.ADMIN_PASSWORD || "Admin@1234";
 
 const URI = process.env.MONGO_URI;
 if (!URI) {
-  console.error("❌  MONGO_URI is not set. Make sure --env-file=src/.env is passed.");
+  console.error("❌  MONGO_URI is not set. Make sure it is defined in the environment.");
   process.exit(1);
 }
 

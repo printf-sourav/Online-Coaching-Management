@@ -1,21 +1,10 @@
 import cron from "node-cron";
 import Enrollment from "../models/Enrollment.model.js";
 import Payment from "../models/Payment.model.js";
-
-// ── Helper: add 1 month to a Date ────────────────────────────────────────────
-function addOneMonth(date) {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() + 1);
-  return d;
-}
-
-function billingMonthStr(date) {
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
+import { addOneMonth, billingMonthStr } from "./helpers.js";
 
 // ── Job 1: Generate monthly invoices ─────────────────────────────────────────
-// Runs every day at 00:05 AM
+// Runs every day at 00:05 AM IST
 // Finds all active enrollments whose nextBillingDate is today or past,
 // creates a pending Payment record, and advances nextBillingDate by 1 month.
 async function generateMonthlyInvoices() {
@@ -23,26 +12,43 @@ async function generateMonthlyInvoices() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Active enrollments where next billing date has arrived
     const due = await Enrollment.find({
       status: "active",
       nextBillingDate: { $lte: today },
-    });
+    }).lean();
 
-    let created = 0;
+    if (due.length === 0) return;
+
+    // Batch check for existing payments to avoid N queries
+    const dueBillingKeys = due.map((e) => ({
+      enrollmentId: e._id,
+      billingMonth: billingMonthStr(e.nextBillingDate),
+    }));
+
+    const existingPayments = await Payment.find({
+      $or: dueBillingKeys.map((k) => ({
+        enrollmentId: k.enrollmentId,
+        billingMonth: k.billingMonth,
+        type: "monthly",
+      })),
+    })
+      .select("enrollmentId billingMonth")
+      .lean();
+
+    const existingSet = new Set(
+      existingPayments.map((p) => `${p.enrollmentId}-${p.billingMonth}`)
+    );
+
+    const paymentsToCreate = [];
+    const bulkEnrollmentOps = [];
+
     for (const enrollment of due) {
       const billingMonth = billingMonthStr(enrollment.nextBillingDate);
+      const key = `${enrollment._id}-${billingMonth}`;
 
-      // Avoid duplicate: skip if a payment already exists for this month
-      const exists = await Payment.findOne({
-        enrollmentId: enrollment._id,
-        billingMonth,
-        type: "monthly",
-      });
-
-      if (!exists) {
-        const dueDate = new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000); // due in 5 days
-        await Payment.create({
+      if (!existingSet.has(key)) {
+        const dueDate = new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000);
+        paymentsToCreate.push({
           studentId: enrollment.studentId,
           enrollmentId: enrollment._id,
           amount: enrollment.price,
@@ -54,16 +60,31 @@ async function generateMonthlyInvoices() {
           razorpayOrderId: "",
           currency: "INR",
         });
-        created++;
       }
 
-      // Advance nextBillingDate by 1 month regardless
-      enrollment.nextBillingDate = addOneMonth(enrollment.nextBillingDate);
-      await enrollment.save();
+      // Advance nextBillingDate regardless
+      bulkEnrollmentOps.push({
+        updateOne: {
+          filter: { _id: enrollment._id },
+          update: {
+            $set: {
+              nextBillingDate: addOneMonth(enrollment.nextBillingDate),
+            },
+          },
+        },
+      });
     }
 
-    if (created > 0) {
-      console.log(`[Scheduler] Monthly invoices generated: ${created}`);
+    // Batch insert payments + batch update enrollments
+    if (paymentsToCreate.length > 0) {
+      await Payment.insertMany(paymentsToCreate);
+      console.log(
+        `[Scheduler] Monthly invoices generated: ${paymentsToCreate.length}`
+      );
+    }
+
+    if (bulkEnrollmentOps.length > 0) {
+      await Enrollment.bulkWrite(bulkEnrollmentOps);
     }
   } catch (err) {
     console.error("[Scheduler] generateMonthlyInvoices error:", err.message);
@@ -71,8 +92,7 @@ async function generateMonthlyInvoices() {
 }
 
 // ── Job 2: Mark overdue enrollments ──────────────────────────────────────────
-// Runs every day at 00:10 AM
-// Finds pending payments past their dueDate and marks the enrollment as overdue.
+// Runs every day at 00:10 AM IST
 async function markOverdueEnrollments() {
   try {
     const now = new Date();
@@ -90,7 +110,9 @@ async function markOverdueEnrollments() {
     );
 
     if (result.modifiedCount > 0) {
-      console.log(`[Scheduler] Enrollments marked overdue: ${result.modifiedCount}`);
+      console.log(
+        `[Scheduler] Enrollments marked overdue: ${result.modifiedCount}`
+      );
     }
   } catch (err) {
     console.error("[Scheduler] markOverdueEnrollments error:", err.message);
@@ -99,11 +121,12 @@ async function markOverdueEnrollments() {
 
 // ── Start all cron jobs ───────────────────────────────────────────────────────
 export function startScheduler() {
-  // Generate monthly invoices — daily at 00:05 AM
-  cron.schedule("5 0 * * *", generateMonthlyInvoices, { timezone: "Asia/Kolkata" });
-
-  // Mark overdue enrollments — daily at 00:10 AM
-  cron.schedule("10 0 * * *", markOverdueEnrollments, { timezone: "Asia/Kolkata" });
+  cron.schedule("5 0 * * *", generateMonthlyInvoices, {
+    timezone: "Asia/Kolkata",
+  });
+  cron.schedule("10 0 * * *", markOverdueEnrollments, {
+    timezone: "Asia/Kolkata",
+  });
 
   console.log("[Scheduler] Billing scheduler started (IST timezone)");
 }

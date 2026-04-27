@@ -8,14 +8,14 @@ import { apiGetNotifications, apiMarkNotificationRead, apiUpdateProfile } from '
 const NOTIF_ICONS = { info: 'ℹ️', success: '✅', warning: '⚠️', assignment: '📝', payment: '💳', class: '📹', default: '🔔' };
 
 const AVATAR_GRADS = [
-  'linear-gradient(135deg,#7c5cfc,#c084fc)',
-  'linear-gradient(135deg,#00d4aa,#38bdf8)',
-  'linear-gradient(135deg,#f97316,#facc15)',
-  'linear-gradient(135deg,#ff6b9d,#f43f5e)',
-  'linear-gradient(135deg,#06b6d4,#6366f1)',
-  'linear-gradient(135deg,#10b981,#059669)',
-  'linear-gradient(135deg,#a855f7,#ec4899)',
-  'linear-gradient(135deg,#f59e0b,#ef4444)',
+  'linear-gradient(135deg,#2CCBCA,#1B9E9E)',
+  'linear-gradient(135deg,#D8ED92,#A6B079)',
+  'linear-gradient(135deg,#FFB87A,#E89A50)',
+  'linear-gradient(135deg,#E76F51,#C45A3F)',
+  'linear-gradient(135deg,#89D8D1,#5EB9B1)',
+  'linear-gradient(135deg,#C8DE7C,#A9C06A)',
+  'linear-gradient(135deg,#F2B682,#DDA26E)',
+  'linear-gradient(135deg,#E2C45A,#C9AC44)',
 ];
 
 export default function Topbar({ title, subtitle, onMenuClick }) {

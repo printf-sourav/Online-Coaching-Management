@@ -21,7 +21,7 @@ const hashOTP = (otp) =>
 const cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 };
 
 export const registerUser = asyncHandler(async (req, res) => {

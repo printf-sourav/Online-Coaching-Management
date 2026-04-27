@@ -3,8 +3,30 @@ import { useNavigate, Link } from 'react-router-dom';
 import RippleButton from '../components/RippleButton';
 import { fetchTutors } from '../api';
 import PlaceholderImage from '../components/PlaceholderImage';
+import LandingMobile from './LandingMobile';
 
-import meritLogo from '../../public/images/logo.png';
+import { meritNookLogoUrl as meritLogo } from '../lib/publicAssets';
+
+/* Detect compact viewports once + listen for resizes */
+const MOBILE_QUERY = '(max-width: 820px)';
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(MOBILE_QUERY).matches;
+  });
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia(MOBILE_QUERY);
+    const fn = (e) => setIsMobile(e.matches);
+    if (mq.addEventListener) mq.addEventListener('change', fn);
+    else mq.addListener(fn);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', fn);
+      else mq.removeListener(fn);
+    };
+  }, []);
+  return isMobile;
+}
 
 /* ── Spotlight card: tracks mouse to cast a radial glow ── */
 function SpotlightCard({ children, className = '', style = {}, onClick }) {
@@ -60,15 +82,23 @@ function Chip({ label, color = '#7C5CFC' }) {
 }
 
 export default function Landing() {
+  const isMobile = useIsMobile();
+  if (isMobile) return <LandingMobile />;
+  return <LandingDesktop />;
+}
+
+function LandingDesktop() {
   const navigate    = useNavigate();
   const isDark = false;
   const [tutors, setTutors]   = useState([]);
   const [openFaq, setOpenFaq] = useState(null);
   const [navScrolled, setNavScrolled] = useState(false);
   const [selectedStudyTab, setSelectedStudyTab] = useState(0);
+  const [isFinalCtaVideoPlaying, setIsFinalCtaVideoPlaying] = useState(true);
   
   // Ref and state for scroll-linked orbit
   const orbitRef = useRef(null);
+  const finalCtaVideoRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => { fetchTutors().then(setTutors); }, []);
@@ -134,22 +164,31 @@ export default function Landing() {
   ];
 
   const orbitInsightCards = [
-    { title: '1:1 Concept Coaching', img: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Small Group Collaboration', img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Live Doubt Solving', img: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Coding Practice Session', img: 'https://images.unsplash.com/photo-1513258496099-48168024aec0?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Science Learning Lab', img: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Language & Communication Class', img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Progress Review with Mentor', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&auto=format&fit=crop&q=80' },
-    { title: 'Exam Strategy Workshop', img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=900&auto=format&fit=crop&q=80' },
+    { title: '1:1 Concept Coaching', img: `${import.meta.env.BASE_URL}images/merit-personal-attention.jpeg` },
+    { title: 'Small Group Collaboration', img: `${import.meta.env.BASE_URL}images/merit-strong-concepts.jpeg` },
+    { title: 'Live feedback & smart class analytics', img: `${import.meta.env.BASE_URL}images/merit-realtime-feedback.png` },
+    {
+      insightLabel: 'Parent & progress',
+      title: 'Weekly reports — attendance, scores & tutor notes',
+      img: `${import.meta.env.BASE_URL}images/merit-parent-progress.jpeg`,
+    },
+    { title: 'Expert mentor, hands-on guidance', img: `${import.meta.env.BASE_URL}images/merit-guided-by-experts.png` },
+    { title: 'Flexible schedules — 1:1 or small group', img: `${import.meta.env.BASE_URL}images/merit-flexible-learning.png` },
+    { title: 'Warm, collaborative classroom energy', img: `${import.meta.env.BASE_URL}images/merit-encouraging-environment.png` },
+    { title: 'Global learners, many curriculums', img: `${import.meta.env.BASE_URL}images/merit-worldwide-curriculum.png` },
   ];
 
   const subjectColumns = [
-    { name: 'Mathematics', desc: 'Arithmetic to advanced problem solving.' },
-    { name: 'Science', desc: 'Physics, Chemistry and Biology with clarity.' },
-    { name: 'English', desc: 'Grammar, writing and communication skills.' },
-    { name: 'Coding', desc: 'Programming and computational thinking.' },
-    { name: 'Social Studies', desc: 'History, Geography and Civics concepts.' },
+    { icon: '🔢', name: 'Mathematics', desc: 'Arithmetic to advanced problem solving.' },
+    { icon: '🔬', name: 'Science', desc: 'Physics, Chemistry and Biology with clarity.' },
+    { icon: '📖', name: 'English', desc: 'Grammar, writing and communication skills.' },
+    { icon: '💻', name: 'Coding', desc: 'Programming and computational thinking.' },
+  ];
+
+  const languagePrograms = [
+    { icon: '🇮🇳', name: 'Hindi' },
+    { icon: '🇪🇸', name: 'Spanish' },
+    { icon: '🇫🇷', name: 'French' },
   ];
 
   const testimonials = [
@@ -198,7 +237,7 @@ export default function Landing() {
   });
 
   return (
-    <div data-theme="light" style={{ minHeight: '100vh', background: 'var(--color-bg)', color: 'var(--text-primary)', overflowX: 'clip' }}>
+    <div data-theme="light" data-page="landing" style={{ minHeight: '100vh', background: 'var(--color-bg)', color: 'var(--text-primary)', overflowX: 'clip' }}>
 
       {/* ═══════════════════════════════════════ NAV ═══ */}
       <nav style={{
@@ -413,6 +452,7 @@ export default function Landing() {
                 if (activeIdx < 0) activeIdx = 0;
                 
                 const s = effectivenessPoints[activeIdx];
+                const insight = orbitInsightCards[activeIdx % orbitInsightCards.length];
                 let localProgress = isCapped ? 0.5 : (rawIdx - activeIdx);
                 
                 let opacity = 1;
@@ -484,13 +524,13 @@ export default function Landing() {
                     overflow: 'hidden',
                   }}>
                     <img
-                      src={orbitInsightCards[activeIdx % orbitInsightCards.length].img}
-                      alt={orbitInsightCards[activeIdx % orbitInsightCards.length].title}
+                      src={insight.img}
+                      alt={insight.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                     <div style={{ position: 'absolute', left: 12, bottom: 12, right: 12, background: 'rgba(255,255,255,.92)', border: '2px solid #1C2216', borderRadius: 12, padding: '8px 10px', textAlign: 'left' }}>
-                      <div style={{ fontSize: '.68rem', letterSpacing: '.06em', textTransform: 'uppercase', color: 'rgba(28,34,22,.7)' }}>Classroom Insight</div>
-                      <div style={{ marginTop: 2, fontSize: '.9rem', fontWeight: 900, lineHeight: 1.3, color: '#1C2216' }}>{orbitInsightCards[activeIdx % orbitInsightCards.length].title}</div>
+                      <div style={{ fontSize: '.68rem', letterSpacing: '.06em', textTransform: 'uppercase', color: 'rgba(28,34,22,.7)' }}>{insight.insightLabel ?? 'Classroom Insight'}</div>
+                      <div style={{ marginTop: 2, fontSize: '.9rem', fontWeight: 900, lineHeight: 1.3, color: '#1C2216' }}>{insight.title}</div>
                     </div>
                   </div>
                 ];
@@ -582,7 +622,20 @@ export default function Landing() {
             {subjectColumns.map((item, i) => (
               <SpotlightCard key={i} className="neon-box" style={{ ...card({ borderRadius: 16, padding: '18px 18px', border: 'none' }) }}>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                  
+                  <div style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 12,
+                    border: '2px solid #1C2216',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.2rem',
+                    flexShrink: 0,
+                    background: 'rgba(255,255,255,0.75)',
+                  }}>
+                    {item.icon}
+                  </div>
                   <div>
                     <h3 style={{ fontSize: '.95rem', margin: '0 0 5px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.name}</h3>
                     <p style={{ margin: 0, fontSize: '.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{item.desc}</p>
@@ -590,6 +643,33 @@ export default function Landing() {
                 </div>
               </SpotlightCard>
             ))}
+          </div>
+
+          <div style={{ marginTop: 'clamp(28px,4vw,42px)' }}>
+            <div className="neon-box" style={{ ...card({ borderRadius: 18, border: 'none', padding: '22px clamp(16px,3vw,26px)' }) }}>
+              <h3 style={{ fontSize: 'clamp(1.2rem,2.4vw,1.6rem)', fontWeight: 900, margin: '0 0 8px', color: 'var(--text-primary)' }}>
+                Explore Our Language Programs
+              </h3>
+              <p style={{ margin: '0 0 18px', color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: '.92rem' }}>
+                Fun and interactive language learning programs designed for all levels—from beginners to more advanced learners.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(170px,1fr))', gap: 12 }}>
+                {languagePrograms.map((lang, idx) => (
+                  <div key={idx} style={{
+                    border: '1.5px solid var(--color-border)',
+                    borderRadius: 12,
+                    background: 'var(--color-surface)',
+                    padding: '12px 14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                  }}>
+                    <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{lang.icon}</span>
+                    <span style={{ fontSize: '.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>{lang.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -929,7 +1009,64 @@ export default function Landing() {
             </div>
             
             <div style={{ flex: '0 0 auto', position: 'relative' }}>
-               <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&auto=format&fit=crop&q=80" alt="Students with tutor" style={{ width: 'min(100vw - 32px, 420px)', height: '420px', objectFit: 'cover', borderRadius: '24px', border: '3px solid #1C2216', boxShadow: '14px 14px 0 #1C2216', transform: 'rotate(2deg)' }} />
+              <div
+                style={{
+                  width: 'min(100vw - 32px, 560px)',
+                  height: 'clamp(446px, 54vw, 682px)',
+                  borderRadius: '24px',
+                  border: '3px solid #1C2216',
+                  boxShadow: '14px 14px 0 #1C2216',
+                  transform: 'rotate(1deg)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <video
+                  ref={finalCtaVideoRef}
+                  src={import.meta.env.BASE_URL + 'videos/merit-join-parents-cta.mp4'}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    transform: 'scale(1.06)',
+                  }}
+                  onPlay={() => setIsFinalCtaVideoPlaying(true)}
+                  onPause={() => setIsFinalCtaVideoPlaying(false)}
+                />
+              </div>
+              <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = finalCtaVideoRef.current;
+                    if (!el) return;
+                    if (el.paused) {
+                      el.play().catch(() => {});
+                    } else {
+                      el.pause();
+                    }
+                  }}
+                  style={{
+                    background: '#FFFFFF',
+                    color: '#1C2216',
+                    border: '2px solid #1C2216',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '4px 4px 0 #1C2216',
+                  }}
+                >
+                  {isFinalCtaVideoPlaying ? 'Pause Video' : 'Play Video'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

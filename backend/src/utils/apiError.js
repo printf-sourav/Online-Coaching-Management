@@ -1,21 +1,17 @@
-class apiError extends Error{
-    constructor(
-        statusCode,
-        message="something went wrong",
-        errors = [],
-        stack=""
-    ){
-        super(message)
-        this.statusCode=statusCode
-        this.message=message
-        this.success=false
-        this.error=errors
+class ApiError extends Error {
+  constructor(statusCode, message = "Something went wrong", errors = []) {
+    super(message);
+    this.statusCode = statusCode;
+    this.success = false;
+    this.errors = errors;
 
-        if(stack) this.stack=stack
-        else{
-            Error.captureStackTrace(this,this.constructor)
-        }
+    // Capture stack trace for debugging (only in non-production)
+    if (process.env.NODE_ENV !== "production") {
+      Error.captureStackTrace(this, this.constructor);
     }
+  }
 }
 
-export {apiError}
+// Keep backward-compatible lowercase alias
+export { ApiError, ApiError as apiError };
+export default ApiError;

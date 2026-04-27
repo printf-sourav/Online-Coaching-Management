@@ -3,7 +3,7 @@ import { useTheme } from '../../context/ThemeContext';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatCard from '../../components/StatCard';
-import { statusConfig } from '../../data/mockData';
+import { statusConfig } from '../../data/statusConfig';
 import {
   fetchAdminData,
   apiAdminCreateTeacher,

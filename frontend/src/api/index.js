@@ -4,11 +4,34 @@
 
 // ─── REAL API HELPERS ─────────────────────────────────────────────────────────
 
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  (window.location.hostname === 'localhost'
-    ? ''
-    : 'https://online-coaching-management-production.up.railway.app');
+/**
+ * API origin for fetch().
+ * - Dev on localhost: use Vite proxy (same origin, path /api) unless VITE_FORCE_REMOTE_API=1
+ * - Otherwise: VITE_API_URL, or same-origin on localhost, or production fallback
+ */
+function resolveApiBase() {
+  const fromEnv = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
+  const isBrowser = typeof window !== 'undefined';
+  const host = isBrowser ? window.location.hostname : '';
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  const isDev = import.meta.env.DEV;
+
+  if (isDev && isLocal && import.meta.env.VITE_FORCE_REMOTE_API !== '1') {
+    const envIsRemote = fromEnv && /^https?:\/\//i.test(fromEnv) && !/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\b/i.test(fromEnv);
+    if (envIsRemote) {
+      console.info('[api] Using Vite dev proxy (/api → backend). Set VITE_FORCE_REMOTE_API=1 to use VITE_API_URL instead.');
+      return '';
+    }
+    if (fromEnv) return fromEnv;
+    return '';
+  }
+
+  if (fromEnv) return fromEnv;
+  if (isLocal) return '';
+  return 'https://online-coaching-management-production.up.railway.app';
+}
+
+const API_BASE = resolveApiBase();
 
 // Shared refresh promise — prevents multiple concurrent refresh calls
 let _refreshing = null;

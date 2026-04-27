@@ -14,13 +14,18 @@ import PerformanceNote from "../models/PerformanceNote.model.js";
 import Feedback from "../models/Feedback.model.js";
 import Notification from "../models/Notification.model.js";
 
+const CLASS_COLORS = [
+  "var(--grad-primary)", "var(--grad-accent)", "var(--grad-rose)",
+  "var(--grad-amber)", "var(--grad-sky)",
+];
+
 // ─── GET /api/teacher/list (public — any auth'd user) ────────────────────────
 export const getPublicTeachersList = asyncHandler(async (req, res) => {
   const teachers = await Teacher.find({})
     .populate("userId", "name")
     .lean();
 
-  // Fetch featured reviews for all teachers in one query
+  // Fetch featured reviews for all teachers in a single query
   const teacherIds = teachers.map(t => t._id);
   const featuredFeedbacks = await Feedback.find({
     teacherId: { $in: teacherIds },
@@ -84,32 +89,44 @@ export const getPublicTeachersList = asyncHandler(async (req, res) => {
   );
 });
 
+// ─── GET /api/teacher/dashboard ──────────────────────────────────────────────
 export const getTeacherDashboard = asyncHandler(async (req, res) => {
   const teacher = await Teacher.findOne({ userId: req.user._id });
   if (!teacher) throw new apiError(404, "Teacher not found");
 
   const user = req.user;
-
-  // Today boundaries
+  const now = new Date();
   const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
   const todayEnd   = new Date(); todayEnd.setHours(23, 59, 59, 999);
-  const now        = new Date();
 
-  // ── Classes ──────────────────────────────────────────────────────────────────
-  const totalClasses = await Class.countDocuments({ tutorId: teacher._id });
+  // ── Parallel query block 1: counts + today's classes + enrollments + assignments ──
+  const [
+    totalClasses,
+    todayClasses,
+    enrollments,
+    totalAssignments,
+    assignmentDocs,
+    upcomingClassDocs,
+  ] = await Promise.all([
+    Class.countDocuments({ tutorId: teacher._id }),
+    Class.find({ tutorId: teacher._id, date: { $gte: todayStart, $lte: todayEnd } })
+      .sort({ date: 1 }).lean(),
+    Enrollment.find({ tutorId: teacher._id, status: { $in: ["active", "approved", "pending"] } })
+      .populate({ path: "studentId", populate: { path: "userId", select: "name" } }).lean(),
+    Assignment.countDocuments({ teacherId: teacher._id }),
+    Assignment.find({ teacherId: teacher._id })
+      .populate("classId", "subject")
+      .sort({ dueDate: 1 })
+      .limit(10)
+      .lean(),
+    Class.find({ tutorId: teacher._id, date: { $gte: now } })
+      .sort({ date: 1 })
+      .limit(5)
+      .select("subject topic date timeSlot status meetingLink studentIds")
+      .lean(),
+  ]);
 
-  const todayClasses = await Class.find({
-    tutorId: teacher._id,
-    date: { $gte: todayStart, $lte: todayEnd },
-  }).sort({ date: 1 });
-
-  const classesToday = todayClasses.length;
-
-  const classColors = [
-    "var(--grad-primary)", "var(--grad-accent)", "var(--grad-rose)",
-    "var(--grad-amber)", "var(--grad-sky)",
-  ];
-
+  // ── Format today's classes ──
   const classesFormatted = todayClasses.map((c, i) => ({
     id: c._id,
     name: c.subject,
@@ -120,131 +137,132 @@ export const getTeacherDashboard = asyncHandler(async (req, res) => {
       : (c.date ? new Date(c.date).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }) : ""),
     status: c.status,
     zoomLink: c.meetingLink || "#",
-    color: classColors[i % classColors.length],
+    color: CLASS_COLORS[i % CLASS_COLORS.length],
   }));
 
-  // ── Students ─────────────────────────────────────────────────────────────────
-  // Fetch all enrolled students
-  const enrollments = await Enrollment.find({ tutorId: teacher._id, status: { $in: ["active", "approved", "pending"] } })
-    .populate({ path: "studentId", populate: { path: "userId", select: "name" } });
+  // ── Enrolled student IDs ──
+  const studentIds = enrollments.map(e => e.studentId?._id).filter(Boolean);
 
-  // For each student, calculate attendance % and last assignment score
-  const studentsFormatted = (await Promise.all(enrollments.map(async e => {
-    const s = e.studentId;
-    if (!s) return null;
-    const name = s.userId?.name || "Student";
-    // Attendance %
-    const attRecords = await Attendance.find({ teacherId: teacher._id, studentId: s._id });
-    const totalAtt = attRecords.length;
-    const presentAtt = attRecords.filter(a => a.status === "present" || a.status === "late").length;
-    const attendance = totalAtt > 0 ? Math.round((presentAtt / totalAtt) * 100) : 0;
-    // Last assignment score — only from THIS teacher's assignments
-    const teacherAssignmentIds = await Assignment.find({ teacherId: teacher._id }).distinct("_id");
-    const lastSubmission = teacherAssignmentIds.length > 0
-      ? await Submission.findOne({ studentId: s._id, assignmentId: { $in: teacherAssignmentIds }, status: "graded" })
-          .sort({ createdAt: -1 })
-      : null;
-    let lastScore = "—";
-    if (lastSubmission && typeof lastSubmission.grade === "number" && lastSubmission.grade > 0) {
-      let maxScore = 10;
-      if (lastSubmission.assignmentId) {
-        const assignment = await Assignment.findById(lastSubmission.assignmentId).select("maxPoints");
-        if (assignment && typeof assignment.maxPoints === "number") {
-          maxScore = assignment.maxPoints;
-        }
-      }
-      lastScore = `${lastSubmission.grade}/${maxScore}`;
-    }
+  // ── Parallel query block 2: batch attendance + batch submissions + batch assignment counts ──
+  const teacherAssignmentIds = assignmentDocs.map(a => a._id);
 
-    // HW status — check if student has any pending submissions for this teacher's assignments
-    let homeworkStatus = "—";
-    if (teacherAssignmentIds.length > 0) {
-      const pendingCount = await Submission.countDocuments({
-        studentId: s._id,
-        assignmentId: { $in: teacherAssignmentIds },
-        status: "submitted",
-      });
-      const totalAssigned = await Assignment.countDocuments({
-        teacherId: teacher._id,
-        $or: [{ studentIds: s._id }, { studentIds: { $size: 0 } }, { studentIds: { $exists: false } }],
-      });
-      if (totalAssigned === 0) {
-        homeworkStatus = "—";
-      } else if (pendingCount > 0) {
-        homeworkStatus = "pending";
-      } else {
-        homeworkStatus = "done";
-      }
-    }
-    return {
-      id: s._id,
-      enrollmentId: e._id,
-      name,
-      avatar: name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase(),
-      grade: e.grade || s.grade || "—",
-      board: e.board || "—",
-      school: e.school || "—",
-      subjectsEnrolled: e.subjectsEnrolled || [],
-      parentName: e.parentName || s.parentName || "—",
-      parentPhone: e.parentPhone || s.parentPhone || "—",
-      preferredDays: e.preferredDays || [],
-      attendance,
-      lastScore,
-      status: e.status || "active",
-      homeworkStatus,
-      remarks: "",
+  const [attAgg, submissionsByStudent, pendingEval, gradedSubmissions, recentSubmissions] =
+    await Promise.all([
+      // Batch attendance aggregation for all enrolled students at once
+      Attendance.aggregate([
+        { $match: { teacherId: teacher._id, studentId: { $in: studentIds } } },
+        {
+          $group: {
+            _id: "$studentId",
+            total: { $sum: 1 },
+            attended: { $sum: { $cond: [{ $in: ["$status", ["present", "late"]] }, 1, 0] } },
+          },
+        },
+      ]),
+      // Batch: last graded submission per student for this teacher's assignments
+      Submission.aggregate([
+        { $match: { assignmentId: { $in: teacherAssignmentIds }, status: "graded", grade: { $gt: 0 } } },
+        { $sort: { createdAt: -1 } },
+        { $group: { _id: "$studentId", grade: { $first: "$grade" }, assignmentId: { $first: "$assignmentId" } } },
+      ]),
+      // Pending evaluations
+      Submission.countDocuments({ assignmentId: { $in: teacherAssignmentIds }, status: "submitted" }),
+      // Graded
+      Submission.countDocuments({ assignmentId: { $in: teacherAssignmentIds }, status: "graded" }),
+      // Recent activity
+      Submission.find({ assignmentId: { $in: teacherAssignmentIds } })
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .populate("studentId", "studentId")
+        .lean(),
+    ]);
+
+  // Build lookup maps for O(1) access
+  const attMap = {};
+  attAgg.forEach(a => {
+    attMap[a._id.toString()] = {
+      total: a.total,
+      attended: a.attended,
+      pct: a.total > 0 ? Math.round((a.attended / a.total) * 100) : 0,
     };
-  }))).filter(Boolean);
+  });
 
-  const totalStudents = studentsFormatted.length;
+  const lastScoreMap = {};
+  for (const s of submissionsByStudent) {
+    const asgn = assignmentDocs.find(a => a._id.toString() === s.assignmentId?.toString());
+    const maxPoints = asgn?.maxPoints || 10;
+    lastScoreMap[s._id.toString()] = `${s.grade}/${maxPoints}`;
+  }
 
-  // ── Assignments ───────────────────────────────────────────────────────────────
-  const totalAssignments = await Assignment.countDocuments({ teacherId: teacher._id });
+  // ── Batch: homework status (pending submitted count per student) ──
+  const hwAgg = teacherAssignmentIds.length > 0
+    ? await Submission.aggregate([
+        { $match: { assignmentId: { $in: teacherAssignmentIds }, status: "submitted" } },
+        { $group: { _id: "$studentId", count: { $sum: 1 } } },
+      ])
+    : [];
+  const hwMap = {};
+  hwAgg.forEach(h => { hwMap[h._id.toString()] = h.count; });
 
-  const assignmentDocs = await Assignment.find({ teacherId: teacher._id })
-    .populate("classId", "subject")
-    .sort({ dueDate: 1 })
-    .limit(10);
+  // ── Format students using lookup maps (no N+1!) ──
+  const studentsFormatted = enrollments
+    .filter(e => e.studentId)
+    .map(e => {
+      const s = e.studentId;
+      const sid = s._id.toString();
+      const name = s.userId?.name || "Student";
+      const att = attMap[sid];
+      const lastScore = lastScoreMap[sid] || "—";
 
-  const assignmentsFormatted = await Promise.all(
-    assignmentDocs.map(async (a) => {
-      const submittedCount = await Submission.countDocuments({ assignmentId: a._id });
+      let homeworkStatus = "—";
+      if (teacherAssignmentIds.length > 0) {
+        homeworkStatus = (hwMap[sid] || 0) > 0 ? "pending" : "done";
+      }
+
       return {
-        id: a._id,
-        class: a.classId?.subject || "All Students",
-        title: a.title || a.description || "Assignment",
-        due: a.dueDate
-          ? new Date(a.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
-          : "",
-        submitted: submittedCount,
-        total: a.studentIds?.length || 0,
-        maxScore: a.maxPoints || 10,
-        fileUrl: a.attachmentUrl || null,
+        id: s._id,
+        enrollmentId: e._id,
+        name,
+        avatar: name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase(),
+        grade: e.grade || s.grade || "—",
+        board: e.board || "—",
+        school: e.school || "—",
+        subjectsEnrolled: e.subjectsEnrolled || [],
+        parentName: e.parentName || s.parentName || "—",
+        parentPhone: e.parentPhone || s.parentPhone || "—",
+        preferredDays: e.preferredDays || [],
+        attendance: att?.pct ?? 0,
+        lastScore,
+        status: e.status || "active",
+        homeworkStatus,
+        remarks: "",
       };
-    })
-  );
+    });
 
-  // ── Pending evaluations ───────────────────────────────────────────────────────
-  const pendingEval = await Submission.countDocuments({
-    assignmentId: { $in: assignmentDocs.map(a => a._id) },
-    status: "submitted",
-  });
+  // ── Format assignments ──
+  const submissionCountAgg = teacherAssignmentIds.length > 0
+    ? await Submission.aggregate([
+        { $match: { assignmentId: { $in: teacherAssignmentIds } } },
+        { $group: { _id: "$assignmentId", count: { $sum: 1 } } },
+      ])
+    : [];
+  const subCountMap = {};
+  submissionCountAgg.forEach(s => { subCountMap[s._id.toString()] = s.count; });
 
-  // ── Graded submissions ────────────────────────────────────────────────────────
-  const gradedSubmissions = await Submission.countDocuments({
-    assignmentId: { $in: assignmentDocs.map(a => a._id) },
-    status: "graded",
-  });
+  const assignmentsFormatted = assignmentDocs.map(a => ({
+    id: a._id,
+    class: a.classId?.subject || "All Students",
+    title: a.title || a.description || "Assignment",
+    due: a.dueDate
+      ? new Date(a.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
+      : "",
+    submitted: subCountMap[a._id.toString()] || 0,
+    total: a.studentIds?.length || 0,
+    maxScore: a.maxPoints || 10,
+    fileUrl: a.attachmentUrl || null,
+  }));
 
-  // ── Upcoming classes (next 5) ─────────────────────────────────────────────────
-  const upcomingClassDocs = await Class.find({
-    tutorId: teacher._id,
-    date: { $gte: now },
-  })
-    .sort({ date: 1 })
-    .limit(5)
-    .select("subject topic date timeSlot status meetingLink studentIds");
-
+  // ── Upcoming classes ──
   const upcomingClasses = upcomingClassDocs.map((c, i) => ({
     id: c._id,
     name: c.subject,
@@ -256,20 +274,13 @@ export const getTeacherDashboard = asyncHandler(async (req, res) => {
       : "",
     status: c.status,
     zoomLink: c.meetingLink || "#",
-    color: classColors[i % classColors.length],
+    color: CLASS_COLORS[i % CLASS_COLORS.length],
   }));
 
-  // ── Recent activity (last 5 submissions/classes) ──────────────────────────────
-  const recentSubmissions = await Submission.find({
-    assignmentId: { $in: assignmentDocs.map(a => a._id) },
-  })
-    .sort({ createdAt: -1 })
-    .limit(5)
-    .populate("studentId", "studentId");
-
+  // ── Recent activity ──
   const recentActivity = recentSubmissions.map(s => ({
     action: "Assignment submitted",
-    detail: `Student submitted`,
+    detail: "Student submitted",
     time: s.createdAt
       ? new Date(s.createdAt).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
       : "",
@@ -277,27 +288,23 @@ export const getTeacherDashboard = asyncHandler(async (req, res) => {
   }));
 
   return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        name: user.name,
-        subject: teacher.subjects?.[0] || "",
-        employeeId: teacher.teacherId,
-        totalClasses,
-        totalStudents,
-        classesToday,
-        pendingEval,
-        avgRating: teacher.rating || 0,
-        totalAssignments,
-        gradedSubmissions,
-        upcomingClasses,
-        classes: classesFormatted,
-        students: studentsFormatted,
-        assignments: assignmentsFormatted,
-        recentActivity,
-      },
-      "Teacher dashboard fetched successfully"
-    )
+    new ApiResponse(200, {
+      name: user.name,
+      subject: teacher.subjects?.[0] || "",
+      employeeId: teacher.teacherId,
+      totalClasses,
+      totalStudents: studentsFormatted.length,
+      classesToday: todayClasses.length,
+      pendingEval,
+      avgRating: teacher.rating || 0,
+      totalAssignments,
+      gradedSubmissions,
+      upcomingClasses,
+      classes: classesFormatted,
+      students: studentsFormatted,
+      assignments: assignmentsFormatted,
+      recentActivity,
+    }, "Teacher dashboard fetched successfully")
   );
 });
 
@@ -307,44 +314,54 @@ export const getTeacherAssignments = asyncHandler(async (req, res) => {
   if (!teacher) throw new apiError(404, "Teacher not found");
 
   const assignmentDocs = await Assignment.find({ teacherId: teacher._id })
-    .sort({ dueDate: -1 });
+    .sort({ dueDate: -1 })
+    .lean();
 
-  const list = await Promise.all(
-    assignmentDocs.map(async (a) => {
-      const submissions = await Submission.find({ assignmentId: a._id })
-        .populate("studentId", "studentId")
-        .populate({ path: "studentId", populate: { path: "userId", select: "name" } })
-        .sort({ createdAt: -1 });
+  // Batch fetch all submissions for these assignments
+  const assignmentIds = assignmentDocs.map(a => a._id);
+  const allSubmissions = await Submission.find({ assignmentId: { $in: assignmentIds } })
+    .populate({ path: "studentId", populate: { path: "userId", select: "name" } })
+    .sort({ createdAt: -1 })
+    .lean();
 
-      return {
-        id: a._id,
-        title: a.title || a.description || "Assignment",
-        description: a.description || "",
-        due: a.dueDate
-          ? new Date(a.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
-          : "",
-        dueRaw: a.dueDate,
-        total: a.studentIds?.length || 0,
-        submitted: submissions.length,
-        maxScore: a.maxPoints || 10,
-        fileUrl: a.attachmentUrl || null,
-        priority: a.priority || "medium",
-        submissions: submissions.map(s => ({
-          id: s._id,
-          studentName: s.studentId?.userId?.name || "Student",
-          studentRollNo: s.studentId?.studentId || "",
-          fileUrl: s.fileUrl || "",
-          note: s.note || "",
-          status: s.status,
-          grade: s.grade ?? null,
-          teacherRemark: s.teacherRemark || "",
-          submittedAt: s.createdAt
-            ? new Date(s.createdAt).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
-            : "",
-        })),
-      };
-    })
-  );
+  // Group submissions by assignment
+  const subsByAssignment = {};
+  for (const s of allSubmissions) {
+    const aid = s.assignmentId.toString();
+    if (!subsByAssignment[aid]) subsByAssignment[aid] = [];
+    subsByAssignment[aid].push({
+      id: s._id,
+      studentName: s.studentId?.userId?.name || "Student",
+      studentRollNo: s.studentId?.studentId || "",
+      fileUrl: s.fileUrl || "",
+      note: s.note || "",
+      status: s.status,
+      grade: s.grade ?? null,
+      teacherRemark: s.teacherRemark || "",
+      submittedAt: s.createdAt
+        ? new Date(s.createdAt).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
+        : "",
+    });
+  }
+
+  const list = assignmentDocs.map(a => {
+    const subs = subsByAssignment[a._id.toString()] || [];
+    return {
+      id: a._id,
+      title: a.title || a.description || "Assignment",
+      description: a.description || "",
+      due: a.dueDate
+        ? new Date(a.dueDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+        : "",
+      dueRaw: a.dueDate,
+      total: a.studentIds?.length || 0,
+      submitted: subs.length,
+      maxScore: a.maxPoints || 10,
+      fileUrl: a.attachmentUrl || null,
+      priority: a.priority || "medium",
+      submissions: subs,
+    };
+  });
 
   return res.status(200).json(new ApiResponse(200, list, "Assignments fetched"));
 });
@@ -382,7 +399,8 @@ export const getTopics = asyncHandler(async (req, res) => {
 
   const topics = await Topic.find({ teacherId: teacher._id })
     .populate({ path: "studentId", populate: { path: "userId", select: "name" } })
-    .sort({ date: -1 });
+    .sort({ date: -1 })
+    .lean();
 
   const list = topics.map(t => ({
     id: t._id,
@@ -423,14 +441,17 @@ export const addPerformanceNote = asyncHandler(async (req, res) => {
     note: note?.trim() || "",
   });
 
-  // Create a notification for the student so they see it in Teacher Updates
-  const studentDoc = await Student.findById(studentId).populate("userId", "name");
+  // Create a notification for the student
+  const [studentDoc, teacherUser] = await Promise.all([
+    Student.findById(studentId).populate("userId", "name"),
+    User.findById(teacher.userId).select("name"),
+  ]);
+
   if (studentDoc?.userId) {
-    const teacherUser = await User.findById(teacher.userId).select("name");
     const teacherName = teacherUser?.name || "Your teacher";
     let msg = `${teacherName} added a remark`;
     if (doc.score != null) msg += ` · Score: ${doc.score}%`;
-    if (doc.note) msg += `${doc.score != null ? '' : ':'} ${doc.note}`;
+    if (doc.note) msg += `${doc.score != null ? "" : ":"} ${doc.note}`;
     await Notification.create({
       userId: studentDoc.userId._id,
       title: `📝 New remark from ${teacherName}`,
@@ -448,7 +469,8 @@ export const getPerformanceNotes = asyncHandler(async (req, res) => {
 
   const notes = await PerformanceNote.find({ teacherId: teacher._id })
     .populate({ path: "studentId", populate: { path: "userId", select: "name" } })
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .lean();
 
   const list = notes.map(n => ({
     id: n._id,
@@ -479,7 +501,8 @@ export const getTeacherFeedback = asyncHandler(async (req, res) => {
 
   const feedbacks = await Feedback.find({ teacherId: teacher._id })
     .populate({ path: "studentId", populate: { path: "userId", select: "name" } })
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .lean();
 
   const list = feedbacks.map(f => ({
     id: f._id,
@@ -518,7 +541,6 @@ export const updateAvailability = asyncHandler(async (req, res) => {
   const { availability } = req.body;
   if (!Array.isArray(availability)) throw new apiError(400, "availability must be an array");
 
-  // Validate each entry: { day: String, slots: [{ start, end }] }
   const validDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   for (const entry of availability) {
     if (!validDays.includes(entry.day)) throw new apiError(400, `Invalid day: ${entry.day}`);

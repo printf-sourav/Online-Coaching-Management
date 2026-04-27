@@ -15,6 +15,7 @@ import PlatformReview from "../models/PlatformReview.model.js";
 import Attendance from "../models/Attendance.model.js";
 import Announcement from "../models/Announcement.model.js";
 import Demo from "../models/Demo.model.js";
+import { escapeRegex } from "../utils/helpers.js";
 
 export const createTeacher = asyncHandler(async(req,res)=>{
     const {name, email, password, subjects, experience, bio, phone, salary, grades} = req.body
@@ -127,7 +128,7 @@ export const searchStudents = asyncHandler(async (req, res) => {
   const q = (req.query.q || "").trim();
   if (!q) return res.status(200).json(new ApiResponse(200, [], "No query"));
 
-  const regex = new RegExp(q, "i");
+  const regex = new RegExp(escapeRegex(q), "i");
   // Find matching User docs
   const users = await User.find({ name: regex, role: "student" }, "_id name email").limit(20);
   const userIds = users.map(u => u._id);

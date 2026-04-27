@@ -9,18 +9,7 @@ import { apiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { sendPaymentReceiptEmail } from "../utils/sendEmail.js";
 import { generateInvoicePDF } from "../utils/generateInvoice.js";
-
-// ── Helper: add exactly one month to a Date ───────────────────────────────
-function addOneMonth(date) {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() + 1);
-  return d;
-}
-
-function billingMonthStr(date) {
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-}
+import { addOneMonth, billingMonthStr } from "../utils/helpers.js";
 
 export const initiatePayment = asyncHandler(async (req, res) => {
   const { enrollmentId, paymentId: existingPaymentId } = req.body;

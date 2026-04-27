@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Class from "../models/Class.model.js"
+import Class from "../models/Class.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
 import Teacher from "../models/Teacher.model.js";
@@ -8,192 +8,179 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import Student from "../models/Student.model.js";
 import { createNotification } from "../utils/notification.js";
 
+const createClass = asyncHandler(async (req, res) => {
+  const teacher = await Teacher.findOne({ userId: req.user._id });
+  if (!teacher) throw new apiError(404, "Tutor not found");
 
-const createClass = asyncHandler(async(req,res)=>{
-    const tutorId = req.user._id
+  const { subject, topic, date, timeSlot, meetingLink, classNotes } = req.body;
 
-    
-    const teacher = await Teacher.findOne({userId:tutorId});
-    if(!teacher){
-        throw new apiError(404,"Tutor not found")
-    }
+  if (!subject || !topic || !date || !timeSlot || !meetingLink) {
+    throw new apiError(400, "All fields are required");
+  }
 
-    const {subject,topic,date,timeSlot,meetingLink,classNotes} = req.body
+  const startTime = new Date(timeSlot.start);
+  const endTime = new Date(timeSlot.end);
+  if (startTime > endTime) {
+    throw new apiError(400, "Starting time is greater than ending time");
+  }
+  if (new Date(date) < new Date()) {
+    throw new apiError(400, "Date cannot be in past");
+  }
 
-    if(!subject||!topic||!date||!timeSlot||!meetingLink){
-        throw new apiError(400,"All fields are required")
-    }
+  const enrollments = await Enrollment.find({
+    tutorId: teacher._id,
+    status: { $in: ["active", "pending"] },
+  })
+    .select("studentId")
+    .lean();
 
-    if(new Date(timeSlot.start)>new Date(timeSlot.end)){
-        throw new apiError(400,"starting time is greater than ending time")
-    }
-    if(new Date(date) < new Date()){
-        throw new apiError(400,"date cannot be in past")
-    }
+  const studentIds = enrollments.map((en) => en.studentId);
 
-    const enrollments = await Enrollment.find({
-        tutorId:teacher._id,
-        status:{ $in: ["active", "pending"] }
-    })
+  const newClass = await Class.create({
+    tutorId: teacher._id,
+    studentIds,
+    subject,
+    topic,
+    date: new Date(date),
+    timeSlot: { start: startTime, end: endTime },
+    meetingLink,
+    status: "scheduled",
+    ...(classNotes ? { classNotes } : {}),
+  });
 
-    const studentIds = enrollments.map((en)=>(en.studentId))
-    const totalStudents = studentIds.length
+  // Batch fetch student userIds for notifications (eliminates N+1)
+  const students = await Student.find({ _id: { $in: studentIds } })
+    .select("_id userId")
+    .lean();
 
-    
-    
+  // Fire-and-forget notifications
+  const notificationPromises = students.map((s) =>
+    createNotification({
+      userId: s.userId,
+      title: "New Class Scheduled",
+      message: `A new class for ${subject} has been scheduled.`,
+      type: "class",
+      link: `/student/classes/${newClass._id}`,
+    }).catch(() => {})
+  );
 
-    const newClass = await Class.create({
-        tutorId:teacher._id,
-        studentIds:studentIds,
+  Promise.all(notificationPromises).catch(() => {});
+
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        classId: newClass._id,
         subject,
-        topic,
-        date:new Date(date),
-        timeSlot:{
-            start:new Date(timeSlot.start),
-            end: new Date(timeSlot.end)
-        },
-        meetingLink:meetingLink,
-        status:"scheduled",
-        ...(classNotes ? { classNotes } : {})
-    }) 
+        date: newClass.date,
+        timeSlot: newClass.timeSlot,
+        totalStudents: studentIds.length,
+      },
+      "Class created successfully"
+    )
+  );
+});
 
-    for (const studentId of studentIds) {
+const getTeacherClasses = asyncHandler(async (req, res) => {
+  const teacher = await Teacher.findOne({ userId: req.user._id });
+  if (!teacher) throw new apiError(404, "Tutor not found");
 
-        const student = await Student.findById(studentId);
+  const classes = await Class.find({ tutorId: teacher._id })
+    .sort({ date: -1 })
+    .lean();
 
-        if (student) {
-            await createNotification({
-                userId: student.userId,
-                title: "New Class Scheduled",
-                message: `A new class for ${subject} has been scheduled.`,
-                type: "class",
-                link: `/student/classes/${newClass?._id || ""}`
-            });
-        }
-    }
+  return res.status(200).json(
+    new ApiResponse(200, { classes }, "Classes fetched")
+  );
+});
 
-    return res.status(201).json(new ApiResponse(201,{
-        classId:newClass._id,subject:subject,date:newClass.date,timeSlot:newClass.timeSlot,totalStudents:totalStudents
-    },"Class created successfully"))
-})
+const getStudentClasses = asyncHandler(async (req, res) => {
+  const student = await Student.findOne({ userId: req.user._id });
+  if (!student) throw new apiError(404, "Student not found");
 
+  const classes = await Class.find({ studentIds: student._id })
+    .sort({ date: -1 })
+    .lean();
 
-const getTeacherClasses = asyncHandler(async(req,res)=>{
-    const tutorId = req.user._id
-    const teacher = await Teacher.findOne({userId:tutorId})
-    if(!teacher){
-        throw new apiError(404,"Tutor not found")
-    }
+  return res.status(200).json(
+    new ApiResponse(200, { classes }, "Classes fetched")
+  );
+});
 
-    const classes = await Class.find({
-        tutorId:teacher._id,
-        
-    }).sort({date:-1})
+const updateClass = asyncHandler(async (req, res) => {
+  const classId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(classId)) {
+    throw new apiError(400, "Invalid classId");
+  }
 
-    return res.status(200).json(new ApiResponse(200,{
-        classes:classes
-    },"Classes fetched"))
-})
+  const { topic, meetingLink, timeSlot, status } = req.body;
 
-const getStudentClasses = asyncHandler(async(req,res)=>{
-    const userId = req.user._id
-    const student = await Student.findOne({userId:userId})
+  const teacher = await Teacher.findOne({ userId: req.user._id });
+  if (!teacher) throw new apiError(404, "Teacher not found");
 
-    if(!student){
-        throw new apiError(404,"Student not found");
-    }
+  const existingClass = await Class.findOne({
+    _id: classId,
+    tutorId: teacher._id,
+  });
+  if (!existingClass) throw new apiError(404, "Class not found");
+  if (existingClass.status === "completed") {
+    throw new apiError(403, "Completed class cannot be updated");
+  }
 
-    const classes = await Class.find({
-        studentIds:student._id,
-    }).sort({date:-1})
-    
+  if (topic) existingClass.topic = topic;
+  if (meetingLink) existingClass.meetingLink = meetingLink;
+  if (timeSlot?.start && timeSlot?.end) {
+    existingClass.timeSlot = {
+      start: new Date(timeSlot.start),
+      end: new Date(timeSlot.end),
+    };
+  }
+  if (status) existingClass.status = status;
 
-    return res.status(200).json(new ApiResponse(200,{
-        classes:classes
-    },"Classes fetched"))
+  await existingClass.save();
 
-})
+  return res.status(200).json(
+    new ApiResponse(200, existingClass, "Class updated")
+  );
+});
 
-const updateClass = asyncHandler(async(req,res)=>{
-    const classId = req.params.id
-    if(!mongoose.Types.ObjectId.isValid(classId)){
-        throw new apiError(400,"Invalid classId")
-    }
-    const {topic,meetingLink,timeSlot,status} = req.body
+const deleteClass = asyncHandler(async (req, res) => {
+  const classId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(classId)) {
+    throw new apiError(400, "Invalid classId");
+  }
 
-    const teacher = await Teacher.findOne({userId:req.user._id});
-    if(!teacher){
-        throw new apiError(404,"Teacher not found")
-    }
-    const existingClass = await Class.findOne({
-        _id:classId,
-        tutorId:teacher._id
-    })
-    if(!existingClass){
-        throw new apiError(404,"Class not found")
-    }
-    if(existingClass.status==="completed"){
-        throw new apiError(403,"Completed class cannot be updated");
-    }
-    if(topic) existingClass.topic = topic
-    if(meetingLink) existingClass.meetingLink = meetingLink
-    if(timeSlot && timeSlot.start && timeSlot.end){
-        existingClass.timeSlot = {
-            start: new Date(timeSlot.start),
-            end: new Date(timeSlot.end)
-        }
-    }
-    if(status) existingClass.status = status
+  const teacher = await Teacher.findOne({ userId: req.user._id });
+  if (!teacher) throw new apiError(404, "Teacher not found");
 
-    await existingClass.save()
+  const existingClass = await Class.findOne({
+    _id: classId,
+    tutorId: teacher._id,
+  });
+  if (!existingClass) throw new apiError(404, "Class not found");
+  if (existingClass.status === "completed") {
+    throw new apiError(403, "Completed class cannot be deleted");
+  }
 
-    return res.status(200).json(new ApiResponse(200,existingClass,"Class updated"))
-})
+  await Class.findByIdAndDelete(classId);
 
-const deleteClass = asyncHandler(async(req,res)=>{
-    const classId = req.params.id
-    if(!mongoose.Types.ObjectId.isValid(classId)){
-        throw new apiError(400,"Invalid classId")
-    }
-    const teacher = await Teacher.findOne({userId:req.user._id})
-    if(!teacher){
-        throw new apiError(404,"Teacher not found")
-    }
+  return res.status(200).json(
+    new ApiResponse(200, {}, "Class deleted")
+  );
+});
 
-    const newClass = await Class.findOne({
-        _id:classId,
-        tutorId:teacher._id
-    })
-    if(!newClass){
-        throw new apiError(404,"Class not found")
-    }
+const getClass = asyncHandler(async (req, res) => {
+  const classId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(classId)) {
+    throw new apiError(400, "Invalid classId");
+  }
 
-    if(newClass.status==="completed"){
-        throw new apiError(403,"Completed class cannot be deleted");
-    }
+  const classDoc = await Class.findById(classId).lean();
+  if (!classDoc) throw new apiError(404, "Class not found");
 
-    await Class.findByIdAndDelete(classId)
+  return res.status(200).json(
+    new ApiResponse(200, classDoc, "Class fetched")
+  );
+});
 
-    return res.status(200).json( new ApiResponse(200,{},"class deleted"))
-})
-
-const getClass = asyncHandler(async(req,res)=>{
-    const classId = req.params.id
-    if(!mongoose.Types.ObjectId.isValid(classId)){
-        throw new apiError(400,"Invalid classId")
-    }
-
-    const newClass = await Class.findById(classId)
-    if(!newClass){
-        throw new apiError(404,"Class not found")
-    }
-
-    return res.status(200).json(new ApiResponse(200,newClass,"class fetched"))
-    
-})
-
-
-
-
-
-export {createClass,getTeacherClasses,getStudentClasses,updateClass,deleteClass,getClass}
+export { createClass, getTeacherClasses, getStudentClasses, updateClass, deleteClass, getClass };

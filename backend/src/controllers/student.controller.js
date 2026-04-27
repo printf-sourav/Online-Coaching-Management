@@ -34,7 +34,8 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
   // ── Attendance ──────────────────────────────────────────────────────────────
   const attendanceRecordsRaw = await Attendance.find({ studentId: student._id })
     .populate("classId", "subject topic date")
-    .sort({ date: -1 });
+    .sort({ date: -1 })
+    .lean();
 
   const totalAttendance = attendanceRecordsRaw.length;
   const presentCount = attendanceRecordsRaw.filter(a => a.status === "present").length;
@@ -100,7 +101,8 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
     ],
   })
     .populate("tutorId", "userId subjects")
-    .sort({ date: -1 });
+    .sort({ date: -1 })
+    .lean();
 
   const totalClasses = totalAttendance; // each attendance record = one class held for this student
   const classesAttended = presentCount + lateCount;
@@ -127,7 +129,8 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
   // Confirmed demo classes for this student (act as extra upcoming classes)
   const demoClasses = await Demo.find({ studentId: student._id, status: "confirmed" })
     .populate({ path: "tutorId", populate: { path: "userId", select: "name" } })
-    .sort({ scheduledAt: 1 });
+    .sort({ scheduledAt: 1 })
+    .lean();
 
   const upcomingDemos = demoClasses
     .filter(d => d.scheduledAt && new Date(d.scheduledAt) >= new Date(Date.now() - 2 * 60 * 60 * 1000)) // past 2h grace
@@ -231,9 +234,10 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
   // ── Assignments ──────────────────────────────────────────────────────────────
   const assignments = await Assignment.find({ studentIds: student._id })
     .populate("classId", "subject")
-    .sort({ dueDate: 1 });
+    .sort({ dueDate: 1 })
+    .lean();
 
-  const submissions = await Submission.find({ studentId: student._id });
+  const submissions = await Submission.find({ studentId: student._id }).lean();
   const submissionMap = {};
   submissions.forEach(s => { submissionMap[s.assignmentId.toString()] = s; });
 
@@ -475,30 +479,33 @@ export const submitAssignment = asyncHandler(async (req, res) => {
     status: isLate ? "late" : "submitted",
   });
 
-  // Email the file to the teacher (non-fatal)
-  try {
-    const teacher = await Teacher.findById(assignment.teacherId)
-      .populate("userId", "name email");
-    const teacherEmail = teacher?.userId?.email;
-    const teacherName = teacher?.userId?.name || "Teacher";
-    const studentUser = await Student.findById(student._id).populate("userId", "name");
-    const studentName = studentUser?.userId?.name || "Student";
-    if (teacherEmail) {
-      await sendAssignmentSubmissionEmail({
-        teacherEmail,
-        teacherName,
-        studentName,
-        assignmentTitle: assignment.title,
-        note: req.body.note || "",
-        isLate,
-        fileBuffer: req.file?.buffer,
-        fileName: req.file?.originalname,
-        fileMime: req.file?.mimetype,
-      });
+  // Email the file to the teacher (fire-and-forget, non-blocking)
+  (async () => {
+    try {
+      const [teacherDoc, studentDoc] = await Promise.all([
+        Teacher.findById(assignment.teacherId).populate("userId", "name email"),
+        Student.findById(student._id).populate("userId", "name"),
+      ]);
+      const teacherEmail = teacherDoc?.userId?.email;
+      const teacherName = teacherDoc?.userId?.name || "Teacher";
+      const studentName = studentDoc?.userId?.name || "Student";
+      if (teacherEmail) {
+        await sendAssignmentSubmissionEmail({
+          teacherEmail,
+          teacherName,
+          studentName,
+          assignmentTitle: assignment.title,
+          note: req.body.note || "",
+          isLate,
+          fileBuffer: req.file?.buffer,
+          fileName: req.file?.originalname,
+          fileMime: req.file?.mimetype,
+        });
+      }
+    } catch (emailErr) {
+      console.error("Failed to email assignment submission:", emailErr.message);
     }
-  } catch (emailErr) {
-    console.error("Failed to email assignment submission:", emailErr.message);
-  }
+  })();
 
   return res.status(201).json(
     new ApiResponse(201, {

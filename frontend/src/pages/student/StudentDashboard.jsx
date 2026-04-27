@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import StatCard from '../../components/StatCard';
 import StarRating from '../../components/StarRating';
-import { fetchStudentData, fetchTutors, fetchFeeData, fetchTeacherUpdates, fetchEnrollments, apiRequestEnrollment, apiCancelEnrollment, apiInitiatePayment, apiInitiateMonthlyPayment, apiVerifyPayment, apiGetMyDemos, apiRequestDemo, apiGetStudentSchedule, submitAssignment, apiSubmitFeedback, apiGetMyFeedback, apiSubmitPlatformReview, apiGetMyPlatformReview, apiGetMyPerformanceNotes, apiGetMyFees, apiInitiateFeePayment, apiVerifyFeePayment } from '../../api';
+import { fetchStudentData, fetchTutors, fetchFeeData, fetchTeacherUpdates, fetchEnrollments, apiRequestEnrollment, apiCancelEnrollment, apiInitiatePayment, apiInitiateMonthlyPayment, apiVerifyPayment, apiGetMyDemos, apiGetStudentSchedule, submitAssignment, apiSubmitFeedback, apiGetMyFeedback, apiSubmitPlatformReview, apiGetMyPlatformReview, apiGetMyPerformanceNotes, apiGetMyFees, apiInitiateFeePayment, apiVerifyFeePayment } from '../../api';
 import toast from 'react-hot-toast';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement,
@@ -84,7 +84,6 @@ export default function StudentDashboard() {
   const [enrollModal, setEnrollModal] = useState(null); // { tutor, grade, parentName, parentPhone, board } | null
   const [enrolling, setEnrolling] = useState(false);
   const [demosMap, setDemosMap] = useState({});
-  const [bookingDemo, setBookingDemo] = useState(null); // tutorId being booked
   const [feeData, setFeeData] = useState({ pendingFees: 0, totalFeesPaid: 0, nextDueDate: '—', nextBillingDateRaw: null, pendingInvoices: [], feeHistory: [] });
   const [feeBannerDismissed, setFeeBannerDismissed] = useState(false);
   const [payingInvoiceId, setPayingInvoiceId] = useState(null); // which invoice is being paid via Razorpay

@@ -6,7 +6,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import RippleButton from '../components/RippleButton';
 import PlaceholderImage from '../components/PlaceholderImage';
-import meritLogo from '../../public/images/logo.png';
+import { meritNookLogoUrl as meritLogo } from '../lib/publicAssets';
 
 const SUBJECTS = ['All', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'Computer Science', 'History & Civics', 'Economics'];
 const TUTOR_PAGE_STATE_KEY = 'meritnook-tutor-page-state';
