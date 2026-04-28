@@ -116,12 +116,11 @@ npm run seed:admin
    npm start
    ```
 
-### Deployment
-The frontend is configured for deployment to GitHub Pages. To deploy:
-```bash
-cd frontend
-npm run deploy
-```
+### Deployment (frontend on Vercel)
+1. In [Vercel](https://vercel.com), import this repository and set the **Root Directory** to `frontend`.
+2. Build command: `npm run build`, output directory: `dist`.
+3. Add environment variables your app needs (for example `VITE_API_URL` pointing at your production API).
+4. `frontend/vercel.json` configures SPA routing so client-side routes work on refresh.
 
 ## API Documentation
 

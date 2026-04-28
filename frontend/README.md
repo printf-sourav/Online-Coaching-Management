@@ -3,9 +3,6 @@
   <p>
     <strong>A next-generation platform for 1-to-1, group, and self-paced online learning.</strong>
   </p>
-  <p>
-    <a href="https://printf-sourav.github.io/Online-Coaching-Management"><strong>✨ View Live Demo ✨</strong></a>
-  </p>
   
   [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
   [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](#)
@@ -20,10 +17,6 @@ Merit Nook Online Coaching Management is a sophisticated platform focused on imp
 * **Personalized 1-to-1 Learning**
 * **Small Group Learnings** 
 * **Self-Paced Video Progressions**
-
-## 🔗 Live Preview
-The frontend application is proudly hosted on **GitHub Pages**.
-👉 **[Access the Frontend Application here](https://printf-sourav.github.io/Online-Coaching-Management)**
 
 ## 🛠️ Built With
 - **[React 19](https://react.dev/)** - Component-based UI methodology
@@ -49,11 +42,11 @@ The frontend application is proudly hosted on **GitHub Pages**.
    ```
    Open `http://localhost:5173` to view the project in the browser.
 
-### Deployment 🌐
-This project is configured to easily deploy to GitHub Pages:
-```bash
-npm run deploy
-```
+### Deployment (Vercel)
+1. Import the repo in Vercel and set **Root Directory** to `frontend`.
+2. Build: `npm run build`, output: `dist`.
+3. Set `VITE_API_URL` (and any other `VITE_*` vars) in the Vercel project settings.
+4. `vercel.json` in this folder handles SPA rewrites for React Router.
 
 ---
 *Created with ❤️ for better educational environments.*
