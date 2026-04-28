@@ -1,3 +1,4 @@
+import "../config/loadEnv.js";
 import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";

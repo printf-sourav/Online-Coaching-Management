@@ -7,6 +7,7 @@
  * or just edit the DEFAULTS block before running.
  */
 
+import "../config/loadEnv.js";
 import mongoose from "mongoose";
 import User from "../models/User.model.js";
 

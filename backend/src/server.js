@@ -1,3 +1,4 @@
+import "./config/loadEnv.js";
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
 import { createServer } from "http";
