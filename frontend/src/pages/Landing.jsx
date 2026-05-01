@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import RippleButton from '../components/RippleButton';
-import { fetchTutors } from '../api';
+import { apiFeaturedPlatformReviews, apiFeaturedReviews, fetchTutors } from '../api';
 import PlaceholderImage from '../components/PlaceholderImage';
 import LandingMobile from './LandingMobile';
 
@@ -95,13 +95,20 @@ function LandingDesktop() {
   const [navScrolled, setNavScrolled] = useState(false);
   const [selectedStudyTab, setSelectedStudyTab] = useState(0);
   const [isFinalCtaVideoPlaying, setIsFinalCtaVideoPlaying] = useState(true);
+  const [showFeedbackScreenshots, setShowFeedbackScreenshots] = useState(false);
+  const [featuredTeacherReviews, setFeaturedTeacherReviews] = useState([]);
+  const [featuredPlatformReviews, setFeaturedPlatformReviews] = useState([]);
   
   // Ref and state for scroll-linked orbit
   const orbitRef = useRef(null);
   const finalCtaVideoRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  useEffect(() => { fetchTutors().then(setTutors); }, []);
+  useEffect(() => {
+    fetchTutors().then(setTutors);
+    apiFeaturedReviews().then(setFeaturedTeacherReviews).catch(() => setFeaturedTeacherReviews([]));
+    apiFeaturedPlatformReviews().then(setFeaturedPlatformReviews).catch(() => setFeaturedPlatformReviews([]));
+  }, []);
   
   useEffect(() => {
     const fn = () => setNavScrolled(window.scrollY > 16);
@@ -191,17 +198,34 @@ function LandingDesktop() {
     { icon: '🇫🇷', name: 'French' },
   ];
 
+  const parentReviewCollageImages = [
+    'reviews/WhatsApp Image 2026-04-28 at 7.05.54 PM(3).jpeg',
+    'reviews/WhatsApp Image 2026-04-28 at 7.05.54 PM(1).jpeg',
+    'reviews/WhatsApp Image 2026-04-28 at 7.05.54 PM(2).jpeg',
+    'reviews/WhatsApp Image 2026-04-28 at 7.05.55 PM.jpeg',
+    'reviews/WhatsApp Image 2026-04-28 at 7.05.55 PM(1).jpeg',
+  ].map((p) => encodeURI(`${import.meta.env.BASE_URL}${p}`));
+
   const testimonials = [
-    { name: 'Aryan Sharma',    role: 'Student — Grade 10',          flag: '🇮🇳',
-      text: 'My Maths score jumped from 62% to 94% in just 3 months. The 1:1 attention made all the difference!',
-      avatar: 'AS', photo: 'https://i.pravatar.cc/160?img=12', grad: `linear-gradient(135deg,${PURPLE},#A78BFA)` },
-    { name: 'Priya Mehta',     role: 'Parent of Grade 8 student',   flag: '🇮🇳',
-      text: 'Merit Nook gives me peace of mind. I can see every class, every score, every teacher note. Truly transparent!',
-      avatar: 'PM', photo: 'https://i.pravatar.cc/160?img=32', grad: `linear-gradient(135deg,${BLUE},#38BDF8)` },
-    { name: 'Zara Ahmed',      role: 'Student — Grade 12',          flag: '🇦🇪',
-      text: 'Got 98% in Science boards. My tutor pushed me beyond the syllabus and built real conceptual understanding.',
-      avatar: 'ZA', photo: 'https://i.pravatar.cc/160?img=47', grad: `linear-gradient(135deg,${GREEN},#4ADE80)` },
-  ];
+    ...(Array.isArray(featuredTeacherReviews) ? featuredTeacherReviews : []).map((r, i) => ({
+      id: `teacher-${i}`,
+      name: r?.name || 'Student',
+      role: r?.role || 'Class Review',
+      text: r?.text || '',
+      rating: Number(r?.rating) || 5,
+      avatar: r?.avatar || (r?.name ? r.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'ST'),
+      grad: r?.grad || `linear-gradient(135deg,${PURPLE},${GREEN})`,
+    })),
+    ...(Array.isArray(featuredPlatformReviews) ? featuredPlatformReviews : []).map((r, i) => ({
+      id: `platform-${i}`,
+      name: r?.name || 'Parent',
+      role: r?.role || 'Platform Review',
+      text: r?.text || '',
+      rating: Number(r?.rating) || 5,
+      avatar: r?.avatar || (r?.name ? r.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'PR'),
+      grad: r?.grad || `linear-gradient(135deg,${BLUE},${ORANGE})`,
+    })),
+  ].filter(r => r.text);
 
   const setApart = [
     { title: 'One-to-One Learning', vid: import.meta.env.BASE_URL + 'videos/Generating_a_Moving_Video_From_Picture.mp4', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop&q=80', color: PURPLE, desc: 'Live personalized classes with expert tutors. Your child receives complete attention with lessons tailored to their level, pace, and learning style. This ensures better understanding, faster improvement, and strong confidence in every concept.' },
@@ -368,7 +392,7 @@ function LandingDesktop() {
                 textAlign: 'left',
                 pointerEvents: 'auto',
               }}>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: '0 0 72%' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
                     <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Math, English & Coding</span>
                     <span style={{ background: '#EAB308', padding: '4px 12px', borderRadius: 20, fontSize: '0.85rem', fontWeight: 800, border: '2px solid #1C2216' }}>Pre-K</span>
@@ -380,7 +404,7 @@ function LandingDesktop() {
                     Personalized Online Tutoring for Every Child to Reach Their{' '}
                     <span style={{ background: 'var(--color-accent)', border: '2px solid #1C2216', padding: '2px 10px', borderRadius: 6, display: 'inline-block', transform: 'rotate(-1.5deg)', color: '#1C2216', marginTop: 4 }}>Full Potential</span>
                   </h1>
-                  <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32, maxWidth: 640 }}>
+                  <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 32, maxWidth: '100%' }}>
                     Personalized live classes designed to build strong concepts, improve logical thinking, and track real progress — with regular feedback for parents. Our expert educators tailor each interactive session to your child's unique learning pace, ensuring academic excellence, boosted confidence, and a lifelong love for learning.
                   </p>
                   
@@ -416,9 +440,21 @@ function LandingDesktop() {
                   </div>
                 </div>
                 
-                {/* Right side image placeholder similar to the reference */}
-                <div style={{ flex: '0 0 35%', display: 'none', '@media (min-width: 900px)': { display: 'block' } }}>
-                  <img src="https://images.unsplash.com/photo-1555519391-44ab06ecdc91?w=600&auto=format&fit=crop&q=80" alt="Happy student" style={{ width: '100%', height: 'auto', borderRadius: 24, border: '3px solid #1C2216', transform: 'rotate(2deg)', boxShadow: '6px 6px 0px 0px #1C2216' }} />
+                {/* Right-side hero image (same layout area, no card size changes) */}
+                <div style={{ flex: '0 0 28%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'visible' }}>
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/girl.png`}
+                    alt="Student learning online"
+                    style={{
+                      width: '100%',
+                      maxWidth: 'none',
+                      height: 'auto',
+                      objectFit: 'contain',
+                      objectPosition: 'center bottom',
+                      transform: 'translate(-60px, 181px) scale(2.47)',
+                      transformOrigin: 'center bottom'
+                    }}
+                  />
                 </div>
               </div>
             ) : scrollProgress < 0.2 ? (
@@ -762,47 +798,71 @@ function LandingDesktop() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 'clamp(36px,5vw,60px)' }}>
             <h2 style={{ fontSize: 'clamp(1.7rem,3.5vw,2.8rem)', fontWeight: 900, letterSpacing: '-.02em', color: 'var(--text-primary)', marginBottom: 6 }}>
-              30,000+ Parents{' '}
-              <span style={{ background: 'var(--color-primary-2)', border: '2px solid #1C2216', padding: '2px 10px', borderRadius: 6, display: 'inline-block', transform: 'rotate(-1deg)', color: '#1C2216', marginLeft: 8 }}>Trust Us</span>
+              What Students Say{' '}
+              <span style={{ background: 'var(--color-primary-2)', border: '2px solid #1C2216', padding: '2px 10px', borderRadius: 6, display: 'inline-block', transform: 'rotate(-1deg)', color: '#1C2216', marginLeft: 8 }}>About Us</span>
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '.95rem' }}>
-              Consistently rated <span style={{ color: '#FBBC04' }}>⭐⭐⭐⭐⭐</span> <strong>4.8 / 5</strong> on Google Reviews
+              Students trust Merit Nook for clear concepts, supportive teachers, and consistent academic progress.
             </p>
+            <div style={{ marginTop: 14 }}>
+              <RippleButton
+                className="btn btn-sm"
+                style={{ background: '#2CCBCA', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '4px 4px 0 #1C2216', fontWeight: 800 }}
+                onClick={() => navigate('/login')}
+              >
+                Add Your Review In App
+              </RippleButton>
+              <RippleButton
+                className="btn btn-sm"
+                style={{ marginLeft: 10, background: '#FFFFFF', color: '#1C2216', border: '2px solid #1C2216', boxShadow: '4px 4px 0 #1C2216', fontWeight: 800 }}
+                onClick={() => setShowFeedbackScreenshots(p => !p)}
+              >
+                {showFeedbackScreenshots ? 'Hide Feedback Screenshot' : 'Feedback Screenshot'}
+              </RippleButton>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 20 }}>
-            {testimonials.map((t, i) => (
-              <TiltCard key={i} className="neon-box-accent" style={{ ...card({ borderRadius: 20, padding: '28px 24px', border: 'none' }) }}>
-                {/* Stars */}
-                <div style={{ display: 'flex', gap: 2, marginBottom: 16 }}>
-                  {[1,2,3,4,5].map(s => <span key={s} style={{ color: '#FBBC04', fontSize: '1.05rem' }}>★</span>)}
+            {testimonials.length === 0 ? (
+              <div className="neon-box-accent" style={{ ...card({ borderRadius: 20, border: 'none', textAlign: 'center' }) }}>
+                <div style={{ fontSize: '2rem', marginBottom: 8 }}>📝</div>
+                <div style={{ fontWeight: 800, marginBottom: 6 }}>No featured reviews yet</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '.88rem' }}>
+                  Admin can feature reviews from student/teacher and platform reviews.
                 </div>
-                {/* Quote */}
+              </div>
+            ) : testimonials.slice(0, 3).map((t) => (
+              <TiltCard key={t.id} className="neon-box-accent" style={{ ...card({ borderRadius: 20, padding: '28px 24px', border: 'none' }) }}>
+                <div style={{ display: 'flex', gap: 2, marginBottom: 16 }}>
+                  {[1,2,3,4,5].map(s => <span key={s} style={{ color: '#FBBC04', fontSize: '1.05rem' }}>{s <= Math.round(t.rating || 0) ? '★' : '☆'}</span>)}
+                </div>
                 <p style={{ fontSize: '.9rem', color: 'var(--text-primary)', lineHeight: 1.78, marginBottom: 22, fontStyle: 'italic' }}>
                   "{t.text}"
                 </p>
-                {/* Author */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 16, borderTop: '1px solid var(--color-border)' }}>
-                  <PlaceholderImage
-                    src={t.photo || t.studentPhoto || t.image || ''}
-                    alt={`${t.name} photo`}
-                    label="Student photo"
-                    hint="Add student image"
-                    icon="🧑‍🎓"
-                    width={44}
-                    height={44}
-                    borderRadius={999}
-                    showMeta={false}
-                    style={{ flexShrink: 0, boxShadow: '0 4px 14px rgba(0,0,0,.18)' }}
-                  />
+                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: t.grad, border: '2px solid #1C2216', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: '#1C2216', flexShrink: 0 }}>
+                    {t.avatar}
+                  </div>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '.9rem', color: 'var(--text-primary)' }}>{t.flag} {t.name}</div>
+                    <div style={{ fontWeight: 700, fontSize: '.9rem', color: 'var(--text-primary)' }}>{t.name}</div>
                     <div style={{ fontSize: '.74rem', color: 'var(--text-muted)' }}>{t.role}</div>
                   </div>
                 </div>
               </TiltCard>
             ))}
           </div>
+
+          {showFeedbackScreenshots && (
+            <div style={{ marginTop: 20 }}>
+              <div className="testimonial-screenshot-wall">
+                {parentReviewCollageImages.map((src, idx) => (
+                  <div key={idx} className="parent-review-collage-item">
+                    <img src={src} alt={`Parent review ${idx + 1}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
