@@ -77,7 +77,7 @@ export default function StudentDashboard() {
     performanceMonthly: [], subjectPerformance: [],
   };
 
-  const [d, setD] = useState(null);
+  const [d, setD] = useState(EMPTY_D);
   const [loading, setLoading] = useState(true);
   const [tutors, setTutors] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
@@ -503,7 +503,7 @@ export default function StudentDashboard() {
   })();
 
   const renderSection = () => {
-    if (loading || !d) return (
+    if (!d) return (
       <div style={{ padding: '80px 20px', textAlign: 'center' }}>
         <div style={{ fontSize: '2rem', marginBottom: 14, opacity: .6 }}>⏳</div>
         <div style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>Loading dashboard…</div>
