@@ -2134,7 +2134,7 @@ export default function AdminDashboard() {
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
             {/* Search student */}
-            <div className="glass card" style={{ padding: '20px 24px' }}>
+            <div className="glass card" style={{ padding: '20px 24px', overflow: 'visible', position: 'relative', zIndex: 30 }}>
               <div style={{ fontWeight: 700, fontSize: '.95rem', marginBottom: 14 }}>🔍 Search Student to Manage Fees</div>
               <div style={{ position: 'relative' }}>
                 <input
@@ -2148,10 +2148,11 @@ export default function AdminDashboard() {
                 {feeStudentSearching && <div style={{ position: 'absolute', right: 14, top: 10, fontSize: '.85rem', color: 'var(--text-muted)' }}>⏳</div>}
                 {feeStudentResults.length > 0 && (
                   <div style={{
-                    position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 20,
-                    background: 'var(--color-surface-2)', border: '1px solid var(--color-border)',
+                    position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 2000,
+                    background: 'var(--color-surface)', border: '2px solid var(--color-border)',
                     borderRadius: 'var(--radius-md)', maxHeight: 220, overflowY: 'auto',
                     boxShadow: 'var(--shadow-lg)',
+                    marginTop: 6,
                   }}>
                     {feeStudentResults.map(s => (
                       <div key={s._id} onClick={() => handleFeeStudentSelect(s)}
@@ -2159,7 +2160,7 @@ export default function AdminDashboard() {
                         onMouseOver={e => e.currentTarget.style.background = 'var(--color-surface)'}
                         onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
                         <div>
-                          <div style={{ fontWeight: 600, fontSize: '.88rem' }}>{s.name}</div>
+                          <div style={{ fontWeight: 700, fontSize: '.88rem', color: 'var(--text-primary)' }}>{s.name}</div>
                           <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>{s.email} · {s.studentId || '—'} · Grade {s.grade || '—'}</div>
                         </div>
                       </div>

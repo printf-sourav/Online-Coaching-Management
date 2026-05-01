@@ -69,9 +69,13 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     setLoading(true);
     try {
-      await apiLogin(email, password);
-      const meRes = await apiGetMe();
-      const profile = meRes.data;
+      const loginRes = await apiLogin(email, password);
+      const profile = loginRes?.data?.user || loginRes?.user;
+      if (!profile) {
+        const meRes = await apiGetMe();
+        saveUser(meRes.data);
+        return meRes.data;
+      }
       saveUser(profile);
       return profile;
     } finally {
