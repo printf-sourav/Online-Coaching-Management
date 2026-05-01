@@ -336,19 +336,19 @@ export default function AdminDashboard() {
               <div className="glass card ani-up" style={{
                 display: 'flex', gap: 24, alignItems: 'center',
                 background: isDark
-                  ? 'linear-gradient(135deg,rgba(252,196,28,.10) 0%,rgba(249,115,22,.05) 100%)'
-                  : 'linear-gradient(135deg,rgba(252,196,28,.09) 0%,rgba(249,115,22,.05) 100%)',
-                border: '1.5px solid rgba(252,196,28,.28)',
+                  ? 'var(--grad-primary) 0%,rgba(216,237,146,.05) 100%)'
+                  : 'var(--grad-primary) 0%,rgba(216,237,146,.05) 100%)',
+                border: '1.5px solid rgba(216,237,146,.28)',
                 position: 'relative', overflow: 'hidden',
               }}>
-                <div style={{ position: 'absolute', right: -20, top: -20, width: 110, height: 110, borderRadius: '50%', background: 'radial-gradient(circle,rgba(252,196,28,.18),transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ width: 68, height: 68, borderRadius: 18, background: 'linear-gradient(135deg,#ffb340,#f97316)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.7rem', flexShrink: 0, boxShadow: '0 8px 24px rgba(249,115,22,.4)' }}>💰</div>
+                <div style={{ position: 'absolute', right: -20, top: -20, width: 110, height: 110, borderRadius: '50%', background: 'radial-gradient(circle,rgba(216,237,146,.18),transparent 70%)', pointerEvents: 'none' }} />
+                <div style={{ width: 68, height: 68, borderRadius: 18, background: 'linear-gradient(135deg,var(--color-accent),var(--color-accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.7rem', flexShrink: 0, boxShadow: 'none' }}>💰</div>
                 <div style={{ flex: 1, position: 'relative' }}>
                   <div style={{ fontSize: '.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase', marginBottom: 6 }}>Monthly Revenue</div>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 900, background: 'linear-gradient(135deg,#ffb340,#f97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>₹{((d.monthlyRevenue ?? 0) / 1000).toFixed(0)}K</div>
+                  <div style={{ fontSize: '2.4rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-accent),var(--color-accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>₹{((d.monthlyRevenue ?? 0) / 1000).toFixed(0)}K</div>
                   <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)', marginBottom: 10 }}>This month&apos;s collections</div>
                   <div style={{ height: 5, borderRadius: 99, background: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,#ffb340,#f97316)', width: `${Math.min(100, (d.monthlyRevenue ?? 0) / Math.max(1, (d.yearlyRevenue ?? d.monthlyRevenue ?? 1) / 12) * 100)}%`, transition: 'width 1.2s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,var(--color-accent),var(--color-accent))', width: `${Math.min(100, (d.monthlyRevenue ?? 0) / Math.max(1, (d.yearlyRevenue ?? d.monthlyRevenue ?? 1) / 12) * 100)}%`, transition: 'width 1.2s ease' }} />
                   </div>
                   <div style={{ marginTop: 10 }}>
                     <span className="badge bd-accent" style={{ fontSize: '.7rem', fontWeight: 700 }}>₹{((d.yearlyRevenue ?? (d.monthlyRevenue ?? 0) * 12) / 1000).toFixed(0)}K annual</span>
@@ -361,27 +361,27 @@ export default function AdminDashboard() {
                 <div className="glass card ani-up" style={{
                   flex: 1, display: 'flex', gap: 16, alignItems: 'center',
                   background: isDark
-                    ? 'linear-gradient(135deg,rgba(0,212,170,.09) 0%,rgba(56,189,248,.04) 100%)'
-                    : 'linear-gradient(135deg,rgba(0,212,170,.10) 0%,rgba(56,189,248,.04) 100%)',
-                  border: '1.5px solid rgba(0,212,170,.28)',
+                    ? 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)'
+                    : 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)',
+                  border: '1.5px solid rgba(44,203,202,.28)',
                   padding: '16px 20px', position: 'relative', overflow: 'hidden', animationDelay: '80ms',
                 }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: '0 6px 18px rgba(0,212,170,.35)' }}>🏫</div>
+                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: 'none' }}>🏫</div>
                   <div>
                     <div style={{ fontSize: '.68rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Total Teachers</div>
-                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.totalTeachers ?? 0}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.totalTeachers ?? 0}</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-secondary)' }}>active on platform</div>
                   </div>
                 </div>
                 <div className="glass card ani-up" style={{
                   flex: 1, display: 'flex', gap: 16, alignItems: 'center',
                   background: isDark
-                    ? 'linear-gradient(135deg,rgba(124,92,252,.09) 0%,rgba(167,139,250,.04) 100%)'
-                    : 'linear-gradient(135deg,rgba(124,92,252,.10) 0%,rgba(167,139,250,.04) 100%)',
-                  border: '1.5px solid rgba(124,92,252,.28)',
+                    ? 'var(--grad-primary) 0%,rgba(216,237,146,.04) 100%)'
+                    : 'var(--grad-primary) 0%,rgba(216,237,146,.04) 100%)',
+                  border: '1.5px solid rgba(216,237,146,.28)',
                   padding: '16px 20px', position: 'relative', overflow: 'hidden', animationDelay: '160ms',
                 }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: '0 6px 18px rgba(124,92,252,.35)' }}>🎓</div>
+                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: 'none' }}>🎓</div>
                   <div>
                     <div style={{ fontSize: '.68rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Total Students</div>
                     <div style={{ fontSize: '2rem', fontWeight: 900, background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.totalStudents ?? 0}</div>
@@ -394,15 +394,15 @@ export default function AdminDashboard() {
               <div className="glass card ani-up" style={{
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                 background: isDark
-                  ? 'linear-gradient(135deg,rgba(255,107,157,.09) 0%,rgba(244,63,94,.04) 100%)'
-                  : 'linear-gradient(135deg,rgba(255,107,157,.10) 0%,rgba(244,63,94,.04) 100%)',
-                border: '1.5px solid rgba(255,107,157,.28)',
+                  ? 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)'
+                  : 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)',
+                border: '1.5px solid rgba(44,203,202,.28)',
                 position: 'relative', overflow: 'hidden', animationDelay: '240ms',
               }}>
                 <div style={{ position: 'absolute', right: -12, bottom: -12, fontSize: '5.5rem', lineHeight: 1, opacity: .07, pointerEvents: 'none' }}>📊</div>
                 <div>
                   <div style={{ fontSize: '.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase', marginBottom: 8 }}>Avg Attendance</div>
-                  <div style={{ fontSize: '3rem', fontWeight: 900, background: 'linear-gradient(135deg,#ff6b9d,#f43f5e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>{d.avgAttendance ?? 0}%</div>
+                  <div style={{ fontSize: '3rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>{d.avgAttendance ?? 0}%</div>
                   <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)' }}>Platform average</div>
                 </div>
                 <div>
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
                     <span>0%</span><span>100%</span>
                   </div>
                   <div style={{ height: 5, borderRadius: 99, background: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,#ff6b9d,#f43f5e)', width: `${Math.min(100, d.avgAttendance ?? 0)}%`, transition: 'width 1.2s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,var(--color-primary),var(--color-primary))', width: `${Math.min(100, d.avgAttendance ?? 0)}%`, transition: 'width 1.2s ease' }} />
                   </div>
                   <div style={{ marginTop: 10 }}>
                     <span className={`badge ${(d.avgAttendance ?? 0) >= 80 ? 'bd-success' : 'bd-amber'}`} style={{ fontSize: '.7rem', fontWeight: 700 }}>
@@ -424,8 +424,8 @@ export default function AdminDashboard() {
             {/* Quick glance: charts */}
             <div className="grid-2">
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '60ms' }}>
-                <div style={{ padding: '16px 22px 14px', background: 'linear-gradient(135deg,rgba(124,92,252,.10),rgba(167,139,250,.05))', borderBottom: '1px solid rgba(124,92,252,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(124,92,252,.35)' }}>📈</div>
+                <div style={{ padding: '16px 22px 14px', background: 'var(--grad-primary),rgba(216,237,146,.05))', borderBottom: '1px solid rgba(216,237,146,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>📈</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Revenue Trend</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Last 6 months · ₹K</div>
@@ -435,14 +435,14 @@ export default function AdminDashboard() {
                 <div style={{ padding: '16px 20px 20px', position: 'relative', height: 220 }}>
                   <Line key={`rev-${isDark}`} data={{
                     labels: d.revenueTrend.map(r => r.month),
-                    datasets: [{ label: 'Revenue (₹K)', data: d.revenueTrend.map(r => (r.collected ?? r.amount ?? 0) / 1000), borderColor: '#7c5cfc', backgroundColor: 'rgba(124,92,252,.15)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: '#7c5cfc' }],
+                    datasets: [{ label: 'Revenue (₹K)', data: d.revenueTrend.map(r => (r.collected ?? r.amount ?? 0) / 1000), borderColor: 'var(--color-accent)', backgroundColor: 'rgba(216,237,146,.15)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: 'var(--color-accent)' }],
                   }} options={{ ...chartOpts, maintainAspectRatio: false }} />
                 </div>
               </div>
 
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '120ms' }}>
-                <div style={{ padding: '16px 22px 14px', background: 'linear-gradient(135deg,rgba(0,212,170,.10),rgba(56,189,248,.05))', borderBottom: '1px solid rgba(0,212,170,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(0,212,170,.35)' }}>📚</div>
+                <div style={{ padding: '16px 22px 14px', background: 'var(--grad-primary),rgba(44,203,202,.05))', borderBottom: '1px solid rgba(44,203,202,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>📚</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Students by Subject</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Distribution across subjects</div>
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
                         <div style={{ fontSize: '2.5rem', opacity: .4 }}>📚</div>
                         <div style={{ fontWeight: 600, fontSize: '.9rem' }}>No subject data yet</div>
                       </div>
-                    : <Doughnut key={`subj-${isDark}`} data={{ labels: d.subjectDistribution.map(s => s.subject), datasets: [{ data: d.subjectDistribution.map(s => s.count || s.studentCount || 1), backgroundColor: ['rgba(124,92,252,.8)','rgba(0,212,170,.8)','rgba(255,107,157,.8)','rgba(255,179,64,.8)','rgba(56,189,248,.8)','rgba(99,102,241,.8)'], borderWidth: 0 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: tickColor, font: { family: 'Poppins', size: 11 }, padding: 12 } } } }} />
+                    : <Doughnut key={`subj-${isDark}`} data={{ labels: d.subjectDistribution.map(s => s.subject), datasets: [{ data: d.subjectDistribution.map(s => s.count || s.studentCount || 1), backgroundColor: ['rgba(216,237,146,.8)','rgba(44,203,202,.8)','rgba(44,203,202,.8)','rgba(255,179,64,.8)','rgba(44,203,202,.8)','rgba(99,102,241,.8)'], borderWidth: 0 }] }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: tickColor, font: { family: 'Poppins', size: 11 }, padding: 12 } } } }} />
                   }
                 </div>
               </div>
@@ -464,8 +464,8 @@ export default function AdminDashboard() {
             {/* Top teachers + recent activity */}
             <div className="grid-2">
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '60ms' }}>
-                <div style={{ padding: '16px 22px 14px', background: 'linear-gradient(135deg,rgba(252,196,28,.10),rgba(249,115,22,.05))', borderBottom: '1px solid rgba(252,196,28,.18)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,#ffb340,#f97316)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(249,115,22,.35)' }}>⭐</div>
+                <div style={{ padding: '16px 22px 14px', background: 'var(--grad-primary),rgba(216,237,146,.05))', borderBottom: '1px solid rgba(216,237,146,.18)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,var(--color-accent),var(--color-accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>⭐</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Top Rated Teachers</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Sorted by student rating</div>
@@ -490,8 +490,8 @@ export default function AdminDashboard() {
               </div>
 
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '120ms' }}>
-                <div style={{ padding: '16px 22px 14px', background: 'linear-gradient(135deg,rgba(124,92,252,.10),rgba(167,139,250,.05))', borderBottom: '1px solid rgba(124,92,252,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(124,92,252,.35)' }}>⚡</div>
+                <div style={{ padding: '16px 22px 14px', background: 'var(--grad-primary),rgba(216,237,146,.05))', borderBottom: '1px solid rgba(216,237,146,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>⚡</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Recent Platform Activity</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Latest actions across the platform</div>
@@ -1376,7 +1376,7 @@ export default function AdminDashboard() {
                               s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q)
                             ).slice(0, 8);
                             return (
-                              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 200, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', boxShadow: '0 8px 24px rgba(0,0,0,.18)', maxHeight: 240, overflowY: 'auto', marginTop: 2 }}>
+                              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 200, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', boxShadow: 'none', maxHeight: 240, overflowY: 'auto', marginTop: 2 }}>
                                 {matches.length === 0 ? (
                                   <div style={{ padding: '12px 14px', fontSize: '.82rem', color: 'var(--text-muted)' }}>No students found</div>
                                 ) : matches.map(s => (
@@ -1454,7 +1454,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    <div style={{ background: 'rgba(124,92,252,.06)', border: '1px solid rgba(124,92,252,.18)', borderRadius: 10, padding: '10px 14px', fontSize: '.78rem', color: 'var(--text-secondary)' }}>
+                    <div style={{ background: 'rgba(216,237,146,.06)', border: '1px solid rgba(216,237,146,.18)', borderRadius: 10, padding: '10px 14px', fontSize: '.78rem', color: 'var(--text-secondary)' }}>
                       💡 This will create an <strong>approved</strong> enrollment. The student will be able to proceed to payment. You can assign multiple tutors to the same student.
                     </div>
 
@@ -1540,7 +1540,7 @@ export default function AdminDashboard() {
                   labels: d.revenueTrend.map(r => r.month),
                   datasets: [{
                     label: 'Collected (₹K)', data: d.revenueTrend.map(r => r.collected / 1000),
-                    backgroundColor: 'rgba(0,212,170,.7)', borderRadius: 8, borderSkipped: false,
+                    backgroundColor: 'rgba(44,203,202,.7)', borderRadius: 8, borderSkipped: false,
                   }, {
                     label: 'Pending (₹K)', data: d.revenueTrend.map(r => r.pending / 1000),
                     backgroundColor: 'rgba(255,179,64,.7)', borderRadius: 8, borderSkipped: false,
@@ -1698,8 +1698,8 @@ export default function AdminDashboard() {
                 <Line key={`enroll-${isDark}`} data={{
                   labels: d.enrollmentTrend.map(e => e.month),
                   datasets: [
-                    { label: 'New Students', data: d.enrollmentTrend.map(e => e.students), borderColor: '#7c5cfc', backgroundColor: 'rgba(124,92,252,.1)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: '#7c5cfc' },
-                    { label: 'New Teachers', data: d.enrollmentTrend.map(e => e.teachers), borderColor: '#00d4aa', backgroundColor: 'rgba(0,212,170,.1)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: '#00d4aa' },
+                    { label: 'New Students', data: d.enrollmentTrend.map(e => e.students), borderColor: 'var(--color-accent)', backgroundColor: 'rgba(216,237,146,.1)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: 'var(--color-accent)' },
+                    { label: 'New Teachers', data: d.enrollmentTrend.map(e => e.teachers), borderColor: 'var(--color-primary)', backgroundColor: 'rgba(44,203,202,.1)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: 'var(--color-primary)' },
                   ],
                 }} options={{ ...chartOpts, maintainAspectRatio: false }} />
               </div>
@@ -1714,7 +1714,7 @@ export default function AdminDashboard() {
                     labels: d.subjectPerformance.map(s => s.subject),
                     datasets: [{
                       label: 'Avg Score %', data: d.subjectPerformance.map(s => s.avgScore),
-                      backgroundColor: ['rgba(124,92,252,.7)', 'rgba(0,212,170,.7)', 'rgba(255,107,157,.7)', 'rgba(255,179,64,.7)', 'rgba(56,189,248,.7)', 'rgba(99,102,241,.7)'],
+                      backgroundColor: ['rgba(216,237,146,.7)', 'rgba(44,203,202,.7)', 'rgba(44,203,202,.7)', 'rgba(255,179,64,.7)', 'rgba(44,203,202,.7)', 'rgba(99,102,241,.7)'],
                       borderRadius: 8, borderSkipped: false,
                     }],
                   }} options={{ ...chartOpts, maintainAspectRatio: false, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, max: 100 } } }} />
@@ -1728,7 +1728,7 @@ export default function AdminDashboard() {
                     labels: ['Full Capacity', 'Available Slots', 'On Leave'],
                     datasets: [{
                       data: [d.teacherUtilization.full, d.teacherUtilization.available, d.teacherUtilization.onLeave],
-                      backgroundColor: ['rgba(0,212,170,.8)', 'rgba(124,92,252,.8)', 'rgba(255,107,157,.8)'],
+                      backgroundColor: ['rgba(44,203,202,.8)', 'rgba(216,237,146,.8)', 'rgba(44,203,202,.8)'],
                       borderWidth: 0,
                     }],
                   }} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: tickColor, font: { family: 'Poppins', size: 11 }, padding: 16 } } } }} />
@@ -1941,7 +1941,7 @@ export default function AdminDashboard() {
                       <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)' }}>{ac.desc}</div>
                     </div>
                     <div style={{ width: 44, height: 24, borderRadius: 12, background: ac.enabled ? 'var(--color-accent)' : 'var(--color-surface-2)', cursor: 'pointer', position: 'relative', transition: 'var(--transition)' }}>
-                      <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: ac.enabled ? 22 : 2, transition: 'var(--transition)', boxShadow: '0 1px 4px rgba(0,0,0,.2)' }} />
+                      <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: ac.enabled ? 22 : 2, transition: 'var(--transition)', boxShadow: 'none' }} />
                     </div>
                   </div>
                 ))}
@@ -2025,7 +2025,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Info box */}
-                <div style={{ padding: '12px 14px', background: 'rgba(0,212,170,.08)', border: '1px solid rgba(0,212,170,.15)', borderRadius: 'var(--radius-sm)', fontSize: '.8rem', color: 'var(--text-secondary)' }}>
+                <div style={{ padding: '12px 14px', background: 'rgba(44,203,202,.08)', border: '1px solid rgba(44,203,202,.15)', borderRadius: 'var(--radius-sm)', fontSize: '.8rem', color: 'var(--text-secondary)' }}>
                   📧 The teacher will receive an email with their login credentials and onboarding instructions.
                 </div>
 
@@ -2264,7 +2264,7 @@ export default function AdminDashboard() {
                                     setFeeEditId(f._id);
                                     setFeeEditForm({ totalFee: f.totalFee, paidAmount: f.paidAmount, description: f.description || '', dueDate: f.dueDate ? f.dueDate.slice(0, 10) : '' });
                                   }}>✏️</button>
-                                  <button className="btn btn-sm" style={{ background: 'rgba(255,107,157,.1)', color: 'var(--color-rose)', border: '1px solid rgba(255,107,157,.2)' }} onClick={() => handleDeleteFee(f._id)}>🗑</button>
+                                  <button className="btn btn-sm" style={{ background: 'rgba(44,203,202,.1)', color: 'var(--color-rose)', border: '1px solid rgba(44,203,202,.2)' }} onClick={() => handleDeleteFee(f._id)}>🗑</button>
                                 </div>
                               </div>
                             )}

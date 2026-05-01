@@ -7,16 +7,7 @@ import { apiGetNotifications, apiMarkNotificationRead, apiUpdateProfile } from '
 
 const NOTIF_ICONS = { info: 'ℹ️', success: '✅', warning: '⚠️', assignment: '📝', payment: '💳', class: '📹', default: '🔔' };
 
-const AVATAR_GRADS = [
-  'linear-gradient(135deg,#2CCBCA,#1B9E9E)',
-  'linear-gradient(135deg,#D8ED92,#A6B079)',
-  'linear-gradient(135deg,#FFB87A,#E89A50)',
-  'linear-gradient(135deg,#E76F51,#C45A3F)',
-  'linear-gradient(135deg,#89D8D1,#5EB9B1)',
-  'linear-gradient(135deg,#C8DE7C,#A9C06A)',
-  'linear-gradient(135deg,#F2B682,#DDA26E)',
-  'linear-gradient(135deg,#E2C45A,#C9AC44)',
-];
+const AVATAR_GRADS = ['var(--grad-primary)', 'var(--grad-accent)'];
 
 export default function Topbar({ title, subtitle, onMenuClick }) {
   const { user, updateUser, logout } = useAuth();
@@ -149,6 +140,19 @@ export default function Topbar({ title, subtitle, onMenuClick }) {
 
   const initials = (name) => (name || 'U').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   const avatarGrad = user?.avatarGrad || AVATAR_GRADS[0];
+  const renderTopbarTitle = () => {
+    if (!title) return null;
+    const m = String(title).match(/^(.*?)(\bDashboard\b)(.*)$/i);
+    if (!m) return title;
+    const [, pre, word, post] = m;
+    return (
+      <>
+        {pre}
+        <span className="topbar-title-highlight">{word}</span>
+        {post}
+      </>
+    );
+  };
 
   return (
     <>
@@ -161,7 +165,7 @@ export default function Topbar({ title, subtitle, onMenuClick }) {
             <span /><span /><span />
           </button>
           <div className="topbar-info">
-            <div className="topbar-title" style={{ fontWeight: 700, fontSize: '1rem', letterSpacing: '-.01em' }}>{title}</div>
+            <div className="topbar-title" style={{ fontWeight: 700, fontSize: '1rem', letterSpacing: '-.01em' }}>{renderTopbarTitle()}</div>
             {subtitle && (
               <div className="topbar-subtitle" style={{ fontSize: '.78rem', color: 'var(--text-secondary)', marginTop: '1px' }}>
                 {subtitle}

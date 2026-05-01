@@ -386,7 +386,7 @@ export default function TeacherDashboard() {
     labels: barStudents.map(s => s.name.split(' ')[0]),
     datasets: [{
       label: 'Score %', data: barScores,
-      backgroundColor: ['rgba(124,92,252,.7)', 'rgba(0,212,170,.7)', 'rgba(255,107,157,.7)', 'rgba(255,179,64,.7)', 'rgba(56,189,248,.7)', 'rgba(124,92,252,.7)'],
+      backgroundColor: ['rgba(216,237,146,.7)', 'rgba(44,203,202,.7)', 'rgba(44,203,202,.7)', 'rgba(255,179,64,.7)', 'rgba(44,203,202,.7)', 'rgba(216,237,146,.7)'],
       borderRadius: 8, borderSkipped: false,
     }],
   };
@@ -409,13 +409,13 @@ export default function TeacherDashboard() {
               <div className="glass card ani-up" style={{
                 display: 'flex', gap: 24, alignItems: 'center',
                 background: isDark
-                  ? 'linear-gradient(135deg,rgba(124,92,252,.10) 0%,rgba(167,139,250,.05) 100%)'
-                  : 'linear-gradient(135deg,rgba(124,92,252,.09) 0%,rgba(167,139,250,.05) 100%)',
-                border: '1.5px solid rgba(124,92,252,.28)',
+                  ? 'var(--grad-primary) 0%,rgba(216,237,146,.05) 100%)'
+                  : 'var(--grad-primary) 0%,rgba(216,237,146,.05) 100%)',
+                border: '1.5px solid rgba(216,237,146,.28)',
                 position: 'relative', overflow: 'hidden',
               }}>
-                <div style={{ position: 'absolute', right: -20, top: -20, width: 110, height: 110, borderRadius: '50%', background: 'radial-gradient(circle,rgba(124,92,252,.18),transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ width: 68, height: 68, borderRadius: 18, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.7rem', flexShrink: 0, boxShadow: '0 8px 24px rgba(124,92,252,.4)' }}>👥</div>
+                <div style={{ position: 'absolute', right: -20, top: -20, width: 110, height: 110, borderRadius: '50%', background: 'radial-gradient(circle,rgba(216,237,146,.18),transparent 70%)', pointerEvents: 'none' }} />
+                <div style={{ width: 68, height: 68, borderRadius: 18, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.7rem', flexShrink: 0, boxShadow: 'none' }}>👥</div>
                 <div style={{ flex: 1, position: 'relative' }}>
                   <div style={{ fontSize: '.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase', marginBottom: 6 }}>Total Students</div>
                   <div style={{ fontSize: '2.8rem', fontWeight: 900, background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>{d.totalStudents ?? 0}</div>
@@ -431,15 +431,15 @@ export default function TeacherDashboard() {
               <div className="glass card ani-up" style={{
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                 background: isDark
-                  ? 'linear-gradient(135deg,rgba(252,196,28,.09) 0%,rgba(249,115,22,.05) 100%)'
-                  : 'linear-gradient(135deg,rgba(252,196,28,.10) 0%,rgba(249,115,22,.04) 100%)',
-                border: '1.5px solid rgba(252,196,28,.28)',
+                  ? 'var(--grad-primary) 0%,rgba(216,237,146,.05) 100%)'
+                  : 'var(--grad-primary) 0%,rgba(216,237,146,.04) 100%)',
+                border: '1.5px solid rgba(216,237,146,.28)',
                 position: 'relative', overflow: 'hidden', animationDelay: '80ms',
               }}>
                 <div style={{ position: 'absolute', right: -12, bottom: -12, fontSize: '5.5rem', lineHeight: 1, opacity: .07, pointerEvents: 'none' }}>⭐</div>
                 <div>
                   <div style={{ fontSize: '.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase', marginBottom: 8 }}>Avg. Rating</div>
-                  <div style={{ fontSize: '3rem', fontWeight: 900, background: 'linear-gradient(135deg,#ffb340,#f97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 4 }}>{(feedbackAvg || d.avgRating || 0).toFixed(1)}</div>
+                  <div style={{ fontSize: '3rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-accent),var(--color-accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 4 }}>{(feedbackAvg || d.avgRating || 0).toFixed(1)}</div>
                   <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)', marginBottom: 10 }}>from student feedback</div>
                   <div style={{ display: 'flex', gap: 2 }}>
                     {[1,2,3,4,5].map(s => (
@@ -449,7 +449,7 @@ export default function TeacherDashboard() {
                 </div>
                 <div>
                   <div style={{ height: 5, borderRadius: 99, background: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,#ffb340,#f97316)', width: `${Math.min(100, (feedbackAvg || d.avgRating || 0) / 5 * 100)}%`, transition: 'width 1.2s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,var(--color-accent),var(--color-accent))', width: `${Math.min(100, (feedbackAvg || d.avgRating || 0) / 5 * 100)}%`, transition: 'width 1.2s ease' }} />
                   </div>
                 </div>
               </div>
@@ -459,30 +459,30 @@ export default function TeacherDashboard() {
                 <div className="glass card ani-up" style={{
                   flex: 1, display: 'flex', gap: 16, alignItems: 'center',
                   background: isDark
-                    ? 'linear-gradient(135deg,rgba(255,107,157,.09) 0%,rgba(244,63,94,.04) 100%)'
-                    : 'linear-gradient(135deg,rgba(255,107,157,.10) 0%,rgba(244,63,94,.04) 100%)',
-                  border: '1.5px solid rgba(255,107,157,.28)',
+                    ? 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)'
+                    : 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)',
+                  border: '1.5px solid rgba(44,203,202,.28)',
                   padding: '16px 20px', position: 'relative', overflow: 'hidden', animationDelay: '160ms',
                 }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,#ff6b9d,#f43f5e)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: '0 6px 18px rgba(244,63,94,.35)' }}>📝</div>
+                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: 'none' }}>📝</div>
                   <div>
                     <div style={{ fontSize: '.68rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Pending Eval</div>
-                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,#ff6b9d,#f43f5e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.pendingEval ?? 0}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.pendingEval ?? 0}</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-secondary)' }}>assignments to grade</div>
                   </div>
                 </div>
                 <div className="glass card ani-up" style={{
                   flex: 1, display: 'flex', gap: 16, alignItems: 'center',
                   background: isDark
-                    ? 'linear-gradient(135deg,rgba(0,212,170,.09) 0%,rgba(56,189,248,.04) 100%)'
-                    : 'linear-gradient(135deg,rgba(0,212,170,.10) 0%,rgba(56,189,248,.04) 100%)',
-                  border: '1.5px solid rgba(0,212,170,.28)',
+                    ? 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)'
+                    : 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)',
+                  border: '1.5px solid rgba(44,203,202,.28)',
                   padding: '16px 20px', position: 'relative', overflow: 'hidden', animationDelay: '240ms',
                 }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: '0 6px 18px rgba(0,212,170,.35)' }}>🗓</div>
+                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: 'none' }}>🗓</div>
                   <div>
                     <div style={{ fontSize: '.68rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Scheduled Slots</div>
-                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{studentSlotsList.reduce((n, e) => n + e.slots.length, 0)}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{studentSlotsList.reduce((n, e) => n + e.slots.length, 0)}</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-secondary)' }}>across all students</div>
                   </div>
                 </div>
@@ -492,8 +492,8 @@ export default function TeacherDashboard() {
             {/* Student scores + recent activity */}
             <div className="grid-2">
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '60ms' }}>
-                <div style={{ padding: '16px 22px 14px', background: 'linear-gradient(135deg,rgba(124,92,252,.10),rgba(167,139,250,.05))', borderBottom: '1px solid rgba(124,92,252,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(124,92,252,.35)' }}>📊</div>
+                <div style={{ padding: '16px 22px 14px', background: 'var(--grad-primary),rgba(216,237,146,.05))', borderBottom: '1px solid rgba(216,237,146,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>📊</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Student Scores</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Latest assignment / performance grades</div>
@@ -521,8 +521,8 @@ export default function TeacherDashboard() {
               </div>
 
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '120ms' }}>
-                <div style={{ padding: '16px 22px 14px', background: 'linear-gradient(135deg,rgba(0,212,170,.10),rgba(56,189,248,.05))', borderBottom: '1px solid rgba(0,212,170,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(0,212,170,.35)' }}>⚡</div>
+                <div style={{ padding: '16px 22px 14px', background: 'var(--grad-primary),rgba(44,203,202,.05))', borderBottom: '1px solid rgba(44,203,202,.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>⚡</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Recent Activity</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Your latest platform events</div>
@@ -1203,9 +1203,9 @@ export default function TeacherDashboard() {
             data: selectedStudentNotes.map(n => n.score),
             fill: true,
             tension: 0.4,
-            borderColor: 'rgba(124,92,252,1)',
-            backgroundColor: 'rgba(124,92,252,0.12)',
-            pointBackgroundColor: 'rgba(124,92,252,1)',
+            borderColor: 'rgba(216,237,146,1)',
+            backgroundColor: 'rgba(216,237,146,0.12)',
+            pointBackgroundColor: 'rgba(216,237,146,1)',
             pointRadius: 5,
           }],
         };
@@ -1401,7 +1401,7 @@ export default function TeacherDashboard() {
                           display: 'flex', alignItems: 'center', gap: 10,
                           padding: '10px 18px', borderRadius: 'var(--radius-md)',
                           cursor: 'pointer', border: isActive ? '2px solid var(--color-primary)' : '2px solid transparent',
-                          background: isActive ? 'rgba(124,92,252,.1)' : undefined,
+                          background: isActive ? 'rgba(216,237,146,.1)' : undefined,
                           transition: 'var(--transition)',
                         }}
                       >
@@ -1607,10 +1607,10 @@ export default function TeacherDashboard() {
       {toastMsg && (
         <div style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
-          background: 'rgba(0,212,170,.12)', backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0,212,170,.3)', borderRadius: 'var(--radius-md)',
+          background: 'rgba(44,203,202,.12)', backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(44,203,202,.3)', borderRadius: 'var(--radius-md)',
           padding: '14px 22px', color: 'var(--color-accent-2)', fontWeight: 600, fontSize: '.9rem',
-          boxShadow: '0 8px 32px rgba(0,0,0,.4)',
+          boxShadow: 'none',
           animation: 'fadeUp .3s ease',
         }}>
           {toastMsg}

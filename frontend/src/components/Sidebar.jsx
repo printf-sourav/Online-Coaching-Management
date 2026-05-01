@@ -74,13 +74,9 @@ export default function Sidebar({ active, onNav, open, onClose }) {
       {open && <div className="sidebar-overlay" onClick={onClose} />}
 
       <aside className={`sidebar${open ? ' sidebar-open' : ''}`}>
-      <div className="sidebar-logo">
-        <img src={meritLogo} alt="Merit Nook logo" style={{ width: 40, height: 40, objectFit: 'contain' }} />
-        <div>
-          <div className="sidebar-logo-text">Merit Nook</div>
-          <div style={{ fontSize: '.68rem', color: 'var(--text-muted)', marginTop: '1px' }}>Academic workspace</div>
+        <div className="sidebar-logo">
+          <img src={meritLogo} alt="Merit Nook logo" style={{ width: 189, height: 189, objectFit: 'contain' }} />
         </div>
-      </div>
 
       <nav className="sidebar-nav">
         <div className="sidebar-section">Navigation</div>

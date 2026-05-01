@@ -17,17 +17,17 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 const gradeColor = (g) => {
   switch(g) { case 'A+': return 'bd-success'; case 'A': return 'bd-accent'; case 'B+': return 'bd-primary'; default: return 'bd-muted'; }
 };
-const trendIcon = (t) => t === 'up' ? <span style={{ color: '#4ade80' }}>↑</span> : t === 'down' ? <span style={{ color: 'var(--color-rose)' }}>↓</span> : <span style={{ color: 'var(--color-amber)' }}>→</span>;
+const trendIcon = (t) => t === 'up' ? <span style={{ color: 'var(--color-primary)' }}>↑</span> : t === 'down' ? <span style={{ color: 'var(--color-rose)' }}>↓</span> : <span style={{ color: 'var(--color-amber)' }}>→</span>;
 
 function AttendanceBar({ data }) {
   const [animated, setAnimated] = useState(false);
   useEffect(() => { setTimeout(() => setAnimated(true), 100); }, []);
 
   const getGrad = (pct) => {
-    if (pct >= 90) return 'linear-gradient(90deg,#4ade80,#22c55e)';
-    if (pct >= 75) return 'linear-gradient(90deg,#00d4aa,#38bdf8)';
-    if (pct >= 60) return 'linear-gradient(90deg,#ffb340,#f97316)';
-    return 'linear-gradient(90deg,#ff6b9d,#f43f5e)';
+    if (pct >= 90) return 'linear-gradient(90deg,var(--color-primary),var(--color-primary))';
+    if (pct >= 75) return 'linear-gradient(90deg,var(--color-primary),var(--color-primary))';
+    if (pct >= 60) return 'linear-gradient(90deg,var(--color-accent),var(--color-accent))';
+    return 'linear-gradient(90deg,var(--color-primary),var(--color-primary))';
   };
 
   return (
@@ -219,7 +219,7 @@ export default function StudentDashboard() {
           },
           modal: { ondismiss: () => reject(new Error('Payment cancelled.')) },
           prefill: { name: d?.name ?? '' },
-          theme: { color: '#7c5cfc' },
+          theme: { color: 'var(--color-accent)' },
         });
         rzp.on('payment.failed', (resp) => reject(new Error(resp.error?.description || 'Payment failed.')));
         rzp.open();
@@ -258,7 +258,7 @@ export default function StudentDashboard() {
           },
           modal: { ondismiss: () => reject(new Error('Payment cancelled.')) },
           prefill: { name: d?.name ?? '' },
-          theme: { color: '#7c5cfc' },
+          theme: { color: 'var(--color-accent)' },
         });
         rzp.on('payment.failed', (resp) => reject(new Error(resp.error?.description || 'Payment failed.')));
         rzp.open();
@@ -300,7 +300,7 @@ export default function StudentDashboard() {
           },
           modal: { ondismiss: () => reject(new Error('Payment cancelled.')) },
           prefill: { name: d?.name ?? '' },
-          theme: { color: '#7c5cfc' },
+          theme: { color: 'var(--color-accent)' },
         });
         rzp.on('payment.failed', (resp) => reject(new Error(resp.error?.description || 'Payment failed.')));
         rzp.open();
@@ -330,8 +330,8 @@ export default function StudentDashboard() {
     labels: perfMonthly.map(m => m.month ?? m),
     datasets: [{
       label: 'Score %', data: perfMonthly.map(m => m.score ?? m),
-      borderColor: '#7c5cfc', backgroundColor: 'rgba(124,92,252,.12)',
-      tension: .4, fill: true, pointBackgroundColor: '#7c5cfc', pointRadius: 4,
+      borderColor: 'var(--color-accent)', backgroundColor: 'rgba(216,237,146,.12)',
+      tension: .4, fill: true, pointBackgroundColor: 'var(--color-accent)', pointRadius: 4,
       spanGaps: false,
     }],
   };
@@ -341,8 +341,8 @@ export default function StudentDashboard() {
     labels: subjPerf.length > 0 ? subjPerf.map(s => s.subject ?? s) : ['Maths','Physics','Chemistry','English','Biology'],
     datasets: [{
       label: 'Score', data: subjPerf.length > 0 ? subjPerf.map(s => s.score ?? s) : [0,0,0,0,0],
-      backgroundColor: 'rgba(0,212,170,.12)', borderColor: '#00d4aa',
-      pointBackgroundColor: '#00d4aa', pointRadius: 4,
+      backgroundColor: 'rgba(44,203,202,.12)', borderColor: 'var(--color-primary)',
+      pointBackgroundColor: 'var(--color-primary)', pointRadius: 4,
     }],
   };
 
@@ -353,8 +353,8 @@ export default function StudentDashboard() {
     labels: ['Present', 'Absent'],
     datasets: [{
       data: [d?.sessionsAttended ?? d?.classesAttended ?? 0, (d?.totalSessions ?? d?.totalClasses ?? 0) - (d?.sessionsAttended ?? d?.classesAttended ?? 0)],
-      backgroundColor: ['rgba(0,212,170,.8)', 'rgba(255,107,157,.3)'],
-      borderColor: ['#00d4aa', '#ff6b9d'], borderWidth: 2,
+      backgroundColor: ['rgba(44,203,202,.8)', 'rgba(44,203,202,.3)'],
+      borderColor: ['var(--color-primary)', 'var(--color-primary)'], borderWidth: 2,
     }],
   };
 
@@ -385,8 +385,8 @@ export default function StudentDashboard() {
           if (enroll.status === 'requested') {
             return (
               <div key={enroll.enrollmentId} className="glass card ani-up" style={{
-                border: '1.5px solid rgba(124,92,252,.4)',
-                background: 'rgba(124,92,252,.06)',
+                border: '1.5px solid rgba(216,237,146,.4)',
+                background: 'rgba(216,237,146,.06)',
                 display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '16px 20px',
               }}>
                 <span style={{ fontSize: '1.6rem' }}>📩</span>
@@ -404,8 +404,8 @@ export default function StudentDashboard() {
           /* ── Approved / Pending — admin will set fee separately ── */
           return (
             <div key={enroll.enrollmentId} className="glass card ani-up" style={{
-              border: '1.5px solid rgba(0,212,170,.5)',
-              background: 'rgba(0,212,170,.07)',
+              border: '1.5px solid rgba(44,203,202,.5)',
+              background: 'rgba(44,203,202,.07)',
               display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '16px 20px',
             }}>
               <span style={{ fontSize: '1.6rem' }}>✅</span>
@@ -456,8 +456,8 @@ export default function StudentDashboard() {
 
     return (
       <div className="glass card ani-up" style={{
-        border: `1.5px solid ${isOverdue ? 'rgba(255,107,157,.55)' : 'rgba(252,196,28,.55)'}`,
-        background: isOverdue ? 'rgba(255,107,157,.07)' : 'rgba(252,196,28,.07)',
+        border: `1.5px solid ${isOverdue ? 'rgba(44,203,202,.55)' : 'rgba(216,237,146,.55)'}`,
+        background: isOverdue ? 'rgba(44,203,202,.07)' : 'rgba(216,237,146,.07)',
         display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '18px 22px',
         position: 'relative',
       }}>
@@ -510,12 +510,12 @@ export default function StudentDashboard() {
               <div className="glass card ani-up" style={{
                 display: 'flex', gap: 24, alignItems: 'center',
                 background: isDark
-                  ? 'linear-gradient(135deg,rgba(0,212,170,.10) 0%,rgba(56,189,248,.05) 100%)'
-                  : 'linear-gradient(135deg,rgba(0,212,170,.09) 0%,rgba(56,189,248,.05) 100%)',
-                border: '1.5px solid rgba(0,212,170,.28)',
+                  ? 'var(--grad-primary) 0%,rgba(44,203,202,.05) 100%)'
+                  : 'var(--grad-primary) 0%,rgba(44,203,202,.05) 100%)',
+                border: '1.5px solid rgba(44,203,202,.28)',
                 position: 'relative', overflow: 'hidden',
               }}>
-                <div style={{ position: 'absolute', right: -28, top: -28, width: 120, height: 120, borderRadius: '50%', background: 'radial-gradient(circle,rgba(0,212,170,.15),transparent 70%)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', right: -28, top: -28, width: 120, height: 120, borderRadius: '50%', background: 'radial-gradient(circle,rgba(44,203,202,.15),transparent 70%)', pointerEvents: 'none' }} />
                 {/* SVG ring */}
                 <div style={{ position: 'relative', width: 96, height: 96, flexShrink: 0 }}>
                   <svg width="96" height="96" viewBox="0 0 96 96" style={{ transform: 'rotate(-90deg)' }}>
@@ -528,21 +528,21 @@ export default function StudentDashboard() {
                     />
                     <defs>
                       <linearGradient id="attRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#00d4aa" />
-                        <stop offset="100%" stopColor="#38bdf8" />
+                        <stop offset="0%" stopColor="var(--color-primary)" />
+                        <stop offset="100%" stopColor="var(--color-primary)" />
                       </linearGradient>
                     </defs>
                   </svg>
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                    <span style={{ fontWeight: 800, fontSize: '1.1rem', background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>{d.attendance}%</span>
+                    <span style={{ fontWeight: 800, fontSize: '1.1rem', background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>{d.attendance}%</span>
                   </div>
                 </div>
                 <div style={{ flex: 1, position: 'relative' }}>
                   <div style={{ fontSize: '.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase', marginBottom: 6 }}>Overall Attendance</div>
-                  <div style={{ fontSize: '2.4rem', fontWeight: 900, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>{d.attendance}%</div>
+                  <div style={{ fontSize: '2.4rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1, marginBottom: 6 }}>{d.attendance}%</div>
                   <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)', marginBottom: 10 }}>{d.classesAttended ?? 0} of {d.totalClasses ?? 0} classes attended</div>
                   <div style={{ height: 5, borderRadius: 99, background: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,#00d4aa,#38bdf8)', width: `${Math.min(100, d.attendance || 0)}%`, transition: 'width 1.2s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,var(--color-primary),var(--color-primary))', width: `${Math.min(100, d.attendance || 0)}%`, transition: 'width 1.2s ease' }} />
                   </div>
                   <div style={{ marginTop: 10 }}>
                     <span className={`badge ${(d.attendance ?? 0) >= 85 ? 'bd-success' : (d.attendance ?? 0) >= 60 ? 'bd-amber' : 'bd-rose'}`} style={{ fontSize: '.7rem', fontWeight: 700 }}>
@@ -556,18 +556,18 @@ export default function StudentDashboard() {
               <div className="glass card ani-up" style={{
                 display: 'flex', flexDirection: 'column', gap: 14,
                 background: isDark
-                  ? 'linear-gradient(135deg,rgba(252,196,28,.09) 0%,rgba(249,115,22,.05) 100%)'
-                  : 'linear-gradient(135deg,rgba(252,196,28,.10) 0%,rgba(249,115,22,.04) 100%)',
-                border: '1.5px solid rgba(252,196,28,.28)',
+                  ? 'var(--grad-primary) 0%,rgba(216,237,146,.05) 100%)'
+                  : 'var(--grad-primary) 0%,rgba(216,237,146,.04) 100%)',
+                border: '1.5px solid rgba(216,237,146,.28)',
                 position: 'relative', overflow: 'hidden', animationDelay: '80ms',
               }}>
                 <div style={{ position: 'absolute', right: -12, bottom: -12, fontSize: '5.5rem', lineHeight: 1, opacity: .07, pointerEvents: 'none' }}>🏆</div>
                 <div style={{ fontSize: '.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Avg Score</div>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6 }}>
-                  <div style={{ fontSize: '3rem', fontWeight: 900, color: '#f97316', lineHeight: 1 }}>
+                  <div style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--color-accent)', lineHeight: 1 }}>
                     {(d.avgScore ?? 0) > 0 ? d.avgScore : '—'}
                   </div>
-                  {(d.avgScore ?? 0) > 0 && <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffb340', marginBottom: 4 }}>%</div>}
+                  {(d.avgScore ?? 0) > 0 && <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-accent)', marginBottom: 4 }}>%</div>}
                 </div>
                 <div style={{ fontSize: '.78rem', color: 'var(--text-secondary)' }}>
                   {d.gradedAssignments > 0 ? `${d.gradedAssignments} assignment${d.gradedAssignments !== 1 ? 's' : ''} graded` : 'No assignments graded yet'}
@@ -577,7 +577,7 @@ export default function StudentDashboard() {
                     <span>0%</span><span>100%</span>
                   </div>
                   <div style={{ height: 5, borderRadius: 99, background: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,#ffb340,#f97316)', width: `${Math.min(100, d.avgScore ?? 0)}%`, transition: 'width 1.2s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 99, background: 'linear-gradient(90deg,var(--color-accent),var(--color-accent))', width: `${Math.min(100, d.avgScore ?? 0)}%`, transition: 'width 1.2s ease' }} />
                   </div>
                 </div>
               </div>
@@ -587,27 +587,27 @@ export default function StudentDashboard() {
                 <div className="glass card ani-up" style={{
                   flex: 1, display: 'flex', gap: 16, alignItems: 'center',
                   background: isDark
-                    ? 'linear-gradient(135deg,rgba(255,107,157,.09) 0%,rgba(244,63,94,.04) 100%)'
-                    : 'linear-gradient(135deg,rgba(255,107,157,.10) 0%,rgba(244,63,94,.04) 100%)',
-                  border: '1.5px solid rgba(255,107,157,.28)',
+                    ? 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)'
+                    : 'var(--grad-primary) 0%,rgba(44,203,202,.04) 100%)',
+                  border: '1.5px solid rgba(44,203,202,.28)',
                   padding: '16px 20px', position: 'relative', overflow: 'hidden', animationDelay: '160ms',
                 }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,#ff6b9d,#f43f5e)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: '0 6px 18px rgba(244,63,94,.35)' }}>📝</div>
+                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: 'none' }}>📝</div>
                   <div>
                     <div style={{ fontSize: '.68rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Pending Tasks</div>
-                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,#ff6b9d,#f43f5e)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.pendingAssignments ?? 0}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 900, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{d.pendingAssignments ?? 0}</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-secondary)' }}>assignments due soon</div>
                   </div>
                 </div>
                 <div className="glass card ani-up" style={{
                   flex: 1, display: 'flex', gap: 16, alignItems: 'center',
                   background: isDark
-                    ? 'linear-gradient(135deg,rgba(124,92,252,.09) 0%,rgba(167,139,250,.04) 100%)'
-                    : 'linear-gradient(135deg,rgba(124,92,252,.10) 0%,rgba(167,139,250,.04) 100%)',
-                  border: '1.5px solid rgba(124,92,252,.28)',
+                    ? 'var(--grad-primary) 0%,rgba(216,237,146,.04) 100%)'
+                    : 'var(--grad-primary) 0%,rgba(216,237,146,.04) 100%)',
+                  border: '1.5px solid rgba(216,237,146,.28)',
                   padding: '16px 20px', position: 'relative', overflow: 'hidden', animationDelay: '240ms',
                 }}>
-                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: '0 6px 18px rgba(124,92,252,.35)' }}>🗓</div>
+                  <div style={{ width: 46, height: 46, borderRadius: 14, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0, boxShadow: 'none' }}>🗓</div>
                   <div>
                     <div style={{ fontSize: '.68rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '.07em', textTransform: 'uppercase' }}>Weekly Slots</div>
                     <div style={{ fontSize: '2rem', fontWeight: 900, background: 'var(--grad-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.1 }}>{weekSchedule.reduce((n, day) => n + (day.slots?.length ?? 0), 0)}</div>
@@ -623,11 +623,11 @@ export default function StudentDashboard() {
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '60ms' }}>
                 <div style={{
                   padding: '16px 22px 14px',
-                  background: 'linear-gradient(135deg,rgba(124,92,252,.10),rgba(167,139,250,.05))',
-                  borderBottom: '1px solid rgba(124,92,252,.15)',
+                  background: 'var(--grad-primary),rgba(216,237,146,.05))',
+                  borderBottom: '1px solid rgba(216,237,146,.15)',
                   display: 'flex', alignItems: 'center', gap: 10,
                 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(124,92,252,.35)' }}>📈</div>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>📈</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Monthly Performance</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Score % over last 12 months</div>
@@ -656,11 +656,11 @@ export default function StudentDashboard() {
               <div className="glass card ani-up" style={{ padding: 0, overflow: 'hidden', animationDelay: '120ms' }}>
                 <div style={{
                   padding: '16px 22px 14px',
-                  background: 'linear-gradient(135deg,rgba(0,212,170,.10),rgba(56,189,248,.05))',
-                  borderBottom: '1px solid rgba(0,212,170,.15)',
+                  background: 'var(--grad-primary),rgba(44,203,202,.05))',
+                  borderBottom: '1px solid rgba(44,203,202,.15)',
                   display: 'flex', alignItems: 'center', gap: 10,
                 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,#00d4aa,#38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: '0 4px 12px rgba(0,212,170,.35)' }}>🎯</div>
+                  <div style={{ width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg,var(--color-primary),var(--color-primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.95rem', boxShadow: 'none' }}>🎯</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '.95rem', color: 'var(--text-primary)' }}>Subject Performance</div>
                     <div style={{ fontSize: '.72rem', color: 'var(--text-muted)' }}>Score breakdown by subject</div>
@@ -703,7 +703,7 @@ export default function StudentDashboard() {
                       .sort((a, b) => new Date(a.scheduledAt) - new Date(b.scheduledAt))
                       .slice(0, 2)
                       .map(dm => (
-                        <div key={String(dm.tutorId)} className="glass" style={{ padding: '14px 16px', display: 'flex', gap: 14, alignItems: 'center', border: '1px solid rgba(0,212,170,.3)', background: 'rgba(0,212,170,.05)' }}>
+                        <div key={String(dm.tutorId)} className="glass" style={{ padding: '14px 16px', display: 'flex', gap: 14, alignItems: 'center', border: '1px solid rgba(44,203,202,.3)', background: 'rgba(44,203,202,.05)' }}>
                           <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--color-accent)', flexShrink: 0 }} />
                           <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 600, fontSize: '.875rem' }}>🎓 Demo · {dm.tutorName}</div>
@@ -792,8 +792,8 @@ export default function StudentDashboard() {
                       <div key={String(dm.tutorId)} style={{
                         display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
                         padding: '14px 18px', borderRadius: 'var(--radius-md)',
-                        background: isPast ? 'var(--color-surface)' : 'rgba(0,212,170,.06)',
-                        border: `1.5px solid ${isPast ? 'var(--color-border)' : 'rgba(0,212,170,.3)'}`,
+                        background: isPast ? 'var(--color-surface)' : 'rgba(44,203,202,.06)',
+                        border: `1.5px solid ${isPast ? 'var(--color-border)' : 'rgba(44,203,202,.3)'}`,
                       }}>
                         <div style={{ fontSize: '1.5rem' }}>{isPast ? '✅' : '🎯'}</div>
                         <div style={{ flex: 1, minWidth: 160 }}>
@@ -1343,7 +1343,7 @@ export default function StudentDashboard() {
                   <span style={{ fontWeight: 800, color: pct >= 100 ? 'var(--color-accent)' : 'var(--text-primary)', fontSize: '.85rem' }}>{pct}%</span>
                 </div>
                 <div style={{ height: 10, borderRadius: 99, background: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.07)', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', borderRadius: 99, background: pct >= 100 ? 'linear-gradient(90deg,#00d4aa,#38bdf8)' : pct >= 50 ? 'linear-gradient(90deg,#7c5cfc,#00d4aa)' : 'linear-gradient(90deg,#ff6b9d,#ffb340)', width: `${pct}%`, transition: 'width 1.2s ease' }} />
+                  <div style={{ height: '100%', borderRadius: 99, background: pct >= 100 ? 'linear-gradient(90deg,var(--color-primary),var(--color-primary))' : pct >= 50 ? 'linear-gradient(90deg,var(--color-accent),var(--color-primary))' : 'linear-gradient(90deg,var(--color-primary),var(--color-accent))', width: `${pct}%`, transition: 'width 1.2s ease' }} />
                 </div>
               </div>
             )}
@@ -1599,7 +1599,7 @@ export default function StudentDashboard() {
               </div>
 
               {/* Info banner */}
-              <div style={{ background: 'rgba(124,92,252,.07)', border: '1px solid rgba(124,92,252,.2)', borderRadius: 12, padding: '12px 16px', marginBottom: 18, fontSize: '.82rem', color: 'var(--text-secondary)' }}>
+              <div style={{ background: 'rgba(216,237,146,.07)', border: '1px solid rgba(216,237,146,.2)', borderRadius: 12, padding: '12px 16px', marginBottom: 18, fontSize: '.82rem', color: 'var(--text-secondary)' }}>
                 📋 Our team will review your request, contact you, and set the monthly fee before activating your enrollment.
               </div>
 
