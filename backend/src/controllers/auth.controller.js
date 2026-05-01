@@ -123,9 +123,27 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
+  const hashedRefreshToken = hashToken(refreshToken);
 
-  user.refreshToken = hashToken(refreshToken);
-  await user.save();
+  // Faster than document save() and avoids unrelated validators/hooks
+  await User.updateOne({ _id: user._id }, { $set: { refreshToken: hashedRefreshToken } });
+
+  const userProfile = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    avatar: user.avatar || "",
+    phone: user.phone || "",
+    mobileNumber: user.mobileNumber || "",
+    dob: user.dob || null,
+    gender: user.gender || "",
+    bio: user.bio || "",
+    isVerified: user.isVerified,
+    isActive: user.isActive,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
 
   return res
     .status(200)
@@ -134,7 +152,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { accessToken, refreshToken },
+        { accessToken, refreshToken, user: userProfile },
         "User logged in successfully"
       )
     );

@@ -1185,11 +1185,11 @@ function LandingDesktop() {
               <h4 style={{ color: '#1C2216', fontWeight: 700, fontSize: '.8rem', marginBottom: 18, textTransform: 'uppercase', letterSpacing: '.07em' }}>Get In Touch</h4>
               <div style={{ marginBottom: 16, fontSize: '.82rem' }}>
                 <div style={{ color: '#1C2216', fontWeight: 600, marginBottom: 4 }}>📧 Email</div>
-                <div>support@meritnook.com</div>
+                <div>Kajal04043@gmail.com</div>
               </div>
               <div style={{ marginBottom: 16, fontSize: '.82rem' }}>
                 <div style={{ color: '#1C2216', fontWeight: 600, marginBottom: 4 }}>💬 WhatsApp</div>
-                <div>+91 98765 43210</div>
+                <div>9701339070</div>
               </div>
               <div style={{ marginTop: 24 }}>
                 <RippleButton

@@ -31,11 +31,45 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
 
   const user = req.user; // already attached by requireAuth middleware
 
-  // ── Attendance ──────────────────────────────────────────────────────────────
-  const attendanceRecordsRaw = await Attendance.find({ studentId: student._id })
-    .populate("classId", "subject topic date")
-    .sort({ date: -1 })
-    .lean();
+  // ── Fetch dashboard sources in parallel (reduces endpoint latency) ─────────
+  const [
+    attendanceRecordsRaw,
+    enrollmentsForSubject,
+    enrolledForScheduleRaw,
+    demoClasses,
+    topicDocs,
+    assignments,
+    submissions,
+    perfNoteDocs,
+  ] = await Promise.all([
+    Attendance.find({ studentId: student._id })
+      .populate("classId", "subject topic date")
+      .sort({ date: -1 })
+      .lean(),
+    Enrollment.find({
+      studentId: student._id,
+      status: { $in: ["active", "pending", "approved"] },
+    }).populate("tutorId", "subjects").lean(),
+    Enrollment.find({ studentId: student._id, status: { $in: ["active", "pending"] } })
+      .populate({ path: "tutorId", populate: { path: "userId", select: "name" } }),
+    Demo.find({ studentId: student._id, status: "confirmed" })
+      .populate({ path: "tutorId", populate: { path: "userId", select: "name" } })
+      .sort({ scheduledAt: 1 })
+      .lean(),
+    Topic.find({ studentId: student._id })
+      .populate({ path: "teacherId", populate: { path: "userId", select: "name" } })
+      .sort({ date: -1 })
+      .limit(20),
+    Assignment.find({ studentIds: student._id })
+      .populate("classId", "subject")
+      .sort({ dueDate: 1 })
+      .lean(),
+    Submission.find({ studentId: student._id }).lean(),
+    PerformanceNote.find({ studentId: student._id })
+      .populate({ path: "teacherId", populate: { path: "userId", select: "name" } })
+      .sort({ createdAt: -1 })
+      .limit(10),
+  ]);
 
   const totalAttendance = attendanceRecordsRaw.length;
   const presentCount = attendanceRecordsRaw.filter(a => a.status === "present").length;
@@ -44,13 +78,6 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
     totalAttendance > 0
       ? Number((((presentCount + lateCount) / totalAttendance) * 100).toFixed(1))
       : 0;
-
-  // Per-class attendance grouped by subject
-  // When attendance is class-free (no classId), resolve subject from enrollment
-  const enrollmentsForSubject = await Enrollment.find({
-    studentId: student._id,
-    status: { $in: ["active", "pending", "approved"] },
-  }).populate("tutorId", "subjects").lean();
 
   // Build a teacherId -> subject(s) lookup
   const teacherSubjectMap = {};
@@ -86,13 +113,9 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
   }));
 
   // ── Classes ─────────────────────────────────────────────────────────────────
-  // Get tutor IDs from all enrollments (active + pending) so we don't miss
-  // classes created before a student's payment was confirmed
-  const myEnrollments = await Enrollment.find({
-    studentId: student._id,
-    status: { $in: ["active", "pending", "approved"] },
-  }).select("tutorId").lean();
-  const enrolledTutorIds = myEnrollments.map(e => e.tutorId).filter(Boolean);
+  // Get tutor IDs from enrollments (active + pending) so we don't miss classes
+  // created before a student's payment was confirmed
+  const enrolledTutorIds = enrollmentsForSubject.map(e => e.tutorId?._id || e.tutorId).filter(Boolean);
 
   const allClasses = await Class.find({
     $or: [
@@ -126,12 +149,6 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
       isDemo: false,
     }));
 
-  // Confirmed demo classes for this student (act as extra upcoming classes)
-  const demoClasses = await Demo.find({ studentId: student._id, status: "confirmed" })
-    .populate({ path: "tutorId", populate: { path: "userId", select: "name" } })
-    .sort({ scheduledAt: 1 })
-    .lean();
-
   const upcomingDemos = demoClasses
     .filter(d => d.scheduledAt && new Date(d.scheduledAt) >= new Date(Date.now() - 2 * 60 * 60 * 1000)) // past 2h grace
     .map(d => {
@@ -162,9 +179,7 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
 
   // Weekly recurring schedule from teacher-set slots
   const DAY_ORDER = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const enrolledForSchedule = (await Enrollment.find({ studentId: student._id, status: { $in: ["active", "pending"] } })
-    .populate({ path: "tutorId", populate: { path: "userId", select: "name" } }))
-    .filter(e => e.tutorId);
+  const enrolledForSchedule = enrolledForScheduleRaw.filter(e => e.tutorId);
 
   const tutorNameMap = {};
   enrolledForSchedule.forEach(e => {
@@ -217,12 +232,7 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
     .filter(d => scheduleMap[d])
     .map(day => ({ day, slots: scheduleMap[day] }));
 
-  // Topics covered — from the new Topic model
-  const topicDocs = await Topic.find({ studentId: student._id })
-    .populate({ path: "teacherId", populate: { path: "userId", select: "name" } })
-    .sort({ date: -1 })
-    .limit(20);
-
+  // Topics covered — from Topic model (already fetched above)
   const topicsCovered = topicDocs.map(t => ({
     subject: t.topic,
     topic: t.topic,
@@ -232,12 +242,6 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
   }));
 
   // ── Assignments ──────────────────────────────────────────────────────────────
-  const assignments = await Assignment.find({ studentIds: student._id })
-    .populate("classId", "subject")
-    .sort({ dueDate: 1 })
-    .lean();
-
-  const submissions = await Submission.find({ studentId: student._id }).lean();
   const submissionMap = {};
   submissions.forEach(s => { submissionMap[s.assignmentId.toString()] = s; });
 
@@ -290,12 +294,7 @@ export const getStudentDashboard = asyncHandler(async (req, res) => {
       };
     });
 
-  // Performance notes from the PerformanceNote model
-  const perfNoteDocs = await PerformanceNote.find({ studentId: student._id })
-    .populate({ path: "teacherId", populate: { path: "userId", select: "name" } })
-    .sort({ createdAt: -1 })
-    .limit(10);
-
+  // Performance notes already fetched above
   const perfRemarks = perfNoteDocs
     .filter(n => n.note)
     .map(n => ({
