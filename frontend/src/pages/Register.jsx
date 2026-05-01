@@ -165,7 +165,7 @@ export default function Register() {
           {step === 2 && (
             <form onSubmit={handleVerify} className="auth-form">
               <div className="alert alert-info">
-                📬 Check your inbox at <strong>{form.email}</strong>. The OTP expires in{' '}
+                📬 Check your inbox at <strong>{form.email}</strong> (and spam folder). The OTP expires in{' '}
                 {!expired
                   ? <Countdown seconds={otpExpiry} onZero={() => setExpired(true)} />
                   : <span style={{ color: 'var(--color-rose)', fontWeight: 700 }}>00:00 (expired)</span>
