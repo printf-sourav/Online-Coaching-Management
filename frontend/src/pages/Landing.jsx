@@ -427,16 +427,6 @@ function LandingDesktop() {
                       Parents, Start FREE Trial
                     </button>
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 16 }}>
-                      <div style={{ display: 'flex' }}>
-                        <img src="https://i.pravatar.cc/100?img=12" alt="Student" style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', zIndex: 3 }} />
-                        <img src="https://i.pravatar.cc/100?img=32" alt="Student" style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', marginLeft: -12, zIndex: 2 }} />
-                        <img src="https://i.pravatar.cc/100?img=47" alt="Student" style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid #1C2216', objectFit: 'cover', marginLeft: -12, zIndex: 1 }} />
-                      </div>
-                      <div style={{ fontSize: '.85rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>
-                        Joined by<br/><span style={{ color: '#EAB308', WebkitTextStroke: '1px #1C2216' }}>50K+</span> Learners
-                      </div>
-                    </div>
                   </div>
                 </div>
                 
@@ -1058,14 +1048,6 @@ function LandingDesktop() {
               >Browse Tutors</RippleButton>
             </div>
 
-            <div style={{ display: 'flex', gap: 'clamp(20px,4vw,60px)', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-              {[{v:'50,000+',l:'Students Taught'},{v:'120+',l:'Expert Tutors'},{v:'4.8/5',l:'Google Rating'},{v:'100%',l:'Free Demo'}].map((s,i) => (
-                <div key={i} style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 'clamp(1.4rem,2.5vw,1.9rem)', fontWeight: 900, color: '#1C2216', letterSpacing: '-.02em' }}>{s.v}</div>
-                  <div style={{ fontSize: '.7rem', color: 'rgba(28,34,22,.75)', fontWeight: 500, marginTop: 3, letterSpacing: '.04em' }}>{s.l}</div>
-                </div>
-              ))}
-            </div>
             </div>
             
             <div style={{ flex: '0 0 auto', position: 'relative' }}>
