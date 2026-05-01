@@ -113,8 +113,9 @@ export default function StudentDashboard() {
   }, []);
 
   useEffect(() => {
-    Promise.all([fetchStudentData(), fetchTutors(), fetchFeeData(), fetchTeacherUpdates(), fetchEnrollments(), apiGetMyDemos(), apiGetMyPerformanceNotes()])
-      .then(([data, tutorList, fees, updates, myEnrollments, demoList, perfNotes]) => {
+    // Stage 1 (blocking): only essential data for first paint
+    Promise.all([fetchStudentData(), fetchEnrollments()])
+      .then(([data, myEnrollments]) => {
         setD({
           ...EMPTY_D,
           ...(data || {}),
@@ -126,11 +127,24 @@ export default function StudentDashboard() {
           performanceMonthly: data?.performanceMonthly ?? [],
           subjectPerformance: data?.subjectPerformance ?? [],
         });
-        setTutors(tutorList ?? []);
         setEnrollments(Array.isArray(myEnrollments) ? myEnrollments : (myEnrollments?.data ?? []));
+      })
+      .catch(() => { setD(EMPTY_D); })
+      .finally(() => setLoading(false));
+
+    // Stage 2 (non-blocking): enrich dashboard after first render
+    Promise.allSettled([fetchTutors(), fetchFeeData(), fetchTeacherUpdates(), apiGetMyDemos(), apiGetMyPerformanceNotes()])
+      .then(([tutorsRes, feesRes, updatesRes, demosRes, perfNotesRes]) => {
+        const tutorList = tutorsRes.status === 'fulfilled' ? tutorsRes.value : [];
+        const fees = feesRes.status === 'fulfilled' ? feesRes.value : null;
+        const updates = updatesRes.status === 'fulfilled' ? updatesRes.value : [];
+        const demoList = demosRes.status === 'fulfilled' ? demosRes.value : [];
+        const perfNotes = perfNotesRes.status === 'fulfilled' ? perfNotesRes.value : [];
+
+        setTutors(tutorList ?? []);
         if (fees) setFeeData(fees);
         if ((fees?.pendingInvoices?.length ?? 0) > 0) setFeeBannerDismissed(false);
-        // Merge performance notes into teacherUpdates (prepend, avoid duplicates with notifications)
+
         const noteUpdates = (perfNotes ?? []).map(n => ({
           title: `📝 New remark from ${n.teacherName}`,
           message: [
@@ -142,17 +156,18 @@ export default function StudentDashboard() {
           createdAt: n.createdAt,
           _fromPerfNote: true,
         }));
-        // Notifications already include notes added after this fix; dedupe by checking existing remark notifications
-        const existingRemarkTimes = new Set((updates ?? []).filter(u => u.type === 'remark').map(u => u.createdAt ? new Date(u.createdAt).toISOString().slice(0, 16) : ''));
+
+        const existingRemarkTimes = new Set((updates ?? [])
+          .filter(u => u.type === 'remark')
+          .map(u => u.createdAt ? new Date(u.createdAt).toISOString().slice(0, 16) : ''));
         const newNoteUpdates = noteUpdates.filter(n => !existingRemarkTimes.has(new Date(n.createdAt).toISOString().slice(0, 16)));
         const allUpdates = [...(updates ?? []), ...newNoteUpdates].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setTeacherUpdates(allUpdates);
+
         const dMap = {};
         (Array.isArray(demoList) ? demoList : []).forEach(dm => { if (dm.tutorId) dMap[String(dm.tutorId)] = dm; });
         setDemosMap(dMap);
-      })
-      .catch(() => { setD(EMPTY_D); })
-      .finally(() => setLoading(false));
+      });
   }, []);
 
   const validateSubmitFile = (file) => {
